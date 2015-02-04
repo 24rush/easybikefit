@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>BikeFit</title>
+	
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">		
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">	
+	<link href="css/style.css" rel='stylesheet' type='text/css' />	
+</head>
+<body>			
+	<div style="margin: 35px auto; width: 1200px;">
+		<div class="stepWorkArea">
+			<div class="stepHeader alert alert-header unselectable" role="alert">
+				<span id="stepOneDropdownIco" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+				<span class="sr-only">Step 1:</span>
+				Side picture with leg straight
+				<span class="btn btn-default btn-file" style="margin-left: 10px;">
+					Upload your own picture <input type="file" id="fileOne" class="clickable">
+				</span>
+			</div>		
+			<div class="stepCanvasArea" style="width: 100%; height: 100%; pointer-events: none;background-color: #E5FFF7; background-repeat: no-repeat; background-position: center;background-image: url(http://www.triradar.com/files/2014/01/DIY-Bike-Fit.jpg); background-size: contain;">
+				<canvas id="stepOneCanvas" style="pointer-events: all; width: 100%; height: 100%;"></canvas>
+			</div>		
+		</div>
+
+		<div class="stepWorkArea" style="margin-top: 5px;">
+			<div class="stepHeader alert alert-header unselectable" role="alert">
+				<span id="stepOneDropdownIco" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+				<span class="sr-only">Step 2:</span>
+				Side picture with knee bent
+				<span class="btn btn-default btn-file" style="margin-left: 10px;">
+					Upload your own picture <input type="file" id="fileTwo" class="clickable">
+				</span>
+			</div>		
+			<div class="stepCanvasArea" style="width:100%; height: 100%; pointer-events: none;background-color: #E5FFF7; background-repeat: no-repeat; background-position: center;background-image: url(http://www.triradar.com/files/2014/01/DIY-Bike-Fit.jpg); background-size: contain;">
+				<canvas id="stepTwoCanvas" style="pointer-events: all; width: 100%; height: 100%;"></canvas>
+			</div>		
+		</div>	
+	</div>
+
+
+	<div class="toolbox panel panel-default">
+		<div class="panel-heading">Results</div>
+		<div class="panel-body">
+			<span>Hip - Knee </span><span class="angleText" id="hipKneeAngle"></span>
+			<br>
+			<span>Arm - Forearm </span><span class="angleText" id="armForeArmAngle"></span>
+			<br>
+			<span>Knee Angle Extension </span><span class="angleText" id="kneeAngleExtension"></span>			
+		</div>
+	</div>
+
+	<script src="js/lib/jquery.min.js" type="text/javascript"></script>		
+	<script src="js/lib/bootstrap.min.js" type="text/javascript"></script>	
+	<script src="js/paper-full.js" type="text/javascript"></script>
+	<script src="js/paper-core.js" type="text/javascript"></script>
+
+	<script src="js/jointpoint.js" type="text/javascript"></script>
+	<script src="js/line.js" type="text/javascript"></script>
+	<script src="js/text.js" type="text/javascript"></script>
+	<script src="js/jointsangle.js" type="text/javascript"></script>	
+	<script src="js/dependentpoint.js" type="text/javascript"></script>
+
+	<script type="text/javascript">
+	$(document).on('change', '.btn-file :file', function(evt) {	
+		var input = $(this),
+		numFiles = input.get(0).files ? input.get(0).files[0] : 1;
+		input.trigger('fileselect', [numFiles, evt.target.id]);
+	});
+
+	$(document).ready(function() {		
+		$('.btn-file :file').on('fileselect', function(event, numFiles, targetId) {
+			var file = new FileReader();			
+			file.readAsDataURL(event.target.files[0]);
+
+			file.onload = function(evt) {	
+				var destination = $(targetId == 'fileOne' ? $('.stepCanvasArea')[0] : $('.stepCanvasArea')[1]);
+				destination.css('background-image', 'url("' + evt.target.result + '")');
+				loadToolbox();
+			}		
+		});
+
+		$('.stepHeader').click(function(event) {			
+			if (event.target.localName == 'input')
+				return;
+
+			$.each($('.stepHeader'), function (index, step) {
+				var menuIco = $(step).find('#stepOneDropdownIco');			
+				//Close
+				if (menuIco.hasClass('glyphicon-chevron-down') == true) {
+					menuIco.removeClass('glyphicon-chevron-down');
+					menuIco.addClass('glyphicon-chevron-right');
+
+					$($(this).siblings()[0]).animate({ height: "toggle", opacity: 0 }, 500, function() {
+						$($(step).siblings()[0]).css('opacity', '0');
+					});  
+
+				} else { // Open
+					menuIco.addClass('glyphicon-chevron-down');
+					menuIco.removeClass('glyphicon-chevron-right');
+
+					$($(this).siblings()[0]).animate({ height: "toggle", opacity: 1 }, 500, function() {
+						$($(step).siblings()[0]).css('opacity', '1');
+					});					
+				}
+			});
+		});
+
+
+		var wWidth = $('#stepOneCanvas').width();
+		var wHeight = $(window).height();
+		
+		this.tbStartLeft = wWidth - 140;
+		this.tbStartTop = 40;
+		this.paddingRight = 14;
+		this.textHeight = 6;
+		this.rowPadding = 25;
+
+		$('.toolbox').css('left', $(window).width() - 300);
+		$('.toolbox').css('top', this.tbStartTop);
+
+		this.getJointPoint = function (index) {			
+			return new Point(this.tbStartLeft, this.tbStartTop + index * this.rowPadding - this.textHeight);
+		}
+
+		this.getTextPoint = function (index) {			
+			return new Point(this.tbStartLeft + this.paddingRight, this.tbStartTop + index * this.rowPadding);
+		}
+
+		this.loadToolbox = function () {
+			var self = this;					
+			var circles = [];
+
+			function onTextSelect(target, ctx, state) {
+				if (state == true) {
+					circles[ctx].enlarge();
+					target.setStyle({'fontWeight' : 'bold'});
+				}
+				else {
+					circles[ctx].reduce();
+					target.setStyle({'fontWeight' : 'normal'});
+				}
+			};
+
+			circles.push(new JointPoint(this.getJointPoint(0)));
+			new Text(this.getTextPoint(0)).setText('Shoulder joint').registerOnTextSelect(onTextSelect, 0);
+
+			circles.push(new JointPoint(this.getJointPoint(1)));
+			new Text(this.getTextPoint(1)).setText('Elbow joint').registerOnTextSelect(onTextSelect, 1);
+
+			circles.push(new JointPoint(this.getJointPoint(2)));
+			new Text(this.getTextPoint(2)).setText('Fist joint').registerOnTextSelect(onTextSelect, 2);
+
+			// Legs
+			var hipPoint = new JointPoint(this.getJointPoint(3))		
+			circles.push(hipPoint);
+			new Text(this.getTextPoint(3)).setText('Hip joint').registerOnTextSelect(onTextSelect, 3);
+
+			var kneePoint = new JointPoint(this.getJointPoint(4));
+			circles.push(kneePoint);
+			new Text(this.getTextPoint(4)).setText('Knee joint').registerOnTextSelect(onTextSelect, 4);
+
+			circles.push(new JointPoint(this.getJointPoint(5)));
+			new Text(this.getTextPoint(5)).setText('Ankle joint').registerOnTextSelect(onTextSelect, 5);
+
+			var line1 = new JointLine(circles[0], circles[1]);
+			var line2 = new JointLine(circles[1], circles[2]);
+
+			var line3 = new JointLine(circles[3], circles[4]);
+			var line4 = new JointLine(circles[4], circles[5]);
+
+			var line5 = new JointLine(circles[0], circles[3]);
+
+			//kneePoint.point().subtract(hipPoint.point()).add(kneePoint.point());
+			
+			var armsAngle = new JointsAngle(line1, line2);
+			var ranges = [{'range' : [0, 90], 'color' : 'red'}, {'range' : [90, 135], 'color' : 'green'}, {'range' : [135, 180], 'color' : 'red'}];
+			armsAngle.setRanges(ranges);
+
+			var lineHip = new JointLine(kneePoint, new DependantPoint([hipPoint, kneePoint], function () {				
+				return kneePoint.point().subtract(hipPoint.point()).add(kneePoint.point());
+			}));
+
+			// Legs			
+			new JointsAngle(line1, line2).onAngleChanged(function (newAngle) { $('#armForeArmAngle').text(newAngle);});
+			new JointsAngle(line3, line4).onAngleChanged(function (newAngle) { $('#hipKneeAngle').text(newAngle);});		
+
+			new JointsAngle(line4, lineHip).onAngleChanged(function (newAngle) { $('#kneeAngleExtension').text(newAngle);});
+
+			view.draw();
+		}
+
+		paper.install(window);
+
+		var windowHeight = 0.8 * $(window).height();
+		$('.stepCanvasArea').height(windowHeight);		
+
+		paper.setup('stepOneCanvas');		
+		this.loadToolbox();
+		paper.setup('stepTwoCanvas');
+		this.loadToolbox();
+
+		$($('.stepCanvasArea')[1]).hide();
+	});
+
+</script>
+
+</body>
+</html>
