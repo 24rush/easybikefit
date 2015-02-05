@@ -20,7 +20,7 @@ var JointsAngle = function (line1, line2) {
 	this.ranges = undefined;
 
 	this._onAngleChangedCbk = [];
-	
+
 	this.onAngleChanged = function (cbk) {		
 		self._onAngleChangedCbk.push(cbk);
 	}
@@ -126,4 +126,6 @@ var JointsAngle = function (line1, line2) {
 
 		self.drawAngle();
 	});
+
+	this.drawAngle();
 }

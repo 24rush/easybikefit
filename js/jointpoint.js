@@ -48,7 +48,11 @@ var JointPoint = function(point) {
 		}
 	}
 
-	_circle.onMouseDrag = function (event) {				
+	this.setMoved = function (event) {
+		_circle.onMouseDrag(event);
+	}
+
+	_circle.onMouseDrag = function (event) {			
 		_circle.position = event.point;
 
 		for (var cbk in _onMoveCbk) {			

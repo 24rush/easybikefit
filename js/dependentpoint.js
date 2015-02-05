@@ -2,7 +2,7 @@ var DependantPoint = function (arrJointPoint, funcDependency) {
 	var self = this;
 	self._dependecyFunc = funcDependency;
 
-	var _point = arrJointPoint[1].point().clone();
+	var _point = self._dependecyFunc();
 
 	for (var i = 0; i < arrJointPoint.length; i++) {		
 		arrJointPoint[i].onMove(function () {			
