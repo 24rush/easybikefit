@@ -115,7 +115,7 @@
 		
 		var scene = function (paperScope, width, height) {
 			var self = this;
-
+console.log(width, height);
 			this.tbStartLeft = wWidth - 140;
 			this.tbStartTop = 40;
 
@@ -130,24 +130,24 @@
 			this.animationStart = undefined;
 			this.animationEnded = false;
 
-			var backImgSize = [515, 515];
+			var backImgSize = [775, 775];
 			
 			this.height = height;
 			this.width = width;	
 
-			var backImgScaling = backImgSize[0] / backImgSize[1];
+			this.backImgScaling = backImgSize[0] / backImgSize[1];
 
-			this.scalingX = ((this.width - this.height * backImgScaling) / 2 + this.height) / 857;	
-			this.scalingY = this.height / (775);
+			this.scalingX = ((this.width - this.height * this.backImgScaling) / 2 + this.height * this.backImgScaling) / 987.5;				
+			this.scalingY = this.height / 775;
 
 			// this.jointsAngles = [12, 20, 20 , 28, 31, 43];
 			// this.jointLengths = [660, 740, 850, 528, 714, 811];
 			
-			this.Xx = [637, 686, 788, 459, 603, 585];
-			this.Yy = [135, 250, 287, 244, 362, 545];
-			
+			this.Xx = [647, 703, 794, 476, 615, 597];
+			this.Yy = [140, 246, 291, 261, 370, 541];
+			console.log(this.scalingX + ' '+ this.scalingY);
 			for (var i = 0; i < this.Xx.length; i++) {
-				this.Xx[i] *= this.scalingY;
+				this.Xx[i] *= this.scalingX;
 				this.Yy[i] *= this.scalingY;
 			}
 
