@@ -2,7 +2,7 @@
 var JointLine = function (point1, point2) {	
 	var self = this;
 	
-	var _onLineChangedCbk = [];
+	this._onLineChangedCbk = [];
 
 	self._from = point1.point();	
 	self._to = point2.point();
@@ -20,13 +20,14 @@ var JointLine = function (point1, point2) {
 		_path.add(self._from);			
 		_path.add(self._to);
 
-		for (var cbk in _onLineChangedCbk) {			
-			_onLineChangedCbk[cbk](self._from, self._to);
+		for (var cbk in self._onLineChangedCbk) {			
+			self._onLineChangedCbk[cbk](self._from, self._to);
 		}
 	}
 
 	this.onLineChanged = function (cbk) {
-		_onLineChangedCbk.push(cbk);
+		self._onLineChangedCbk.push(cbk);
+		cbk(self._from, self._to);
 	}
 
 	self.from = function () {
