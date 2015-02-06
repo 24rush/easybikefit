@@ -30,6 +30,10 @@ var JointLine = function (point1, point2) {
 		cbk(self._from, self._to);
 	}
 
+	this.length = function () {		
+		return self._from.getDistance(self._to);
+	}
+
 	self.from = function () {
 		return self._from;
 	}

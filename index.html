@@ -43,25 +43,31 @@
 
 	<button type="button" class="btn btn-default" id="btnDump">Dump</button>
 
-	<div class="toolbox panel panel-default">
-		<div class="panel-heading">Results</div>
-		<div class="panel-body">
-			<span>Hip - Knee </span><span class="angleText" id="hipKneeAngle"></span>
-			<br>
-			<span>Elbow Angle </span><span class="angleText" id="elbowAngle"></span>
-			<br>
-			<span>Knee Angle Extension </span><span class="angleText" id="kneeAngleExtension"></span>
-			<br>
-			<span>Hip Angle Open </span><span class="angleText" id="hipAngleOpen"></span>
-			<br>
-			<span>Shoulder Angle to Elbow </span><span class="angleText" id="shoulderElbowAngle"></span>
+	<div class="toolbox">
+		<div class="panel panel-default">
+			<div class="panel-heading">Angles</div>
+			<div class="panel-body">
+				<span>Hip - Knee </span><span class="angleText" id="hipKneeAngle"></span>
+				<br>
+				<span>Elbow Angle </span><span class="angleText" id="elbowAngle"></span>
+				<br>
+				<span>Knee Angle Extension </span><span class="angleText" id="kneeAngleExtension"></span>
+				<br>
+				<span>Hip Angle Open </span><span class="angleText" id="hipAngleOpen"></span>
+				<br>
+				<span>Shoulder Angle to Elbow </span><span class="angleText" id="shoulderElbowAngle"></span>
 
-			<br>
-			<span>Length reference distance </span>  <input type="text" class="form-control" id="inputLength" style="width: 50px;display: inline;" placeholder="cm">			<br>
-			<span>Thigh Length </span><span class="angleText" id="thighLength"></span>
-			<br>
-			<span>Shin Length </span><span class="angleText" id="thighLength"></span>
+			</div>
+		</div>
 
+		<div class="panel panel-default">
+			<div class="panel-heading">Lengths</div>
+			<div class="panel-body">	
+				<span>Length reference distance </span><input type="text" class="form-control" id="inputLength" style="width: 50px;display: inline;" placeholder="cm">			
+				<br>
+				<span>Thigh Length </span><span class="angleText" id="thighLength"></span>
+				<br>
+				<span>Shin Length </span><span class="angleText" id="shinLength"></span>
 		</div>
 	</div>
 
@@ -136,15 +142,13 @@
 		var refDistanceCMPerPixel  = 0;		
 
 		inputLength.data('oldVal', inputLength.val());
-
 		inputLength.bind("propertychange change click keyup input paste", function(event){
 			if (inputLength.data('oldVal') != inputLength.val()) {
 				inputLength.data('oldVal', inputLength.val());
 				refDistanceCM = inputLength.val() != '' ? inputLength.val() : 0;
 				refDistanceCMPerPixel  = refDistanceCM / refDistanceInPixels;
 
-				sceneTop.update();
-				sceneBottom.update();
+				updateLineSizes();
 			}
 		});
 
@@ -162,7 +166,37 @@
 		}
 
 		var sceneTop = setupCanvas('stepOneCanvas');
+
+		// Thigh line
+		sceneTop.onLineLengthChanged(function (f, t) {			
+			updateLineSizes();
+		}, SceneUtils.KnownLines.THIGH_LINE);
+
+		// Shin line
+		sceneTop.onLineLengthChanged(function (f, t) {			
+			updateLineSizes();
+		}, SceneUtils.KnownLines.SHIN_LINE);
+
 		var sceneBottom = setupCanvas('stepTwoCanvas');
+
+		// Ref length line
+		sceneTop.onLineLengthChanged(function (from, to) {
+			refDistanceInPixels = from.getDistance(to);
+			updateLineSizes();		
+		}, SceneUtils.KnownLines.DISTANCE_REF_LINE);
+		
+		function updateLineSizes() {
+			function centiMeterstoMeters(val) {
+				return (val * 10).toFixed(1) + ' mm';
+			}
+
+			refDistanceCMPerPixel = refDistanceCM / refDistanceInPixels;
+			var thighLine = sceneTop.getLine(SceneUtils.KnownLines.THIGH_LINE);
+			$('#thighLength').text(centiMeterstoMeters(thighLine != undefined ? (thighLine.length() * refDistanceCMPerPixel) : 0));
+
+			var shinLine = sceneTop.getLine(SceneUtils.KnownLines.SHIN_LINE);
+			$('#shinLength').text(centiMeterstoMeters(shinLine != undefined ? (shinLine.length() * refDistanceCMPerPixel) : 0));
+		}
 
 		$($('.stepCanvasArea')[1]).hide();	
 	});
