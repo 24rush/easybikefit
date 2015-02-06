@@ -13,9 +13,10 @@ var JointsAngle = function (line1, line2) {
 
 	path.fillColor = 'green';
 	path.opacity = 0.6;
-	path.strokeColor = 'black';
+	path.strokeColor = 'black';	
 
 	var angleText = new Text(center);	
+	angleText.curvature = 0.7;	
 
 	this.ranges = undefined;
 

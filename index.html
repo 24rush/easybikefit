@@ -14,11 +14,10 @@
 	<div style="margin: 35px auto; width: 1200px;">
 		<div class="stepWorkArea">
 			<div class="stepHeader alert alert-header unselectable" role="alert">
-				<span id="stepOneDropdownIco" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-				<span class="sr-only">Step 1:</span>
-				Side picture with leg straight
+				<span id="stepOneDropdownIco" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>				
+				<b>Step 1 </b>| Side picture with leg straight (cranks at 6 and 12 o'clock)
 				<span class="btn btn-default btn-file" style="margin-left: 10px;">
-					Upload your own picture <input type="file" id="fileOne" class="clickable">
+					Upload a picture of you<input type="file" id="fileOne" class="clickable">
 				</span>
 			</div>		
 			<div class="stepCanvasArea" style="width: 100%; height: 100%; pointer-events: none;background-color: #E5FFF7; background-repeat: no-repeat; background-position: center;background-image: url(http://www.triradar.com/files/2014/01/DIY-Bike-Fit.jpg); background-size: contain;">
@@ -28,11 +27,10 @@
 
 		<div class="stepWorkArea" style="margin-top: 5px;">
 			<div class="stepHeader alert alert-header unselectable" role="alert">
-				<span id="stepOneDropdownIco" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-				<span class="sr-only">Step 2:</span>
-				Side picture with knee bent
+				<span id="stepOneDropdownIco" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>				
+				<b>Step 2 </b>| Side picture with knee bent (cranks at 3 and 9 o'clock)
 				<span class="btn btn-default btn-file" style="margin-left: 10px;">
-					Upload your own picture <input type="file" id="fileTwo" class="clickable">
+					Upload a picture of you<input type="file" id="fileTwo" class="clickable">
 				</span>
 			</div>		
 			<div class="stepCanvasArea" style="width:100%; height: 100%; pointer-events: none;background-color: #E5FFF7; background-repeat: no-repeat; background-position: center;background-image: url(http://www.triradar.com/files/2014/01/DIY-Bike-Fit.jpg); background-size: contain;">
@@ -56,6 +54,8 @@
 				<span>Hip Angle Open </span><span class="angleText" id="hipAngleOpen"></span>
 				<br>
 				<span>Shoulder Angle to Elbow </span><span class="angleText" id="shoulderElbowAngle"></span>
+				<br>
+				<span>Back Angle </span><span class="angleText" id="backAngle"></span>
 
 			</div>
 		</div>
@@ -68,46 +68,64 @@
 				<span>Thigh Length </span><span class="angleText" id="thighLength"></span>
 				<br>
 				<span>Shin Length </span><span class="angleText" id="shinLength"></span>
+				<br>
+				<span>Hip to wrist (horiz) </span><span class="angleText" id="hipToWristH"></span>
+				<br>
+				<span>Hip to wrist (vertical) </span><span class="angleText" id="hipToWristV"></span>
+			</div>
 		</div>
-	</div>
 
-	<script src="js/lib/jquery.min.js" type="text/javascript"></script>		
-	<script src="js/lib/bootstrap.min.js" type="text/javascript"></script>	
-	<script src="js/paper-full.js" type="text/javascript"></script>
-	<script src="js/paper-core.js" type="text/javascript"></script>
+		<div class="panel panel-default">
+			<div class="panel-heading">Custom</div>
+			<div class="panel-body">					
+				<span>Length </span><span class="angleText" id="customLength"></span>
+				<br>
+				<span>Angle horizontal </span><span class="angleText" id="customAngle"></span>
+				<br>
+				<span>End to end length (horiz) </span><span class="angleText" id="endToEndH"></span>
+				<br>
+				<span>End to end (vertical) </span><span class="angleText" id="endToEndV"></span>
+			</div>
+		</div>
 
-	<script src="js/jointpoint.js" type="text/javascript"></script>
-	<script src="js/line.js" type="text/javascript"></script>
-	<script src="js/text.js" type="text/javascript"></script>
-	<script src="js/jointsangle.js" type="text/javascript"></script>	
-	<script src="js/dependentpoint.js" type="text/javascript"></script>
-	<script src="js/scene.js" type="text/javascript"></script>
+		<script src="js/lib/jquery.min.js" type="text/javascript"></script>		
+		<script src="js/lib/bootstrap.min.js" type="text/javascript"></script>	
+		<script src="js/paper-full.js" type="text/javascript"></script>
+		<script src="js/paper-core.js" type="text/javascript"></script>
 
-	<script type="text/javascript">
-	$(document).on('change', '.btn-file :file', function(evt) {	
-		var input = $(this),
-		numFiles = input.get(0).files ? input.get(0).files[0] : 1;
-		input.trigger('fileselect', [numFiles, evt.target.id]);
-	});
+		<script src="js/jointpoint.js" type="text/javascript"></script>
+		<script src="js/line.js" type="text/javascript"></script>
+		<script src="js/text.js" type="text/javascript"></script>
+		<script src="js/jointsangle.js" type="text/javascript"></script>	
+		<script src="js/dependentpoint.js" type="text/javascript"></script>
+		<script src="js/scene.js" type="text/javascript"></script>
+		<script src="js/vectorutils.js" type="text/javascript"></script>
 
-	$(document).ready(function() {		
-		$('.btn-file :file').on('fileselect', function(event, numFiles, targetId) {
-			var file = new FileReader();			
-			file.readAsDataURL(event.target.files[0]);
-
-			file.onload = function(evt) {	
-				var destination = $(targetId == 'fileOne' ? $('.stepCanvasArea')[0] : $('.stepCanvasArea')[1]);
-				destination.css('background-image', 'url("' + evt.target.result + '")');
-				loadToolbox();
-			}		
+		<script type="text/javascript">
+		$(document).on('change', '.btn-file :file', function(evt) {	
+			var input = $(this),
+			numFiles = input.get(0).files ? input.get(0).files[0] : 1;
+			input.trigger('fileselect', [numFiles, evt.target.id]);
 		});
 
-		$('.stepHeader').click(function(event) {			
-			if (event.target.localName == 'input')
-				return;
+		$(document).ready(function() {		
+			$('.btn-file :file').on('fileselect', function(event, numFiles, targetId) {
+				var file = new FileReader();			
+				file.readAsDataURL(event.target.files[0]);
 
-			$.each($('.stepHeader'), function (index, step) {
-				var menuIco = $(step).find('#stepOneDropdownIco');			
+				file.onload = function(evt) {	
+					var destination = $(targetId == 'fileOne' ? $('.stepCanvasArea')[0] : $('.stepCanvasArea')[1]);
+					destination.css('background-image', 'url("' + evt.target.result + '")');
+					loadToolbox();
+				}		
+			});
+
+			$('.stepHeader').click(function(event) {			
+				if (event.target.localName == 'input')
+					return;
+
+				$.each($('.stepHeader'), function (index, step) {
+					var menuIco = $(step).find('#stepOneDropdownIco');			
 				//Close
 				if (menuIco.hasClass('glyphicon-chevron-down') == true) {
 					menuIco.removeClass('glyphicon-chevron-down');
@@ -126,46 +144,46 @@
 					});					
 				}
 			});
-		});
+			});
 
-		var self = this;
-		var wWidth = $('#stepOneCanvas').width();		
+			var self = this;
+			var wWidth = $('#stepOneCanvas').width();		
 
-		paper.install(window);			
+			paper.install(window);			
 
-		var windowHeight = 0.8 * $(window).height();
-		$('.stepCanvasArea').height(windowHeight);	
+			var windowHeight = 0.8 * $(window).height();
+			$('.stepCanvasArea').height(windowHeight);	
 
-		var inputLength = $('#inputLength');
-		var refDistanceCM = 0;
-		var refDistanceInPixels = 0;
-		var refDistanceCMPerPixel  = 0;		
+			var inputLength = $('#inputLength');
+			var refDistanceCM = 0;
+			var refDistanceInPixels = 0;
+			var refDistanceCMPerPixel  = 0;		
 
-		inputLength.data('oldVal', inputLength.val());
-		inputLength.bind("propertychange change click keyup input paste", function(event){
-			if (inputLength.data('oldVal') != inputLength.val()) {
-				inputLength.data('oldVal', inputLength.val());
-				refDistanceCM = inputLength.val() != '' ? inputLength.val() : 0;
-				refDistanceCMPerPixel  = refDistanceCM / refDistanceInPixels;
+			inputLength.data('oldVal', inputLength.val());
+			inputLength.bind("propertychange change click keyup input paste", function(event){
+				if (inputLength.data('oldVal') != inputLength.val()) {
+					inputLength.data('oldVal', inputLength.val());
+					refDistanceCM = inputLength.val() != '' ? inputLength.val() : 0;
+					refDistanceCMPerPixel  = refDistanceCM / refDistanceInPixels;
 
-				updateLineSizes();
+					updateLineSizes();
+				}
+			});
+
+			function setupCanvas(canvasId) {
+				paper.setup(canvasId);
+
+				var scene = new Scene(canvasId, $('.stepCanvasArea').width(), $('.stepCanvasArea').height());
+				scene.loadToolbox();
+
+				view.onFrame = function (event) {
+					scene.animateJoints(event);
+				}
+
+				return scene;
 			}
-		});
 
-		function setupCanvas(canvasId) {
-			paper.setup(canvasId);
-
-			var scene = new Scene(canvasId, $('.stepCanvasArea').width(), $('.stepCanvasArea').height());
-			scene.loadToolbox();
-
-			view.onFrame = function (event) {
-				scene.animateJoints(event);
-			}
-
-			return scene;
-		}
-
-		var sceneTop = setupCanvas('stepOneCanvas');
+			var sceneTop = setupCanvas('stepOneCanvas');
 
 		// Thigh line
 		sceneTop.onLineLengthChanged(function (f, t) {			
@@ -177,6 +195,11 @@
 			updateLineSizes();
 		}, SceneUtils.KnownLines.SHIN_LINE);
 
+		// Hip to wrist
+		sceneTop.onLineLengthChanged(function (f, t) {
+			updateLineSizes();
+		}, SceneUtils.KnownLines.HIP_TO_WRIST);
+
 		var sceneBottom = setupCanvas('stepTwoCanvas');
 
 		// Ref length line
@@ -184,6 +207,44 @@
 			refDistanceInPixels = from.getDistance(to);
 			updateLineSizes();		
 		}, SceneUtils.KnownLines.DISTANCE_REF_LINE);
+
+		// Custom tool
+		sceneTop.onLineLengthChanged(function (f, t) {
+			updateLineSizes();
+			updateCustomAngle();
+		}, SceneUtils.KnownLines.CUSTOM_LINE);
+
+		// Back line
+		function updateBackAngle() {
+			var hLine = sceneTop.getLine(SceneUtils.KnownLines.HORIZONTAL_REF_LINE);
+			var bLine = sceneTop.getLine(SceneUtils.KnownLines.BACK_LINE);
+
+			if (hLine == undefined || bLine == undefined)
+				return;
+
+			var angle = GeometryUtils.AngleBetweenLines(hLine, bLine);
+			$('#backAngle').text(angle.toFixed(1) + '°');
+		}
+
+		// Custom tool angle
+		function updateCustomAngle() {
+			var hLine = sceneTop.getLine(SceneUtils.KnownLines.HORIZONTAL_REF_LINE);
+			var bLine = sceneTop.getLine(SceneUtils.KnownLines.CUSTOM_LINE);
+
+			if (hLine == undefined || bLine == undefined)
+				return;
+
+			var angle = GeometryUtils.AngleBetweenLines(hLine, bLine);
+			$('#customAngle').text(Math.abs(180-angle).toFixed(1) + '°' + ' / ' +angle.toFixed(1) + '°');
+		}
+
+		sceneTop.onLineLengthChanged(function (f, t) {
+			updateBackAngle();
+		}, SceneUtils.KnownLines.BACK_LINE);	
+
+		sceneTop.onLineLengthChanged(function (f, t) {
+			updateBackAngle();
+		}, SceneUtils.KnownLines.HORIZONTAL_REF_LINE);	
 		
 		function updateLineSizes() {
 			function centiMeterstoMeters(val) {
@@ -196,6 +257,14 @@
 
 			var shinLine = sceneTop.getLine(SceneUtils.KnownLines.SHIN_LINE);
 			$('#shinLength').text(centiMeterstoMeters(shinLine != undefined ? (shinLine.length() * refDistanceCMPerPixel) : 0));
+
+			var hipToWrist = sceneTop.getLine(SceneUtils.KnownLines.HIP_TO_WRIST);
+			$('#hipToWristH').text(centiMeterstoMeters(hipToWrist != undefined ? (hipToWrist.horizontalDistance() * refDistanceCMPerPixel) : 0));
+			$('#hipToWristV').text(centiMeterstoMeters(hipToWrist != undefined ? (hipToWrist.verticalDistance() * refDistanceCMPerPixel) : 0));
+
+			var customLine = sceneTop.getLine(SceneUtils.KnownLines.CUSTOM_LINE);
+			$('#endToEndH').text(centiMeterstoMeters(customLine != undefined ? (customLine.horizontalDistance() * refDistanceCMPerPixel) : 0));
+			$('#endToEndV').text(centiMeterstoMeters(customLine != undefined ? (customLine.verticalDistance() * refDistanceCMPerPixel) : 0));
 		}
 
 		$($('.stepCanvasArea')[1]).hide();	

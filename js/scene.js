@@ -5,6 +5,9 @@ var SceneUtils = {
 
 		THIGH_LINE : 'thighLine',
 		SHIN_LINE : 'shinLine',
+		BACK_LINE : 'backLine',
+		HIP_TO_WRIST : 'hipToWrist',
+		CUSTOM_LINE : 'customTool'
 	}
 }
 
@@ -12,7 +15,7 @@ var Scene =  function (paperScope, width, height) {
 	var self = this;
 	console.log(width, height);
 
-	this.tbStartLeft = 100;
+	this.tbStartLeft = 35;
 	this.tbStartTop = 35;
 
 	this.paddingRight = 14;
@@ -29,7 +32,7 @@ var Scene =  function (paperScope, width, height) {
 
 	this.view = paper.View._viewsById[paperScope];
 
-	this.animationDuration = 600;
+	this.animationDuration = 500;
 	this.animationStart = undefined;
 	this.animationEnded = false;
 
@@ -43,14 +46,9 @@ var Scene =  function (paperScope, width, height) {
 	this.originalPaddingLeft = 212;
 	this.scalingX = this.height * this.backImgScaling / 775;				
 	this.scalingY = this.height / 775;
-
-	// this.jointsAngles = [12, 20, 20 , 28, 31, 43];
-	// this.jointLengths = [660, 740, 850, 528, 714, 811];
 	
 	this.Xx = [647, 703, 794, 476, 615, 597];
-	this.Yy = [140, 246, 291, 261, 370, 541];
-	
-	//console.log(this.scalingX + ' '+ this.scalingY);
+	this.Yy = [140, 246, 291, 261, 370, 541];	
 	
 	for (var i = 0; i < this.Xx.length; i++) {
 		this.Xx[i] -= this.originalPaddingLeft;
@@ -75,13 +73,10 @@ var Scene =  function (paperScope, width, height) {
 	this.getJointPoint = function (index) {			
 		var point = new Point(0, 0);
 
-		//point.angle = self.jointsAngles[index];
-		//point.length = 0;
 		point.x = self.Xx[index];
 		point.y = self.Yy[index];
 
-		return point;
-		//return new Point(this.tbStartLeft, this.tbStartTop + index * this.rowPadding - this.textHeight);
+		return point;	
 	}
 
 	this.animateJoints = function (event) {
@@ -104,12 +99,8 @@ var Scene =  function (paperScope, width, height) {
 				this.animationEnded = true
 			}
 
-			///console.log(oldPos + ' ' + progress);
 			oldPos.x = this.Xx[i] * progress;
 			oldPos.y = this.Yy[i] * progress;	
-
-			//oldPos.length = self.jointLengths[i] * progress;
-			//oldPos.angle = self.jointsAngles[i];
 
 			self.circles[i].setMoved({'point': oldPos});		
 		}
@@ -141,7 +132,9 @@ var Scene =  function (paperScope, width, height) {
 		var line2 = new JointLine(circles[1], circles[2]);self.storeLine(line2);
 		var line3 = new JointLine(circles[3], circles[4]);self.storeLine(line3, SceneUtils.KnownLines.THIGH_LINE);
 		var line4 = new JointLine(circles[4], circles[5]);self.storeLine(line4, SceneUtils.KnownLines.SHIN_LINE);
-		var line5 = new JointLine(circles[0], circles[3]);self.storeLine(line5);	
+		var line5 = new JointLine(circles[0], circles[3]);self.storeLine(line5, SceneUtils.KnownLines.BACK_LINE);	
+
+		var line6 = new JointLine(circles[3], circles[2], false);self.storeLine(line6, SceneUtils.KnownLines.HIP_TO_WRIST);
 		
 		var armsAngle = new JointsAngle(line1, line2);
 		var ranges = [{'range' : [0, 90], 'color' : 'red'}, {'range' : [90, 135], 'color' : 'green'}, {'range' : [135, 180], 'color' : 'red'}];
@@ -179,7 +172,7 @@ var Scene =  function (paperScope, width, height) {
 			self.lineChangedCbks[lineName] = [];
 
 		self.lineChangedCbks[lineName].push(cbk);
-	}
+	}	
 
 	this.loadToolbox = function () {
 		var self = this;					
@@ -228,7 +221,18 @@ var Scene =  function (paperScope, width, height) {
 		circles.push(startPoint);
 		circles.push(endPoint);
 		
-		self.storeLine(new JointLine(startPoint, endPoint), SceneUtils.KnownLines.HORIZONTAL_REF_LINE);		
+		self.storeLine(new JointLine(startPoint, endPoint), SceneUtils.KnownLines.HORIZONTAL_REF_LINE);	
+
+		// Custom measurement tool
+		new Text(this.getTextPoint(6)).setText('Custom tool').registerOnTextSelect(onTextSelect, 0);
+		startPoint = new JointPoint(this.getTextPoint(7));		
+		endPoint = new JointPoint(this.getTextPoint(7));
+		endPoint.point().x += 130;
+		
+		circles.push(startPoint);
+		circles.push(endPoint);
+		
+		self.storeLine(new JointLine(startPoint, endPoint), SceneUtils.KnownLines.CUSTOM_LINE);	
 
 		$('#btnDump').click(function () {
 			for (var i = 0; i < circles.length; i++)

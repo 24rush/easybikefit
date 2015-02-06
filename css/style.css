@@ -73,6 +73,10 @@ body a{
 	left: 250px;
 }
 
+#stepOneCanvas:active {
+	cursor: default;
+}
+
 .angleText {
 	font-weight: 600;
 }
