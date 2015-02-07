@@ -2,17 +2,18 @@
 var JointPoint = function(point) {
 	var self = this;
 
-	var _radius = 6;
+	var _radius = 9;
+	var strokeWidth = 2;
 
 	var _circle = new Path.Circle({
 		center: point,
 		radius: _radius,
-		fillColor: '#C83A3A',
-		strokeColor: 'white',
-		strokeWidth: 2
+		fillColor: '#12335E',
+		strokeColor: '#0E812E',
+		strokeWidth: strokeWidth
 	});
 
-	var _upScaling = 1.8;
+	var _upScaling = 1.6;
 	var _downScaling = 1 / _upScaling;
 
 	var _isDragging = false;
@@ -20,6 +21,30 @@ var JointPoint = function(point) {
 
 	var _center = point;
 	var _onMoveCbk = [];
+
+
+	var _text = new PointText(point);
+		
+	_text.fillColor = 'white';
+	_text.style = {
+		font: 'sans-serif',
+		fontWeight: 'normal',
+		fontSize: 12,
+	};	
+
+	_text.bringToFront();	
+
+	function centerLabel() {
+		var textBounds = _text.bounds;
+		_text.position = _circle.position.add(0, 1);
+	}
+
+	this.label = function (value) {
+		_text.content = value;
+		centerLabel();
+
+		return this;
+	}	
 
 	this.onMove = function (cbk) {
 		_onMoveCbk.push(cbk);
@@ -41,6 +66,10 @@ var JointPoint = function(point) {
 		self.setScale(_downScaling);
 	}
 
+	this.opacity = function (value) {
+		_circle.opacity = value;
+	}
+
 	this.setScale = function(scale) {
 		if (scale == -1 || _currentScale != scale) {
 			_circle.scale(scale);
@@ -54,6 +83,7 @@ var JointPoint = function(point) {
 
 	_circle.onMouseDrag = function (event) {			
 		_circle.position = event.point;
+		centerLabel();
 
 		for (var cbk in _onMoveCbk) {			
 			_onMoveCbk[cbk](_circle.position);
@@ -82,4 +112,10 @@ var JointPoint = function(point) {
 	_circle.onMouseUp = function (event) {								
 		_isDragging = false;				
 	}
+
+	_text.onMouseEnter = _circle.onMouseEnter;
+	_text.onMouseLeave = _circle.onMouseLeave;
+	_text.onMouseUp = _circle.onMouseUp;
+	_text.onMouseDown = _circle.onMouseDown;
+	_text.onMouseDrag = _circle.onMouseDrag;
 }

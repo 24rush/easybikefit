@@ -102,6 +102,7 @@ var Scene =  function (paperScope, width, height) {
 			oldPos.x = this.Xx[i] * progress;
 			oldPos.y = this.Yy[i] * progress;	
 
+			self.circles[i].opacity(progress);
 			self.circles[i].setMoved({'point': oldPos});		
 		}
 
@@ -192,45 +193,47 @@ var Scene =  function (paperScope, width, height) {
 		};
 
 		// Arms
-		circles.push(new JointPoint(this.getJointPoint(0)));				
-		circles.push(new JointPoint(this.getJointPoint(1)));
-		circles.push(new JointPoint(this.getJointPoint(2)));	
+		circles.push(new JointPoint(this.getJointPoint(0)).label('C'));				
+		circles.push(new JointPoint(this.getJointPoint(1)).label('B'));
+		circles.push(new JointPoint(this.getJointPoint(2)).label('A'));	
 
 		// Legs						
-		circles.push(new JointPoint(this.getJointPoint(3)));							
-		circles.push(new JointPoint(this.getJointPoint(4)));				
-		circles.push(new JointPoint(this.getJointPoint(5)));
+		circles.push(new JointPoint(this.getJointPoint(3)).label('D'));							
+		circles.push(new JointPoint(this.getJointPoint(4)).label('E'));				
+		circles.push(new JointPoint(this.getJointPoint(5)).label('F'));
+
+		var lineRefLengths = 130;
 
 		// Length reference				
-		new Text(this.getTextPoint(0)).setText('Length reference').registerOnTextSelect(onTextSelect, 1);
-		var startPoint = new JointPoint(this.getTextPoint(1));		
+		new Text(this.getTextPoint(0)).setText('Length reference');
+		var startPoint = new JointPoint(this.getTextPoint(1));
 		var endPoint = new JointPoint(this.getTextPoint(1));
-		endPoint.point().x += 130;
+		endPoint.point().x += lineRefLengths;
 		
-		circles.push(startPoint);
-		circles.push(endPoint);
+		circles.push(startPoint.label('G'));
+		circles.push(endPoint.label('H'));
 
 		self.storeLine(new JointLine(startPoint, endPoint), SceneUtils.KnownLines.DISTANCE_REF_LINE);		
 
 		// Horizontal reference
-		new Text(this.getTextPoint(3)).setText('Horizontal reference').registerOnTextSelect(onTextSelect, 0);
-		startPoint = new JointPoint(this.getTextPoint(4));		
+		new Text(this.getTextPoint(3)).setText('Horizontal reference');
+		startPoint = new JointPoint(this.getTextPoint(4));
 		endPoint = new JointPoint(this.getTextPoint(4));
-		endPoint.point().x += 130;
+		endPoint.point().x += lineRefLengths;		
 		
-		circles.push(startPoint);
-		circles.push(endPoint);
+		circles.push(startPoint.label('I'));
+		circles.push(endPoint.label('J'));
 		
 		self.storeLine(new JointLine(startPoint, endPoint), SceneUtils.KnownLines.HORIZONTAL_REF_LINE);	
 
 		// Custom measurement tool
-		new Text(this.getTextPoint(6)).setText('Custom tool').registerOnTextSelect(onTextSelect, 0);
-		startPoint = new JointPoint(this.getTextPoint(7));		
+		new Text(this.getTextPoint(6)).setText('Custom tool');
+		startPoint = new JointPoint(this.getTextPoint(7));
 		endPoint = new JointPoint(this.getTextPoint(7));
-		endPoint.point().x += 130;
+		endPoint.point().x += lineRefLengths;	
 		
-		circles.push(startPoint);
-		circles.push(endPoint);
+		circles.push(startPoint.label('K'));
+		circles.push(endPoint.label('L'));
 		
 		self.storeLine(new JointLine(startPoint, endPoint), SceneUtils.KnownLines.CUSTOM_LINE);	
 

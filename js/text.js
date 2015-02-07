@@ -4,7 +4,7 @@ var Text = function (point) {
 		
 	_text.fillColor = 'black';
 	_text.style = {
-		font: 'Verdana',
+		font: 'sans-serif',
 		fontWeight: 'normal',
 		fontSize: 16,
 	};	

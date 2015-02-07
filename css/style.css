@@ -49,12 +49,36 @@ body a{
 	margin-bottom: 0px;
 }
 
+.alert {
+	border-radius: 0px;
+	padding: 4px;
+}
+
+.alert-note {
+	color: #50557B;
+	background-color: #E4E4E4;
+	border-color: #DADADA;
+}
+
+.alert-small {
+	padding: 2px;
+	margin-bottom: 6px;
+}
+
+.panel {
+	border-radius: 0px;
+}
+
 .text {
 	color: #FFF;
 }
 
 .clickable {
 	pointer-events: all;
+}
+
+#stepOneDropdownIco {
+	margin-left: 4px;
 }
 
 .unselectable {
@@ -65,12 +89,6 @@ body a{
     -ms-user-select: none;
     user-select: none;
     cursor: default;
-}
-
-.toolbox {
-	position: fixed;
-	width: 270px;
-	left: 250px;
 }
 
 #stepOneCanvas:active {
@@ -112,6 +130,38 @@ body a{
 	font-weight: 400;
 	margin: 0.1em 0.5em 3em;
 }
+
+/* Base styles (regardless of theme) */
+.bs-callout {
+  margin: 20px 0;
+  padding: 15px 30px 15px 15px;
+  border-left: 5px solid #eee;
+}
+.bs-callout h4 {
+  margin-top: 0;
+}
+.bs-callout p:last-child {
+  margin-bottom: 0;
+}
+.bs-callout code,
+.bs-callout .highlight {
+  background-color: #fff;
+}
+ 
+/* Themes for different contexts */
+.bs-callout-danger {
+  background-color: #fcf2f2;
+  border-color: #dFb5b4;
+}
+.bs-callout-warning {
+  background-color: #fefbed;
+  border-color: #f1e7bc;
+}
+.bs-callout-info {
+  background-color: #f0f7fd;
+  border-color: #d0e3f0;
+}
+
 ul.big-btns{
 	margin:0;
 	padding:0;
