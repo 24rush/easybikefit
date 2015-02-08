@@ -11,7 +11,8 @@ var JointsAngle = function (line1, line2) {
 	var path = new Path([center, center, center]);
 	path.sendToBack();
 
-	path.fillColor = 'green';
+	var defaultRangeFillColor = 'red';
+	//path.fillColor = defaultRangeFillColor;
 	path.opacity = 0.6;
 	path.strokeColor = 'black';	
 
@@ -57,6 +58,9 @@ var JointsAngle = function (line1, line2) {
 
 	this.setRanges = function (ranges) {
 		this.ranges = ranges;
+		this.drawAngle();
+		
+		return this;
 	}
 
 	this.drawAngle = function () {
@@ -106,6 +110,7 @@ var JointsAngle = function (line1, line2) {
 		}
 
 		if (this.ranges != undefined) {
+			path.fillColor = defaultRangeFillColor;
 			for (var i in this.ranges) {
 				var range = this.ranges[i];
 				if (angle >= range['range'][0] && angle <= range['range'][1]) {					

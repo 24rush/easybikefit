@@ -91,6 +91,7 @@ body a{
     cursor: default;
 }
 
+#stepTwoCanvas:active,
 #stepOneCanvas:active {
 	cursor: default;
 }
