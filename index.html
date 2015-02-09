@@ -19,13 +19,13 @@
 					<div class="panel-body">
 						<span>Knee Angle Flexion</span><span class="angleText" id="hipKneeAngle"></span>
 						<br>
-						<span>Elbow Angle </span><span class="angleText" id="elbowAngle"></span>
+						<span>Elbow Angle </span><span class="angleText" id="armForeArm"></span>
 						<br>
-						<span>Knee Angle Extension </span><span class="angleText" id="kneeAngleExtension"></span>
+						<span>Knee Angle Extension </span><span class="angleText" id="kneeExtension"></span>
 						<br>
-						<span>Hip Angle Open </span><span class="angleText" id="hipAngleOpen"></span>
+						<span>Hip Angle Open </span><span class="angleText" id="hipOpen"></span>
 						<br>
-						<span>Shoulder Angle to Elbow </span><span class="angleText" id="shoulderElbowAngle"></span>
+						<span>Shoulder Angle to Elbow </span><span class="angleText" id="armPit"></span>
 						<br>
 						<div class="alert alert-note alert-small" role="alert" style="margin-top: 5px;">
 							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -211,19 +211,102 @@
 		function setupCanvas(canvasId) {
 			paper.setup(canvasId);
 
-			var scenePoints = {};
-			scenePoints['stepOneCanvas'] = [];
-			scenePoints['stepOneCanvas']['X'] = [647, 703, 794, 476, 615, 597, 655, 662, 49, 179, 49, 179, 49, 179];
-			scenePoints['stepOneCanvas']['Y'] = [140, 246, 291, 261, 370, 541, 330, 651, 60, 60, 135, 135, 210, 210];
-			scenePoints['stepOneCanvas']['scale'] = [true, true, true, true, true, true, true, true, false, false, false, false, false, false];
+			var points = {};
+			var lines = {};
+			var angles = {};
+			var texts = {};
 
-			scenePoints['stepTwoCanvas'] = [];
-			scenePoints['stepTwoCanvas']['X'] = [647, 703, 794, 476, 615, 597, 655, 662, 49, 179, 49, 179, 112, 112];
-			scenePoints['stepTwoCanvas']['Y'] = [140, 246, 291, 261, 370, 541, 330, 651, 60, 60, 137, 137, 207, 309];
-			scenePoints['stepTwoCanvas']['scale'] = [true, true, true, true, true, true, true, true, false, false, false, false, false, false];
+			function onAngleChanged(angle, target)
+			{
+				$('#' + target).text(angle + '°');
+
+				if (target == SceneUtils.KnownAngles.HIP_KNEE_ANGLE) {
+					$('#' + SceneUtils.KnownAngles.KNEE_EXTENSION).text((180 - angle).toFixed(1) + '°');
+				}
+			}
+
+			points['stepOneCanvas'] = [
+				{'x': 647, 'y' : 140, 'scale' : true, 'name' : SceneUtils.KnownPoints.SHOULDER, 'label' : 'A'},
+				{'x': 703, 'y' : 246, 'scale' : true, 'name' : SceneUtils.KnownPoints.ELBOW, 'label' : 'B'},
+				{'x': 794, 'y' : 291, 'scale' : true, 'name' : SceneUtils.KnownPoints.WRIST, 'label' : 'C'},
+				{'x': 476, 'y' : 261, 'scale' : true, 'name' : SceneUtils.KnownPoints.HIP, 'label' : 'D'},
+				{'x': 615, 'y' : 370, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE, 'label' : 'E'},
+				{'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : 'F'},
+				{'x': 49,  'y' : 60,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START, 'label' : 'I'},
+				{'x': 179, 'y' : 60,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END, 'label' : 'J'},
+
+				{'x': 49,  'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : 'K'},
+				{'x': 179, 'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : 'L'},
+
+				{'x': 49, 'y' : 214, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_START, 'label' : 'M'},
+				{'x': 179, 'y' : 214, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_END, 'label' : 'N'}
+			];
+
+			lines['stepOneCanvas'] = [
+				{ 'name' : SceneUtils.KnownLines.ARM_LINE, 'points' : [SceneUtils.KnownPoints.SHOULDER, SceneUtils.KnownPoints.ELBOW]},
+				{ 'name' : SceneUtils.KnownLines.FOREARM_LINE, 'points' : [SceneUtils.KnownPoints.ELBOW, SceneUtils.KnownPoints.WRIST]},
+				{ 'name' : SceneUtils.KnownLines.THIGH_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.KNEE]},
+				{ 'name' : SceneUtils.KnownLines.SHIN_LINE, 'points' : [SceneUtils.KnownPoints.KNEE, SceneUtils.KnownPoints.ANKLE]},
+				{ 'name' : SceneUtils.KnownLines.BACK_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.SHOULDER]},
+
+				{ 'name' : SceneUtils.KnownLines.HIP_TO_WRIST, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.WRIST], 'visible' : false},
+
+				{ 'name' : SceneUtils.KnownLines.DISTANCE_REF_LINE, 'points' : [SceneUtils.KnownPoints.LEN_REF_START, SceneUtils.KnownPoints.LEN_REF_END]},
+				{ 'name' : SceneUtils.KnownLines.HORIZONTAL_REF_LINE, 'points' : [SceneUtils.KnownPoints.HORIZ_REF_START, SceneUtils.KnownPoints.HORIZ_REF_END]},
+				{ 'name' : SceneUtils.KnownLines.CUSTOM_LINE, 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START, SceneUtils.KnownPoints.CUST_TOOL_END]},
+			];
+
+			angles['stepOneCanvas'] = [
+				{ 'name': SceneUtils.KnownAngles.ARM_FOREARM, 'side_first' : SceneUtils.KnownLines.ARM_LINE, 'side_second' : SceneUtils.KnownLines.FOREARM_LINE, 'ranges' : [{'range' : [150, 170], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+				{ 'name': SceneUtils.KnownAngles.HIP_KNEE_ANGLE, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.SHIN_LINE, 'ranges' : [{'range' : [140, 145], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+				{ 'name': SceneUtils.KnownAngles.KNEE_EXTENSION, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.BACK_LINE, 'ranges' : [{'range' : [35, 40], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+				{ 'name': SceneUtils.KnownAngles.HIP_OPEN, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.BACK_LINE, 'onAngleChanged' : onAngleChanged},
+				{ 'name': SceneUtils.KnownAngles.ARM_PIT, 'side_first' : SceneUtils.KnownLines.BACK_LINE, 'side_second' : SceneUtils.KnownLines.ARM_LINE, 'ranges' : [{'range' : [80, 90], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+				{ 'name': SceneUtils.KnownAngles.BACK_ANGLE, 'side_first' : SceneUtils.KnownLines.BACK_LINE, 'side_second' : SceneUtils.KnownLines.HORIZONTAL_REF_LINE, 'ranges' : [{'range' : [40, 45], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+			];
+
+			texts['stepOneCanvas'] = [
+				{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Length reference', 'x' : 42, 'y' : 40},
+				{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Horizontal reference', 'x' : 42, 'y' : 120},
+				{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Custom tool', 'x' : 42, 'y' : 195},
+			]
+
+			points['stepTwoCanvas'] = [
+				{'x': 647, 'y' : 140, 'scale' : true, 'name' : SceneUtils.KnownPoints.SHOULDER, 'label' : 'A'},
+				{'x': 703, 'y' : 246, 'scale' : true, 'name' : SceneUtils.KnownPoints.ELBOW, 'label' : 'B'},
+				{'x': 794, 'y' : 291, 'scale' : true, 'name' : SceneUtils.KnownPoints.WRIST, 'label' : 'C'},
+				{'x': 476, 'y' : 261, 'scale' : true, 'name' : SceneUtils.KnownPoints.HIP, 'label' : 'D'},
+				{'x': 615, 'y' : 370, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE, 'label' : 'E'},
+				{'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : 'F'},
+				{'x': 655, 'y' : 330, 'scale' : true, 'name' : SceneUtils.KnownPoints.TIBIA, 'label' : 'G'},
+				{'x': 662, 'y' : 651, 'scale' : true, 'name' : SceneUtils.KnownPoints.SPINDLE, 'label' : 'H'},
+				{'x': 49,  'y' : 60,  'scale' : true, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START, 'label' : 'I'},
+				{'x': 179, 'y' : 60,  'scale' : true, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END, 'label' : 'J'},
+
+				{'x': 49,  'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : 'K'},
+				{'x': 179, 'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : 'L'},
+
+				{'x': 112, 'y' : 207, 'scale' : false, 'name' : SceneUtils.KnownPoints.VERT_REF_START, 'label' : 'M'},
+				{'x': 112, 'y' : 309, 'scale' : false, 'name' : SceneUtils.KnownPoints.VERT_REF_END, 'label' : 'N'}
+			];
+
+			lines['stepTwoCanvas'] = [
+				{ 'name' : SceneUtils.KnownLines.ARM_LINE, 'points' : [SceneUtils.KnownPoints.SHOULDER, SceneUtils.KnownPoints.ELBOW]},
+				{ 'name' : SceneUtils.KnownLines.FOREARM_LINE, 'points' : [SceneUtils.KnownPoints.ELBOW, SceneUtils.KnownPoints.WRIST]},
+				{ 'name' : SceneUtils.KnownLines.THIGH_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.KNEE]},
+				{ 'name' : SceneUtils.KnownLines.SHIN_LINE, 'points' : [SceneUtils.KnownPoints.KNEE, SceneUtils.KnownPoints.ANKLE]},
+				{ 'name' : SceneUtils.KnownLines.BACK_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.SHOULDER]},
+
+				{ 'name' : SceneUtils.KnownLines.HIP_TO_WRIST, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.WRIST], 'visible' : false},
+
+				{ 'name' : SceneUtils.KnownLines.DISTANCE_REF_LINE, 'points' : [SceneUtils.KnownPoints.LEN_REF_START, SceneUtils.KnownPoints.LEN_REF_END]},
+				{ 'name' : SceneUtils.KnownLines.VERTICAL_REF_LINE, 'points' : [SceneUtils.KnownPoints.VERT_REF_START, SceneUtils.KnownPoints.VERT_REF_END]},
+				{ 'name' : SceneUtils.KnownLines.CUSTOM_LINE, 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START, SceneUtils.KnownPoints.CUST_TOOL_END]},
+			];
+
 
 			var scene = new Scene(canvasId, $('.stepCanvasArea').width(), $('.stepCanvasArea').height());
-			scene.loadToolbox(scenePoints[canvasId]);
+			scene.loadToolbox(points[canvasId], lines[canvasId], angles[canvasId], texts[canvasId]);
 
 			view.onFrame = function (event) {
 				scene.animateJoints(event);
@@ -233,9 +316,9 @@
 		}
 
 		var sceneTop = setupCanvas('stepOneCanvas');		
-		var sceneBottom = setupCanvas('stepTwoCanvas');
+		//var sceneBottom = setupCanvas('stepTwoCanvas');
 
-		[sceneTop, sceneBottom].forEach(function (scene) {
+		[sceneTop].forEach(function (scene) {
 			// Thigh line
 			scene.onLineLengthChanged(function (f, t) {			
 				updateLineSizes();

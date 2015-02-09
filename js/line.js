@@ -9,21 +9,20 @@ var JointLine = function (point1, point2, visible) {
 	self._from = point1.point();	
 	self._to = point2.point();
 
-	if (this.visible == true) {
-		var _path = new Path.Line(self._from, self._to);
-		_path.strokeColor = 'black';
-		_path.sendToBack();	
-	}
+	var _path = new Path.Line(self._from, self._to);
+	_path.strokeColor = 'black';
+	_path.strokeWidth = 0.7;
+	_path.sendToBack();
+
+	_path.opacity = this.visible == true ? 1 : 0;
 	
 	this._onPointsMove = function (evt, ctx) {							
 		self._from = (ctx == self._from ? evt : self._from);
 		self._to = (ctx == self._to ? evt : self._to);
 
-		if (this.visible == true) {
-			_path.removeSegments();
-			_path.add(self._from);			
-			_path.add(self._to);	
-		}
+		_path.removeSegments();
+		_path.add(self._from);			
+		_path.add(self._to);	
 		
 		for (var cbk in self._onLineChangedCbk) {			
 			self._onLineChangedCbk[cbk](self._from, self._to);
@@ -37,6 +36,14 @@ var JointLine = function (point1, point2, visible) {
 
 	this.length = function () {		
 		return self._from.getDistance(self._to);
+	}
+
+	this.opacity = function (value) {
+		if (self.visible == false)
+			return this;
+
+		_path.opacity = value;
+		return this;
 	}
 
 	this.horizontalDistance = function () {

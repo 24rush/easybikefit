@@ -3,18 +3,53 @@ var SceneUtils = {
 		DISTANCE_REF_LINE : 'distanceRefLine',
 		HORIZONTAL_REF_LINE : 'horizontalRefLine',
 		VERTICAL_REF_LINE : 'verticalRefLine',
+		CUSTOM_LINE : 'customTool',
 
+		ARM_LINE : 'armLine',
+		FOREARM_LINE : 'foreArmLine',
 		THIGH_LINE : 'thighLine',
 		SHIN_LINE : 'shinLine',
 		BACK_LINE : 'backLine',
 		HIP_TO_WRIST : 'hipToWrist',
-		CUSTOM_LINE : 'customTool'
+	},
+
+	KnownPoints : {
+		SHOULDER : 'shoulder',
+		ELBOW : 'elbow',
+		WRIST : 'wrist',
+
+		HIP : 'hip',
+		KNEE : 'knee',
+		ANKLE : 'ankle',
+
+		TIBIA : 'tibia',
+		SPINDLE : 'spindle',
+
+		LEN_REF_START : 'lenRefStart',
+		LEN_REF_END : 'lenRefEnd',
+
+		VERT_REF_START : 'vertRefStart',
+		VERT_REF_END : 'vertRefEnd',
+
+		HORIZ_REF_START : 'horizRefStart',
+		HORIZ_REF_END : 'horizRefEnd',
+
+		CUST_TOOL_START : 'customToolStart',
+		CUST_TOOL_END : 'customToolEnd'
+	},
+
+	KnownAngles : {
+		ARM_FOREARM : 'armForeArm',
+		HIP_KNEE_ANGLE : 'hipKneeAngle',
+		KNEE_EXTENSION : 'kneeExtension',
+		HIP_OPEN : 'hipOpen',
+		ARM_PIT : 'armPit',
+		BACK_ANGLE : 'backAngle'
 	}
 }
 
 var Scene =  function (paperScope, width, height) {
 	var self = this;
-	console.log(width, height);
 
 	this.tbStartLeft = 35;
 	this.tbStartTop = 35;
@@ -23,11 +58,10 @@ var Scene =  function (paperScope, width, height) {
 	this.textHeight = 6;
 	this.rowPadding = 25;
 
-	this.circles = [];
-	this.circlesByName = {};
-
-	this.lines = [];
-	this.linesByName = {};
+	this.scenePoints = [];
+	this.sceneLines = [];
+	this.sceneAngles = [];
+	this.sceneTexts = [];
 
 	this.lineChangedCbks = [];
 
@@ -52,24 +86,14 @@ var Scene =  function (paperScope, width, height) {
 	$('.toolbox').css('top', this.tbStartTop);
 
 	this.getLine = function(name) {
-		return self.linesByName[name];
+		return self.sceneLines[name];
 	}
 
-	this.storeLine = function (line, name) {
-		self.linesByName[name] = line;
-		self.lines.push(line);
+	this.getJointPoint = function (pointName) {		
+		return self.scenePoints[pointName];
 	}
 
-	this.getJointPoint = function (index) {			
-		var point = new Point(0, 0);
-
-		point.x = self.Xx[index];
-		point.y = self.Yy[index];
-
-		return point;	
-	}
-
-	this.animateJoints = function (event) {
+	this.animateJoints = function (event) {		
 		if (this.animationEnded == true) {
 			return;
 		}			
@@ -79,9 +103,9 @@ var Scene =  function (paperScope, width, height) {
 			return;
 		}
 
-		for (var i = 0; i < self.Xx.length; i++) {
-			var oldPos = self.circles[i].point();
-
+		for (var pointName in self.scenePoints) {	
+			var oldPos = self.scenePoints[pointName].getFinalDestinationPoint().clone();
+			
 			var progress = (event.time * 1000 - self.animationStart) / self.animationDuration;
 
 			if (progress > 1) {
@@ -89,11 +113,11 @@ var Scene =  function (paperScope, width, height) {
 				this.animationEnded = true
 			}
 
-			oldPos.x = this.Xx[i] * progress;
-			oldPos.y = this.Yy[i] * progress;	
+			oldPos.x *= progress;
+			oldPos.y *= progress;	
 
-			self.circles[i].opacity(progress);
-			self.circles[i].setMoved({'point': oldPos});		
+			self.scenePoints[pointName].opacity(progress <= 0.9 ? progress : 0.9);
+			self.scenePoints[pointName].setMoved({'point': oldPos});		
 		}
 
 		if (this.animationEnded == true) {
@@ -106,45 +130,29 @@ var Scene =  function (paperScope, width, height) {
 	}
 
 	this.update = function () {
-		for (var i = 0; i < self.circles.length; i++) {
-			self.circles[i].setMoved({'point' :self.circles[i].point()});
+		for (var pointName in self.scenePoints) {
+			self.scenePoints[pointName].setMoved({'point' :self.scenePoints[pointName].point()});
 		}
 	}
 
 	this.drawLines = function () {
 		this.view._project.activate();
 
-		var circles = self.circles;
+		for (var line in self.sceneLines) {
+			self.sceneLines[line].opacity(1);
+		}
 
-		var hipPoint = circles[3];
-		var kneePoint = circles[4];
+		for (var angle in self.sceneAngles) {
+			self.sceneAngles[angle].opacity(0.6);
+		}
 
-		var line1 = new JointLine(circles[0], circles[1]);self.storeLine(line1);
-		var line2 = new JointLine(circles[1], circles[2]);self.storeLine(line2);
-		var line3 = new JointLine(circles[3], circles[4]);self.storeLine(line3, SceneUtils.KnownLines.THIGH_LINE);
-		var line4 = new JointLine(circles[4], circles[5]);self.storeLine(line4, SceneUtils.KnownLines.SHIN_LINE);
-		var line5 = new JointLine(circles[0], circles[3]);self.storeLine(line5, SceneUtils.KnownLines.BACK_LINE);
-		var line6 = new JointLine(circles[3], circles[2], false);self.storeLine(line6, SceneUtils.KnownLines.HIP_TO_WRIST);		
+		// For posterity - computation of thigh extension
+		var hipPoint = self.scenePoints[SceneUtils.KnownPoints.HIP];
+		var kneePoint = self.scenePoints[SceneUtils.KnownPoints.KNEE];
 
 		var lineHip = new JointLine(kneePoint, new DependantPoint([hipPoint, kneePoint], function () {				
 			return kneePoint.point().subtract(hipPoint.point()).add(kneePoint.point());
-		}));
-
-		new JointsAngle(line1, line2).setRanges([{'range' : [150, 170], 'color' : 'green'}]).onAngleChanged(function (newAngle) { $('#elbowAngle').text(newAngle);});
-		new JointsAngle(line3, line4).setRanges([{'range' : [140, 145], 'color' : 'green'}]).onAngleChanged(function (newAngle) { $('#hipKneeAngle').text(newAngle);});		
-		new JointsAngle(line4, lineHip).setRanges([{'range' : [35, 40], 'color' : 'green'}]).onAngleChanged(function (newAngle) { $('#kneeAngleExtension').text(newAngle);});	
-		new JointsAngle(line5, line3).onAngleChanged(function (newAngle) { $('#hipAngleOpen').text(newAngle);});
-		new JointsAngle(line5, line1).setRanges([{'range' : [80, 90], 'color' : 'green'}]).onAngleChanged(function (newAngle) { $('#shoulderElbowAngle').text(newAngle);});
-
-		// Register line changed callbacks
-		for (var lineName in self.lineChangedCbks) {
-			if (self.lineChangedCbks[lineName] == undefined)
-				continue;
-
-			for (var j = 0; j < self.lineChangedCbks[lineName].length; j++) {
-				self.getLine(lineName).onLineChanged(self.lineChangedCbks[lineName][j]);
-			}
-		}		
+		}));		
 	}
 
 	this.onLineLengthChanged = function (cbk, lineName) {
@@ -152,11 +160,6 @@ var Scene =  function (paperScope, width, height) {
 			self.getLine(lineName).onLineChanged(cbk);
 			return;
 		}
-
-		if (self.lineChangedCbks[lineName] == undefined)
-			self.lineChangedCbks[lineName] = [];
-
-		self.lineChangedCbks[lineName].push(cbk);
 	}	
 
 	this.applyScaling = function (point) {
@@ -179,83 +182,60 @@ var Scene =  function (paperScope, width, height) {
 		return point;
 	}
 
-	this.loadToolbox = function (points) {
-		var self = this;					
-		var circles = self.circles;
+	this.loadToolbox = function (points, lines, angles, texts) {
+		var self = this;
 
 		this.view._project.activate();
 
-		this.Xx = points['X'];
-		this.Yy = points['Y'];
-		this.scale = points['scale'];
+		for (var i = 0; i < points.length; i++) {
+			var point = points[i];
+			var pointName = point['name'];
 
-		for (var i = 0; i < this.Xx.length; i++) {
-			if (this.scale[i] == false)
+			if (point['scale'] == false) {
+				var finalDestinationPoint = new Point(point['x'], point['y']);
+				self.scenePoints[pointName] = new JointPoint(finalDestinationPoint).label(point['label']).setFinalDestinationPoint(finalDestinationPoint);
 				continue;
+			}
+			
+			var scaledPoint = new Point(point['x'], point['y']);
+			this.applyScaling(scaledPoint)	
 
-			var scaledPoint = new Point(this.Xx[i], this.Yy[i]);
-			this.applyScaling(scaledPoint)
-
-			this.Xx[i] = scaledPoint.x;						
-			this.Yy[i] = scaledPoint.y;
+			self.scenePoints[pointName] = new JointPoint(scaledPoint).label(point['label']).setFinalDestinationPoint(scaledPoint);	
 		}
 
+		for (var i = 0; i < lines.length; i++) {
+			var line = lines[i];
+			self.sceneLines[line['name']] = new JointLine(this.getJointPoint(line['points'][0]), this.getJointPoint(line['points'][1]), line['visible'] == undefined ? true : false).opacity(0);
+		}
 
+		for (var i = 0; i < angles.length; i++) {
+			var angle = angles[i];	
+			self.sceneAngles[angle['name']] = new JointsAngle(self.sceneLines[angle['side_first']], self.sceneLines[angle['side_second']], angle['name']).setRanges(angle['ranges']).opacity(0).onAngleChanged(angle['onAngleChanged']);
+		}
+
+		for (var i = 0; i < texts.length; i++) {
+			var text = texts[i];
+			new Text(new Point(text['x'], text['y'])).setText(text['text']);	
+		}
+	
 		function onTextSelect(target, ctx, state) {
 			if (state == true) {
-				circles[ctx].enlarge();
+				self.scenePoints[ctx].enlarge();
 				target.setStyle({'fontWeight' : 'bold'});
 			}
 			else {
-				circles[ctx].reduce();
+				self.scenePoints[ctx].reduce();
 				target.setStyle({'fontWeight' : 'normal'});
 			}
 		};
-
-		// Arms
-		circles.push(new JointPoint(this.getJointPoint(0)).label('C'));				
-		circles.push(new JointPoint(this.getJointPoint(1)).label('B'));
-		circles.push(new JointPoint(this.getJointPoint(2)).label('A'));	
-
-		// Legs						
-		circles.push(new JointPoint(this.getJointPoint(3)).label('D'));							
-		circles.push(new JointPoint(this.getJointPoint(4)).label('E'));				
-		circles.push(new JointPoint(this.getJointPoint(5)).label('F'));
-
-		circles.push(new JointPoint(this.getJointPoint(6)).label('M'));
-		circles.push(new JointPoint(this.getJointPoint(7)).label('N'));	
 
 		function unscaledPosition(index) {
 			return new Point(points['X'][index], points['Y'][index]);
 		};
 
-		// Custom measurement tool
-		new Text(this.getTextPoint(0)).setText('Custom tool');
-		
-		circles.push(new JointPoint(this.getJointPoint(8)).label('G'));
-		circles.push(new JointPoint(this.getJointPoint(9)).label('H'));
-		
-		self.storeLine(new JointLine(circles[8], circles[9]), SceneUtils.KnownLines.CUSTOM_LINE);	
-
-		// Length reference				
-		new Text(this.getTextPoint(3)).setText('Length reference');		
-
-		circles.push(new JointPoint(this.getJointPoint(10)).label('I'));
-		circles.push(new JointPoint(this.getJointPoint(11)).label('J'));
-
-		self.storeLine(new JointLine(circles[10], circles[11]), SceneUtils.KnownLines.DISTANCE_REF_LINE);		
-
-		// Horizontal reference
-		new Text(this.getTextPoint(6)).setText('Vertical reference');
-		
-		circles.push(new JointPoint(this.getJointPoint(12)).label('K'));
-		circles.push(new JointPoint(this.getJointPoint(13)).label('L'));
-		
-		self.storeLine(new JointLine(circles[12], circles[13]), SceneUtils.KnownLines.VERTICAL_REF_LINE);	
-
 		$('#btnDump').click(function () {
-			for (var i = 0; i < circles.length; i++)
-				console.log('dump ' + circles[i].point().x + ' ' + circles[i].point().y);
+			for (var i in self.scenePoints)
+				console.log('dump ' + self.scenePoints[i].point().x + ' ' + self.scenePoints[i].point().y);
 		});			
 	}
 

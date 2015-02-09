@@ -22,7 +22,6 @@ var JointPoint = function(point) {
 	var _center = point;
 	var _onMoveCbk = [];
 
-
 	var _text = new PointText(point);
 		
 	_text.fillColor = 'white';
@@ -32,7 +31,7 @@ var JointPoint = function(point) {
 		fontSize: 12,
 	};	
 
-	_text.bringToFront();	
+	_text.bringToFront();
 
 	function centerLabel() {
 		var textBounds = _text.bounds;
@@ -44,7 +43,16 @@ var JointPoint = function(point) {
 		centerLabel();
 
 		return this;
-	}	
+	}
+
+	this.setFinalDestinationPoint = function (point) {
+		self.finalDestinationPoint = point;
+		return this;
+	}
+
+	this.getFinalDestinationPoint = function () {
+		return self.finalDestinationPoint;
+	}
 
 	this.onMove = function (cbk) {
 		_onMoveCbk.push(cbk);

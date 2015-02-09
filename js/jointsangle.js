@@ -1,4 +1,4 @@
-var JointsAngle = function (line1, line2) {
+var JointsAngle = function (line1, line2, name) {
 	var self = this;
 
 	var pointL11 = line1.from();
@@ -23,10 +23,13 @@ var JointsAngle = function (line1, line2) {
 
 	this._onAngleChangedCbk = [];
 	this._currentAngle = 0;
+	this._name = name;
 
 	this.onAngleChanged = function (cbk) {		
 		self._onAngleChangedCbk.push(cbk);
-		cbk(this._currentAngle);
+		cbk(this._currentAngle, this._name);
+
+		return this;
 	}
 
 	function findCommonPoint() {
@@ -54,6 +57,11 @@ var JointsAngle = function (line1, line2) {
 
 	function len(v) {
 		return Math.sqrt(v.x * v.x + v.y * v.y);
+	}
+
+	this.opacity = function (value) {
+		path.opacity = value;
+		return this;
 	}
 
 	this.setRanges = function (ranges) {
@@ -101,12 +109,12 @@ var JointsAngle = function (line1, line2) {
 		var angle = Math.acos(cos) * 180 / Math.PI;
 		angleText.setPosition(mid);
 
-		this._currentAngle = angle.toFixed(1) + '°';
+		this._currentAngle = angle.toFixed(1);
 		angleText.setText(this._currentAngle);
 
  		// Notify angle changed
 		for (var cbk in self._onAngleChangedCbk) {							
-			self._onAngleChangedCbk[cbk](this._currentAngle);
+			self._onAngleChangedCbk[cbk](this._currentAngle, this._name);
 		}
 
 		if (this.ranges != undefined) {
