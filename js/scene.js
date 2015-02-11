@@ -182,7 +182,7 @@ var Scene =  function (paperScope, width, height) {
 		return point;
 	}
 
-	this.loadToolbox = function (points, lines, angles, texts) {
+	this.load = function (points, lines, angles, texts) {
 		var self = this;
 
 		this.view._project.activate();

@@ -101,6 +101,11 @@ body a{
 	cursor: default;
 }
 
+
+.glyphicon:hover, .glyphicon:focus {
+  	opacity: 0.5;
+  }
+
 .angleText {
 	font-weight: 600;
 }

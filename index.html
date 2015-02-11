@@ -58,7 +58,10 @@
 				</div>
 
 				<div class="panel panel-default">
-					<div class="panel-heading">Custom</div>
+					<div class="panel-heading clearfix">
+						<span>Custom tools</span>
+						<span class="glyphicon glyphicon-plus pull-right" aria-hidden="true" id="btnAddCustomTool"></span>
+					</div>
 					<div class="panel-body">		
 						<div class="alert alert-note alert-small" role="alert">
 							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -165,6 +168,37 @@
 			});
 		});
 
+		var lastCustomToolY = 200;
+		$('#btnAddCustomTool').click(function () {
+			points = [		
+				{'x': 49,  'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START, 'label' : getNextLabel()},
+				{'x': 140, 'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END, 'label' : getNextLabel()},
+				{'x': 230, 'y' : lastCustomToolY + 20,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END, 'label' : getNextLabel()},
+			];
+
+			lines = [
+				{ 'name' : SceneUtils.KnownLines.CUSTOM_LINE, 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START, SceneUtils.KnownPoints.CUST_TOOL_END]},
+			];
+
+			self.sceneTop.load(points, lines, [], []);
+
+			lastCustomToolY += 40;
+		});
+
+		var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		var lastLabel = 0;
+
+		function getNextLabel() {
+			if (lastLabel >= letters.length) {
+				alert('no more letters');
+			}
+
+			var label = letters[lastLabel];
+			lastLabel += 1;
+
+			return label;
+		}
+
 		var self = this;
 		var wWidth = $('#stepOneCanvas').width();		
 
@@ -226,20 +260,18 @@
 			}
 
 			points['stepOneCanvas'] = [
-				{'x': 647, 'y' : 140, 'scale' : true, 'name' : SceneUtils.KnownPoints.SHOULDER, 'label' : 'A'},
-				{'x': 703, 'y' : 246, 'scale' : true, 'name' : SceneUtils.KnownPoints.ELBOW, 'label' : 'B'},
-				{'x': 794, 'y' : 291, 'scale' : true, 'name' : SceneUtils.KnownPoints.WRIST, 'label' : 'C'},
-				{'x': 476, 'y' : 261, 'scale' : true, 'name' : SceneUtils.KnownPoints.HIP, 'label' : 'D'},
-				{'x': 615, 'y' : 370, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE, 'label' : 'E'},
-				{'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : 'F'},
-				{'x': 49,  'y' : 60,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START, 'label' : 'I'},
-				{'x': 179, 'y' : 60,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END, 'label' : 'J'},
+				{'x': 647, 'y' : 140, 'scale' : true, 'name' : SceneUtils.KnownPoints.SHOULDER, 'label' : getNextLabel()},
+				{'x': 703, 'y' : 246, 'scale' : true, 'name' : SceneUtils.KnownPoints.ELBOW, 'label' : getNextLabel()},
+				{'x': 794, 'y' : 291, 'scale' : true, 'name' : SceneUtils.KnownPoints.WRIST, 'label' : getNextLabel()},
+				{'x': 476, 'y' : 261, 'scale' : true, 'name' : SceneUtils.KnownPoints.HIP, 'label' : getNextLabel()},
+				{'x': 615, 'y' : 370, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE, 'label' : getNextLabel()},
+				{'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : getNextLabel()},		
 
-				{'x': 49,  'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : 'K'},
-				{'x': 179, 'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : 'L'},
+				{'x': 49,  'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : getNextLabel()},
+				{'x': 179, 'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : getNextLabel()},
 
-				{'x': 49, 'y' : 214, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_START, 'label' : 'M'},
-				{'x': 179, 'y' : 214, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_END, 'label' : 'N'}
+				{'x': 49, 'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_START, 'label' : getNextLabel()},
+				{'x': 179, 'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_END, 'label' : getNextLabel()}
 			];
 
 			lines['stepOneCanvas'] = [
@@ -253,7 +285,6 @@
 
 				{ 'name' : SceneUtils.KnownLines.DISTANCE_REF_LINE, 'points' : [SceneUtils.KnownPoints.LEN_REF_START, SceneUtils.KnownPoints.LEN_REF_END]},
 				{ 'name' : SceneUtils.KnownLines.HORIZONTAL_REF_LINE, 'points' : [SceneUtils.KnownPoints.HORIZ_REF_START, SceneUtils.KnownPoints.HORIZ_REF_END]},
-				{ 'name' : SceneUtils.KnownLines.CUSTOM_LINE, 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START, SceneUtils.KnownPoints.CUST_TOOL_END]},
 			];
 
 			angles['stepOneCanvas'] = [
@@ -267,27 +298,26 @@
 
 			texts['stepOneCanvas'] = [
 				{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Length reference', 'x' : 42, 'y' : 40},
-				{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Horizontal reference', 'x' : 42, 'y' : 120},
-				{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Custom tool', 'x' : 42, 'y' : 195},
+				{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Horizontal reference', 'x' : 42, 'y' : 120},				
 			]
-
+/*
 			points['stepTwoCanvas'] = [
-				{'x': 647, 'y' : 140, 'scale' : true, 'name' : SceneUtils.KnownPoints.SHOULDER, 'label' : 'A'},
-				{'x': 703, 'y' : 246, 'scale' : true, 'name' : SceneUtils.KnownPoints.ELBOW, 'label' : 'B'},
-				{'x': 794, 'y' : 291, 'scale' : true, 'name' : SceneUtils.KnownPoints.WRIST, 'label' : 'C'},
-				{'x': 476, 'y' : 261, 'scale' : true, 'name' : SceneUtils.KnownPoints.HIP, 'label' : 'D'},
-				{'x': 615, 'y' : 370, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE, 'label' : 'E'},
-				{'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : 'F'},
-				{'x': 655, 'y' : 330, 'scale' : true, 'name' : SceneUtils.KnownPoints.TIBIA, 'label' : 'G'},
-				{'x': 662, 'y' : 651, 'scale' : true, 'name' : SceneUtils.KnownPoints.SPINDLE, 'label' : 'H'},
-				{'x': 49,  'y' : 60,  'scale' : true, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START, 'label' : 'I'},
-				{'x': 179, 'y' : 60,  'scale' : true, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END, 'label' : 'J'},
+				{'x': 647, 'y' : 140, 'scale' : true, 'name' : SceneUtils.KnownPoints.SHOULDER, 'label' : getNextLabel()},
+				{'x': 703, 'y' : 246, 'scale' : true, 'name' : SceneUtils.KnownPoints.ELBOW, 'label' : getNextLabel()},
+				{'x': 794, 'y' : 291, 'scale' : true, 'name' : SceneUtils.KnownPoints.WRIST, 'label' : getNextLabel()},
+				{'x': 476, 'y' : 261, 'scale' : true, 'name' : SceneUtils.KnownPoints.HIP, 'label' : getNextLabel()},
+				{'x': 615, 'y' : 370, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE, 'label' : getNextLabel()},
+				{'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : getNextLabel()},
+				{'x': 655, 'y' : 330, 'scale' : true, 'name' : SceneUtils.KnownPoints.TIBIA, 'label' : getNextLabel()},
+				{'x': 662, 'y' : 651, 'scale' : true, 'name' : SceneUtils.KnownPoints.SPINDLE, 'label' : getNextLabel()},
+				{'x': 49,  'y' : 60,  'scale' : true, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START, 'label' : getNextLabel()},
+				{'x': 179, 'y' : 60,  'scale' : true, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END, 'label' : getNextLabel()},
 
-				{'x': 49,  'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : 'K'},
-				{'x': 179, 'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : 'L'},
+				{'x': 49,  'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : getNextLabel()},
+				{'x': 179, 'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : getNextLabel()},
 
-				{'x': 112, 'y' : 207, 'scale' : false, 'name' : SceneUtils.KnownPoints.VERT_REF_START, 'label' : 'M'},
-				{'x': 112, 'y' : 309, 'scale' : false, 'name' : SceneUtils.KnownPoints.VERT_REF_END, 'label' : 'N'}
+				{'x': 112, 'y' : 207, 'scale' : false, 'name' : SceneUtils.KnownPoints.VERT_REF_START, 'label' : getNextLabel()},
+				{'x': 112, 'y' : 309, 'scale' : false, 'name' : SceneUtils.KnownPoints.VERT_REF_END, 'label' : getNextLabel()}
 			];
 
 			lines['stepTwoCanvas'] = [
@@ -303,10 +333,10 @@
 				{ 'name' : SceneUtils.KnownLines.VERTICAL_REF_LINE, 'points' : [SceneUtils.KnownPoints.VERT_REF_START, SceneUtils.KnownPoints.VERT_REF_END]},
 				{ 'name' : SceneUtils.KnownLines.CUSTOM_LINE, 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START, SceneUtils.KnownPoints.CUST_TOOL_END]},
 			];
-
+*/
 
 			var scene = new Scene(canvasId, $('.stepCanvasArea').width(), $('.stepCanvasArea').height());
-			scene.loadToolbox(points[canvasId], lines[canvasId], angles[canvasId], texts[canvasId]);
+			scene.load(points[canvasId], lines[canvasId], angles[canvasId], texts[canvasId]);
 
 			view.onFrame = function (event) {
 				scene.animateJoints(event);
@@ -315,10 +345,10 @@
 			return scene;
 		}
 
-		var sceneTop = setupCanvas('stepOneCanvas');		
+		self.sceneTop = setupCanvas('stepOneCanvas');		
 		//var sceneBottom = setupCanvas('stepTwoCanvas');
 
-		[sceneTop].forEach(function (scene) {
+		[self.sceneTop].forEach(function (scene) {
 			// Thigh line
 			scene.onLineLengthChanged(function (f, t) {			
 				updateLineSizes();
@@ -357,8 +387,8 @@
 		});	
 
 		function updateBackAngle() {
-			var hLine = sceneTop.getLine(SceneUtils.KnownLines.HORIZONTAL_REF_LINE);
-			var bLine = sceneTop.getLine(SceneUtils.KnownLines.BACK_LINE);
+			var hLine = self.sceneTop.getLine(SceneUtils.KnownLines.HORIZONTAL_REF_LINE);
+			var bLine = self.sceneTop.getLine(SceneUtils.KnownLines.BACK_LINE);
 
 			if (hLine == undefined || bLine == undefined)
 				return;
@@ -369,8 +399,8 @@
 
 		// Custom tool angle
 		function updateCustomAngle() {
-			var hLine = sceneTop.getLine(SceneUtils.KnownLines.HORIZONTAL_REF_LINE);
-			var bLine = sceneTop.getLine(SceneUtils.KnownLines.CUSTOM_LINE);
+			var hLine = self.sceneTop.getLine(SceneUtils.KnownLines.HORIZONTAL_REF_LINE);
+			var bLine = self.sceneTop.getLine(SceneUtils.KnownLines.CUSTOM_LINE);
 
 			if (hLine == undefined || bLine == undefined)
 				return;
@@ -385,17 +415,17 @@
 			}
 
 			refDistanceCMPerPixel = refDistanceCM / refDistanceInPixels;
-			var thighLine = sceneTop.getLine(SceneUtils.KnownLines.THIGH_LINE);
+			var thighLine = self.sceneTop.getLine(SceneUtils.KnownLines.THIGH_LINE);
 			$('#thighLength').text(centiMeterstoMeters(thighLine != undefined ? (thighLine.length() * refDistanceCMPerPixel) : 0));
 
-			var shinLine = sceneTop.getLine(SceneUtils.KnownLines.SHIN_LINE);
+			var shinLine = self.sceneTop.getLine(SceneUtils.KnownLines.SHIN_LINE);
 			$('#shinLength').text(centiMeterstoMeters(shinLine != undefined ? (shinLine.length() * refDistanceCMPerPixel) : 0));
 
-			var hipToWrist = sceneTop.getLine(SceneUtils.KnownLines.HIP_TO_WRIST);
+			var hipToWrist = self.sceneTop.getLine(SceneUtils.KnownLines.HIP_TO_WRIST);
 			$('#hipToWristH').text(centiMeterstoMeters(hipToWrist != undefined ? (hipToWrist.horizontalDistance() * refDistanceCMPerPixel) : 0));
 			$('#hipToWristV').text(centiMeterstoMeters(hipToWrist != undefined ? (hipToWrist.verticalDistance() * refDistanceCMPerPixel) : 0));
 
-			var customLine = sceneTop.getLine(SceneUtils.KnownLines.CUSTOM_LINE);
+			var customLine = self.sceneTop.getLine(SceneUtils.KnownLines.CUSTOM_LINE);
 			$('#endToEndH').text(centiMeterstoMeters(customLine != undefined ? (customLine.horizontalDistance() * refDistanceCMPerPixel) : 0));
 			$('#endToEndV').text(centiMeterstoMeters(customLine != undefined ? (customLine.verticalDistance() * refDistanceCMPerPixel) : 0));
 			$('#customLength').text(centiMeterstoMeters(customLine != undefined ? (customLine.length() * refDistanceCMPerPixel) : 0));
