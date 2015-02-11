@@ -35,6 +35,7 @@ var SceneUtils = {
 		HORIZ_REF_END : 'horizRefEnd',
 
 		CUST_TOOL_START : 'customToolStart',
+		CUST_TOOL_MIDDLE : 'customToolMid',
 		CUST_TOOL_END : 'customToolEnd'
 	},
 
@@ -44,7 +45,9 @@ var SceneUtils = {
 		KNEE_EXTENSION : 'kneeExtension',
 		HIP_OPEN : 'hipOpen',
 		ARM_PIT : 'armPit',
-		BACK_ANGLE : 'backAngle'
+		BACK_ANGLE : 'backAngle',
+
+		CUSTOM_ANGLE : 'customAngle'
 	}
 }
 
@@ -93,6 +96,11 @@ var Scene =  function (paperScope, width, height) {
 		return self.scenePoints[pointName];
 	}
 
+	this.restartAnimation = function () {
+		self.animationStart = undefined;
+		self.animationEnded = false;
+	}
+
 	this.animateJoints = function (event) {		
 		if (this.animationEnded == true) {
 			return;
@@ -103,13 +111,20 @@ var Scene =  function (paperScope, width, height) {
 			return;
 		}
 
-		for (var pointName in self.scenePoints) {	
+		for (var pointName in self.scenePoints) {
+			var point = self.scenePoints[pointName];
+
+			if (point.requiresAnimation === false)
+				continue;
+
 			var oldPos = self.scenePoints[pointName].getFinalDestinationPoint().clone();
 			
 			var progress = (event.time * 1000 - self.animationStart) / self.animationDuration;
 
 			if (progress > 1) {
 				progress = 1;
+
+				point.requiresAnimation = false;
 				this.animationEnded = true
 			}
 
@@ -217,6 +232,8 @@ var Scene =  function (paperScope, width, height) {
 			var text = texts[i];
 			new Text(new Point(text['x'], text['y'])).setText(text['text']);	
 		}
+
+		self.restartAnimation();
 	
 		function onTextSelect(target, ctx, state) {
 			if (state == true) {

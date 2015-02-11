@@ -168,21 +168,44 @@
 			});
 		});
 
+		function onAngleChanged(angle, target)
+		{
+			console.log(angle + ' ' + target);
+			$('#' + target).text(angle + '°');
+
+			if (target == SceneUtils.KnownAngles.HIP_KNEE_ANGLE) {
+				$('#' + SceneUtils.KnownAngles.KNEE_EXTENSION).text((180 - angle).toFixed(1) + '°');
+			}
+		}
+
 		var lastCustomToolY = 200;
+		var lastCustomToolNo = 0;
+
 		$('#btnAddCustomTool').click(function () {
 			points = [		
-				{'x': 49,  'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START, 'label' : getNextLabel()},
-				{'x': 140, 'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END, 'label' : getNextLabel()},
-				{'x': 230, 'y' : lastCustomToolY + 20,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END, 'label' : getNextLabel()},
+				{'x': 49,  'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START + lastCustomToolNo, 'label' : getNextLabel()},
+				{'x': 140, 'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo, 'label' : getNextLabel()},
+				{'x': 230, 'y' : lastCustomToolY + 20,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END + lastCustomToolNo, 'label' : getNextLabel()},
 			];
 
 			lines = [
-				{ 'name' : SceneUtils.KnownLines.CUSTOM_LINE, 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START, SceneUtils.KnownPoints.CUST_TOOL_END]},
+				{ 'name' : SceneUtils.KnownLines.CUSTOM_LINE + '' + lastCustomToolNo + '' + 0, 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START + lastCustomToolNo, SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo]},
+				{ 'name' : SceneUtils.KnownLines.CUSTOM_LINE + '' + lastCustomToolNo + '' + 1, 'points' : [SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo, SceneUtils.KnownPoints.CUST_TOOL_END + lastCustomToolNo]},
 			];
 
-			self.sceneTop.load(points, lines, [], []);
+			angles = [
+				{ 'name': SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo, 'side_first' : SceneUtils.KnownLines.CUSTOM_LINE + '' + lastCustomToolNo + '' + 0, 'side_second' : SceneUtils.KnownLines.CUSTOM_LINE + '' + lastCustomToolNo + '' + 1, 'ranges' : [{'range' : [0, 180], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+			];
+
+			for (var i = 0; i < lines.length; i++) {	
+				lines[i]['name'] = SceneUtils.KnownLines.CUSTOM_LINE + '' + lastCustomToolNo + '' + i;
+				console.log(lines[i]['name']);
+			}
+
+			self.sceneTop.load(points, lines, angles, []);
 
 			lastCustomToolY += 40;
+			lastCustomToolNo += 1;
 		});
 
 		var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -249,16 +272,7 @@
 			var lines = {};
 			var angles = {};
 			var texts = {};
-
-			function onAngleChanged(angle, target)
-			{
-				$('#' + target).text(angle + '°');
-
-				if (target == SceneUtils.KnownAngles.HIP_KNEE_ANGLE) {
-					$('#' + SceneUtils.KnownAngles.KNEE_EXTENSION).text((180 - angle).toFixed(1) + '°');
-				}
-			}
-
+			
 			points['stepOneCanvas'] = [
 				{'x': 647, 'y' : 140, 'scale' : true, 'name' : SceneUtils.KnownPoints.SHOULDER, 'label' : getNextLabel()},
 				{'x': 703, 'y' : 246, 'scale' : true, 'name' : SceneUtils.KnownPoints.ELBOW, 'label' : getNextLabel()},
