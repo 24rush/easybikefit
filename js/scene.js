@@ -3,7 +3,7 @@ var SceneUtils = {
 		DISTANCE_REF_LINE : 'distanceRefLine',
 		HORIZONTAL_REF_LINE : 'horizontalRefLine',
 		VERTICAL_REF_LINE : 'verticalRefLine',
-		CUSTOM_LINE : 'customTool',
+		CUSTOM_TOOL : 'customTool',
 
 		ARM_LINE : 'armLine',
 		FOREARM_LINE : 'foreArmLine',
@@ -197,6 +197,31 @@ var Scene =  function (paperScope, width, height) {
 		return point;
 	}
 
+	this.unload = function (pointIds, lineIds, angleIds, textIds) {
+		this.view._project.activate();
+
+		for (var i = 0; i < pointIds.length; i++) {
+			var point = self.scenePoints[pointIds[i]];
+			point.remove();
+
+			delete point;
+		}
+
+		for (var i = 0; i < lineIds.length; i++) {
+			var line = self.sceneLines[lineIds[i]];
+			line.remove();
+			
+			delete line;
+		}
+
+		for (var i = 0; i < angleIds.length; i++) {
+			var angle = self.sceneAngles[angleIds[i]];
+			angle.remove();
+			
+			delete angle;
+		}
+	}
+
 	this.load = function (points, lines, angles, texts) {
 		var self = this;
 
@@ -220,7 +245,12 @@ var Scene =  function (paperScope, width, height) {
 
 		for (var i = 0; i < lines.length; i++) {
 			var line = lines[i];
-			self.sceneLines[line['name']] = new JointLine(this.getJointPoint(line['points'][0]), this.getJointPoint(line['points'][1]), line['visible'] == undefined ? true : false).opacity(0);
+			self.sceneLines[line['name']] = new JointLine(this.getJointPoint(line['points'][0]), this.getJointPoint(line['points'][1]), line['visible'] == undefined ? true : false, line['name']).opacity(0);
+
+			if (line['onLineLengthChanged'] != undefined) {
+				console.log('set'+line['name']);
+				self.onLineLengthChanged(line['onLineLengthChanged'], line['name']);
+			}
 		}
 
 		for (var i = 0; i < angles.length; i++) {

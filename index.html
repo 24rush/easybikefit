@@ -17,16 +17,18 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">Angles</div>
 					<div class="panel-body">
-						<span>Knee Angle Flexion</span><span class="angleText" id="hipKneeAngle"></span>
+						<span class="angleName">Knee Angle Flexion</span><span class="angleText" id="hipKneeAngle"></span>
 						<br>
-						<span>Elbow Angle </span><span class="angleText" id="armForeArm"></span>
+						<span class="angleName">Elbow Angle </span><span class="angleText" id="armForeArm"></span>
 						<br>
-						<span>Knee Angle Extension </span><span class="angleText" id="kneeExtension"></span>
+						<span class="angleName">Knee Angle Extension </span><span class="angleText" id="kneeExtension"></span>
 						<br>
-						<span>Hip Angle Open </span><span class="angleText" id="hipOpen"></span>
+						<span class="angleName">Hip Angle Open </span><span class="angleText" id="hipOpen"></span>
 						<br>
-						<span>Shoulder Angle to Elbow </span><span class="angleText" id="armPit"></span>
+						<span class="angleName">Shoulder Angle to Elbow </span><span class="angleText" id="armPit"></span>
 						<br>
+						<span class="angleName">Back Angle </span><span class="angleText" id="backAngle"></span>
+
 						<div class="alert alert-note alert-small" role="alert" style="margin-top: 5px;">
 							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 							<span class="sr-only">Note:</span>
@@ -44,37 +46,32 @@
 							<span class="sr-only">Note:</span>
 							Enter distance reference to get stats
 						</div>
-
-						<span>Length reference distance </span><input type="text" class="form-control" id="inputLength" style="width: 50px;display: inline;" placeholder="cm">			
+						<span class="angleName">Length reference distance </span><input type="text" class="form-control" id="inputLength" style="width: 50px;display: inline;" placeholder="cm">	
 						<br>
-						<span>Thigh Length </span><span class="angleText" id="thighLength"></span>
+						<span class="angleName">Thigh Length </span><span class="angleText" id="thighLength"></span>
 						<br>
-						<span>Shin Length </span><span class="angleText" id="shinLength"></span>
+						<span class="angleName">Shin Length </span><span class="angleText" id="shinLength"></span>
 						<br>
-						<span>Hip to wrist (horiz) </span><span class="angleText" id="hipToWristH"></span>
+						<span class="angleName">Hip to wrist (horiz) </span><span class="angleText" id="hipToWristH"></span>
 						<br>
-						<span>Hip to wrist (vertical) </span><span class="angleText" id="hipToWristV"></span>
+						<span class="angleName">Hip to wrist (vertical) </span><span class="angleText" id="hipToWristV"></span>
 					</div>
 				</div>
 
-				<div class="panel panel-default">
+				<div class="panel panel-default panel-custom-tool">
 					<div class="panel-heading clearfix">
 						<span>Custom tools</span>
 						<span class="glyphicon glyphicon-plus pull-right" aria-hidden="true" id="btnAddCustomTool"></span>
 					</div>
-					<div class="panel-body">		
-						<div class="alert alert-note alert-small" role="alert">
-							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-							<span class="sr-only">Note:</span>
-							Move K and L points to perform custom measurements
-						</div>				
-						<span>Length </span><span class="angleText" id="customLength"></span>
-						<br>
-						<span>Angle horizontal </span><span class="angleText" id="customAngle"></span>
-						<br>
-						<span>End to end length (horiz) </span><span class="angleText" id="endToEndH"></span>
-						<br>
-						<span>End to end (vertical) </span><span class="angleText" id="endToEndV"></span>
+					<div class="panel-body custom-tool-template" style="display: none;">
+						<div class="custom-tool-bg">
+							<span class="close remove-custom-tool glyphicon glyphicon-remove"></span>								
+							<span class="angleName">Length</span><span class="angleText" id="customLength0"></span>
+							<br>
+							<span class="angleName">Length</span><span class="angleText" id="customLength1"></span>
+							<br>
+							<span class="angleName">Angle between </span><span class="angleText" id="customAngle"></span>					
+						</div>
 					</div>
 				</div>
 			</div>
@@ -108,7 +105,7 @@
 			</div>
 		</div>
 	</div>
-	<button type="button" class="btn btn-default" id="btnDump">Dump</button>
+	<!--button type="button" class="btn btn-default" id="btnDump">Dump</button-->
 
 	<script src="js/lib/jquery.min.js" type="text/javascript"></script>		
 	<script src="js/lib/bootstrap.min.js" type="text/javascript"></script>	
@@ -130,7 +127,27 @@
 		input.trigger('fileselect', [numFiles, evt.target.id]);
 	});
 
-	$(document).ready(function() {		
+	$(document).ready(function() {
+		var self = this;
+
+		paper.install(window);
+
+		var lastCustomToolY = 200;
+		var lastCustomToolNo = 0;
+
+		self.customToolsList = [];
+
+		var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		var lastLabel = 0;			
+
+		var windowHeight = 0.8 * $(window).height();
+		$('.stepCanvasArea').height(windowHeight);	
+
+		var inputLength = $('#inputLength');
+		self.refDistanceCM = 0;
+		self.refDistanceInPixels = 0;
+		self.refDistanceCMPerPixel  = 0;
+
 		$('.btn-file :file').on('fileselect', function(event, numFiles, targetId) {
 			var file = new FileReader();			
 			file.readAsDataURL(event.target.files[0]);
@@ -168,9 +185,101 @@
 			});
 		});
 
-		function onAngleChanged(angle, target)
-		{
-			console.log(angle + ' ' + target);
+		$('#btnAddCustomTool').click(function () {
+			var getNextLabel = self.getNextLabel;
+			var onAngleChanged = self.onAngleChanged;
+			var onLineLengthChanged = self.onCustomToolLineChanged;
+
+			var startLabel = getNextLabel();
+			var middleLabel = getNextLabel();
+			var endLabel = getNextLabel();
+
+			points = [		
+			{'x': 49,  'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START + lastCustomToolNo, 'label' : startLabel},
+			{'x': 140, 'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo, 'label' : middleLabel},
+			{'x': 230, 'y' : lastCustomToolY + 20,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END + lastCustomToolNo, 'label' : endLabel},
+			];
+
+			var customToolBase = SceneUtils.KnownLines.CUSTOM_TOOL + '_' + lastCustomToolNo + '_';
+
+			lines = [
+			{ 'name' : customToolBase + '0', 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START + lastCustomToolNo, SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo], 'onLineLengthChanged' : onLineLengthChanged},
+			{ 'name' : customToolBase + '1', 'points' : [SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo, SceneUtils.KnownPoints.CUST_TOOL_END + lastCustomToolNo], 'onLineLengthChanged' : onLineLengthChanged},
+			];
+
+			angles = [
+			{ 'name': SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo, 'side_first' : customToolBase + '0', 'side_second' : customToolBase + '1', 'ranges' : [{'range' : [0, 180], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+			];
+
+			self.sceneTop.load(points, lines, angles, []);		
+
+			var template = $('.custom-tool-template').clone();
+			template.find('#customLength0').attr('id', customToolBase + '0').prev().text(startLabel + '-' + middleLabel +' Length');
+			template.find('#customLength1').attr('id', customToolBase + '1').prev().text(middleLabel + '-' + endLabel +' Length');
+			template.find('#customAngle').attr('id', SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo);
+
+			template.find('.remove-custom-tool').attr('ctx', customToolBase).removeClass('remove-custom-tool').addClass('remove-custom-tool' + lastCustomToolNo);
+
+			template.removeClass('custom-tool-template');
+			template.addClass('custom-tool-' + lastCustomToolNo);
+
+			template.show();
+			self.customToolsList.push(customToolBase);
+
+			$('.panel-custom-tool').append(template[0].outerHTML);
+			$('.remove-custom-tool' + lastCustomToolNo).click(function() {
+				var ctx = $(this).attr('ctx');
+				self.customToolsList.splice(self.customToolsList.indexOf(ctx), 1);
+
+				var toolNo = self.getToolIdFromName(ctx);
+
+				var pointIdsToRemove = [SceneUtils.KnownPoints.CUST_TOOL_START + toolNo, SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + toolNo, SceneUtils.KnownPoints.CUST_TOOL_END + toolNo];
+				var lineIdsToRemove = [ctx + '0', ctx + '1'];
+				var angleIdsToRemove = [SceneUtils.KnownAngles.CUSTOM_ANGLE + toolNo];
+
+				self.sceneTop.unload(pointIdsToRemove, lineIdsToRemove, angleIdsToRemove);
+
+				$(this).parent().parent().detach();
+			});
+
+			lastCustomToolY += 40;
+			lastCustomToolNo += 1;
+
+
+		});	
+
+inputLength.data('oldVal', inputLength.val());
+inputLength.bind("propertychange change click keyup input paste", function(e) {
+	if (inputLength.val() == '') {
+		$('#alertLength').fadeIn();
+		return;
+	}				
+
+	if (inputLength.data('oldVal') != inputLength.val()) {
+		$('#alertLength').fadeOut();
+
+		inputLength.data('oldVal', inputLength.val());
+		self.refDistanceCM = inputLength.val() != '' ? inputLength.val() : 0;
+		self.refDistanceCMPerPixel  = self.refDistanceCM / self.refDistanceInPixels;
+
+		self.updateLineSizes();
+	}
+});
+
+inputLength.keydown(function(event) {                
+	if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 
+		|| event.keyCode == 27 || event.keyCode == 13 
+		|| (event.keyCode == 65 && event.ctrlKey === true) 
+		|| (event.keyCode >= 35 && event.keyCode <= 39))
+		return;		
+
+	if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
+		event.preventDefault(); 
+	}   
+});
+
+self.onAngleChanged = function(angle, target) {
+			//console.log(angle + ' ' + target);
 			$('#' + target).text(angle + '°');
 
 			if (target == SceneUtils.KnownAngles.HIP_KNEE_ANGLE) {
@@ -178,40 +287,79 @@
 			}
 		}
 
-		var lastCustomToolY = 200;
-		var lastCustomToolNo = 0;
+		self.getToolIdFromName = function (target) {								
+			var indexToolId = target.indexOf('_');
 
-		$('#btnAddCustomTool').click(function () {
-			points = [		
-				{'x': 49,  'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START + lastCustomToolNo, 'label' : getNextLabel()},
-				{'x': 140, 'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo, 'label' : getNextLabel()},
-				{'x': 230, 'y' : lastCustomToolY + 20,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END + lastCustomToolNo, 'label' : getNextLabel()},
-			];
+			if (indexToolId == -1)
+				return '-1';
 
-			lines = [
-				{ 'name' : SceneUtils.KnownLines.CUSTOM_LINE + '' + lastCustomToolNo + '' + 0, 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START + lastCustomToolNo, SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo]},
-				{ 'name' : SceneUtils.KnownLines.CUSTOM_LINE + '' + lastCustomToolNo + '' + 1, 'points' : [SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo, SceneUtils.KnownPoints.CUST_TOOL_END + lastCustomToolNo]},
-			];
+			return target.substring(indexToolId + 1, target.indexOf('_', indexToolId + 1));			
+		}
 
-			angles = [
-				{ 'name': SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo, 'side_first' : SceneUtils.KnownLines.CUSTOM_LINE + '' + lastCustomToolNo + '' + 0, 'side_second' : SceneUtils.KnownLines.CUSTOM_LINE + '' + lastCustomToolNo + '' + 1, 'ranges' : [{'range' : [0, 180], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
-			];
+		self.onCustomToolLineChanged = function(f, t, target) {
+			for (var i = 0; i < self.customToolsList.length; i++) {
+				target = self.customToolsList[i];
+				var toolId = self.getToolIdFromName(target);
 
-			for (var i = 0; i < lines.length; i++) {	
-				lines[i]['name'] = SceneUtils.KnownLines.CUSTOM_LINE + '' + lastCustomToolNo + '' + i;
-				console.log(lines[i]['name']);
-			}
+				var currLine = target + '0';
+				$('.custom-tool-' + toolId).find('#' + currLine).text(self.pixelsToMM(self.sceneTop.getLine(currLine).length()));
+				currLine = target + '1';
+				$('.custom-tool-' + toolId).find('#' + currLine).text(self.pixelsToMM(self.sceneTop.getLine(currLine).length()));
+			}				
+		}
 
-			self.sceneTop.load(points, lines, angles, []);
+		self.updateBackAngle = function() {
+			var hLine = self.sceneTop.getLine(SceneUtils.KnownLines.HORIZONTAL_REF_LINE);
+			var bLine = self.sceneTop.getLine(SceneUtils.KnownLines.BACK_LINE);
 
-			lastCustomToolY += 40;
-			lastCustomToolNo += 1;
-		});
+			if (hLine == undefined || bLine == undefined)
+				return;
 
-		var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		var lastLabel = 0;
+			var angle = GeometryUtils.AngleBetweenLines(hLine, bLine);
+			$('#backAngle').text(angle.toFixed(1) + '°');
+		}
 
-		function getNextLabel() {
+		// Custom tool angle
+		self.updateCustomAngle = function() {
+			var hLine = self.sceneTop.getLine(SceneUtils.KnownLines.HORIZONTAL_REF_LINE);
+			var bLine = self.sceneTop.getLine(SceneUtils.KnownLines.CUSTOM_LINE);
+
+			if (hLine == undefined || bLine == undefined)
+				return;
+
+			var angle = GeometryUtils.AngleBetweenLines(hLine, bLine);
+			$('#customAngle').text(Math.abs(180-angle).toFixed(1) + '°' + ' / ' +angle.toFixed(1) + '°');
+		}
+
+		self.getCMPerPixel = function () {
+			if (self.refDistanceInPixels == 0)
+				return 0;
+
+			return self.refDistanceCM / self.refDistanceInPixels;
+		}
+
+		self.pixelsToMM = function(val) {			
+			return (val * 10 * self.getCMPerPixel()).toFixed(1) + ' mm';
+		}
+
+		self.updateLineSizes = function() {						
+			var thighLine = self.sceneTop.getLine(SceneUtils.KnownLines.THIGH_LINE);
+			$('#thighLength').text(self.pixelsToMM(thighLine != undefined ? thighLine.length() : 0));
+
+			var shinLine = self.sceneTop.getLine(SceneUtils.KnownLines.SHIN_LINE);
+			$('#shinLength').text(self.pixelsToMM(shinLine != undefined ? shinLine.length() : 0));
+
+			var hipToWrist = self.sceneTop.getLine(SceneUtils.KnownLines.HIP_TO_WRIST);
+			$('#hipToWristH').text(self.pixelsToMM(hipToWrist != undefined ? hipToWrist.horizontalDistance() : 0));
+			$('#hipToWristV').text(self.pixelsToMM(hipToWrist != undefined ? hipToWrist.verticalDistance() : 0));
+
+			var customLine = self.sceneTop.getLine(SceneUtils.KnownLines.CUSTOM_LINE);
+			$('#endToEndH').text(self.pixelsToMM(customLine != undefined ? customLine.horizontalDistance() : 0));
+			$('#endToEndV').text(self.pixelsToMM(customLine != undefined ? customLine.verticalDistance() : 0));
+			$('#customLength').text(self.pixelsToMM(customLine != undefined ? customLine.length() : 0));
+		}	
+
+		self.getNextLabel = function() {
 			if (lastLabel >= letters.length) {
 				alert('no more letters');
 			}
@@ -222,97 +370,57 @@
 			return label;
 		}
 
-		var self = this;
-		var wWidth = $('#stepOneCanvas').width();		
-
-		paper.install(window);			
-
-		var windowHeight = 0.8 * $(window).height();
-		$('.stepCanvasArea').height(windowHeight);	
-
-		var inputLength = $('#inputLength');
-		var refDistanceCM = 0;
-		var refDistanceInPixels = 0;
-		var refDistanceCMPerPixel  = 0;		
-
-		inputLength.data('oldVal', inputLength.val());
-		inputLength.bind("propertychange change click keyup input paste", function(e) {
-			if (inputLength.val() == '') {
-				$('#alertLength').fadeIn();
-				return;
-			}				
-
-			if (inputLength.data('oldVal') != inputLength.val()) {
-				$('#alertLength').fadeOut();
-
-				inputLength.data('oldVal', inputLength.val());
-				refDistanceCM = inputLength.val() != '' ? inputLength.val() : 0;
-				refDistanceCMPerPixel  = refDistanceCM / refDistanceInPixels;
-
-				updateLineSizes();
-			}
-		});
-
-		inputLength.keydown(function(event) {                
-			if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 
-				|| event.keyCode == 27 || event.keyCode == 13 
-				|| (event.keyCode == 65 && event.ctrlKey === true) 
-				|| (event.keyCode >= 35 && event.keyCode <= 39))
-				return;		
-
-			if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
-				event.preventDefault(); 
-			}   
-		});
-
-		function setupCanvas(canvasId) {
+		self.setupCanvas = function(canvasId) {
 			paper.setup(canvasId);
 
 			var points = {};
 			var lines = {};
 			var angles = {};
 			var texts = {};
-			
+
+			var getNextLabel = self.getNextLabel;
+			var onAngleChanged = self.onAngleChanged;
+
 			points['stepOneCanvas'] = [
-				{'x': 647, 'y' : 140, 'scale' : true, 'name' : SceneUtils.KnownPoints.SHOULDER, 'label' : getNextLabel()},
-				{'x': 703, 'y' : 246, 'scale' : true, 'name' : SceneUtils.KnownPoints.ELBOW, 'label' : getNextLabel()},
-				{'x': 794, 'y' : 291, 'scale' : true, 'name' : SceneUtils.KnownPoints.WRIST, 'label' : getNextLabel()},
-				{'x': 476, 'y' : 261, 'scale' : true, 'name' : SceneUtils.KnownPoints.HIP, 'label' : getNextLabel()},
-				{'x': 615, 'y' : 370, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE, 'label' : getNextLabel()},
-				{'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : getNextLabel()},		
+			{'x': 647, 'y' : 140, 'scale' : true, 'name' : SceneUtils.KnownPoints.SHOULDER, 'label' : getNextLabel()},
+			{'x': 703, 'y' : 246, 'scale' : true, 'name' : SceneUtils.KnownPoints.ELBOW, 'label' : getNextLabel()},
+			{'x': 794, 'y' : 291, 'scale' : true, 'name' : SceneUtils.KnownPoints.WRIST, 'label' : getNextLabel()},
+			{'x': 476, 'y' : 261, 'scale' : true, 'name' : SceneUtils.KnownPoints.HIP, 'label' : getNextLabel()},
+			{'x': 615, 'y' : 370, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE, 'label' : getNextLabel()},
+			{'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : getNextLabel()},		
 
-				{'x': 49,  'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : getNextLabel()},
-				{'x': 179, 'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : getNextLabel()},
+			{'x': 49,  'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : getNextLabel()},
+			{'x': 179, 'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : getNextLabel()},
 
-				{'x': 49, 'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_START, 'label' : getNextLabel()},
-				{'x': 179, 'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_END, 'label' : getNextLabel()}
+			{'x': 49, 'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_START, 'label' : getNextLabel()},
+			{'x': 179, 'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_END, 'label' : getNextLabel()}
 			];
 
 			lines['stepOneCanvas'] = [
-				{ 'name' : SceneUtils.KnownLines.ARM_LINE, 'points' : [SceneUtils.KnownPoints.SHOULDER, SceneUtils.KnownPoints.ELBOW]},
-				{ 'name' : SceneUtils.KnownLines.FOREARM_LINE, 'points' : [SceneUtils.KnownPoints.ELBOW, SceneUtils.KnownPoints.WRIST]},
-				{ 'name' : SceneUtils.KnownLines.THIGH_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.KNEE]},
-				{ 'name' : SceneUtils.KnownLines.SHIN_LINE, 'points' : [SceneUtils.KnownPoints.KNEE, SceneUtils.KnownPoints.ANKLE]},
-				{ 'name' : SceneUtils.KnownLines.BACK_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.SHOULDER]},
+			{ 'name' : SceneUtils.KnownLines.ARM_LINE, 'points' : [SceneUtils.KnownPoints.SHOULDER, SceneUtils.KnownPoints.ELBOW]},
+			{ 'name' : SceneUtils.KnownLines.FOREARM_LINE, 'points' : [SceneUtils.KnownPoints.ELBOW, SceneUtils.KnownPoints.WRIST]},
+			{ 'name' : SceneUtils.KnownLines.THIGH_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.KNEE]},
+			{ 'name' : SceneUtils.KnownLines.SHIN_LINE, 'points' : [SceneUtils.KnownPoints.KNEE, SceneUtils.KnownPoints.ANKLE]},
+			{ 'name' : SceneUtils.KnownLines.BACK_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.SHOULDER]},
 
-				{ 'name' : SceneUtils.KnownLines.HIP_TO_WRIST, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.WRIST], 'visible' : false},
+			{ 'name' : SceneUtils.KnownLines.HIP_TO_WRIST, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.WRIST], 'visible' : false},
 
-				{ 'name' : SceneUtils.KnownLines.DISTANCE_REF_LINE, 'points' : [SceneUtils.KnownPoints.LEN_REF_START, SceneUtils.KnownPoints.LEN_REF_END]},
-				{ 'name' : SceneUtils.KnownLines.HORIZONTAL_REF_LINE, 'points' : [SceneUtils.KnownPoints.HORIZ_REF_START, SceneUtils.KnownPoints.HORIZ_REF_END]},
+			{ 'name' : SceneUtils.KnownLines.DISTANCE_REF_LINE, 'points' : [SceneUtils.KnownPoints.LEN_REF_START, SceneUtils.KnownPoints.LEN_REF_END]},
+			{ 'name' : SceneUtils.KnownLines.HORIZONTAL_REF_LINE, 'points' : [SceneUtils.KnownPoints.HORIZ_REF_START, SceneUtils.KnownPoints.HORIZ_REF_END]},
 			];
 
 			angles['stepOneCanvas'] = [
-				{ 'name': SceneUtils.KnownAngles.ARM_FOREARM, 'side_first' : SceneUtils.KnownLines.ARM_LINE, 'side_second' : SceneUtils.KnownLines.FOREARM_LINE, 'ranges' : [{'range' : [150, 170], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
-				{ 'name': SceneUtils.KnownAngles.HIP_KNEE_ANGLE, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.SHIN_LINE, 'ranges' : [{'range' : [140, 145], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
-				{ 'name': SceneUtils.KnownAngles.KNEE_EXTENSION, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.BACK_LINE, 'ranges' : [{'range' : [35, 40], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
-				{ 'name': SceneUtils.KnownAngles.HIP_OPEN, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.BACK_LINE, 'onAngleChanged' : onAngleChanged},
-				{ 'name': SceneUtils.KnownAngles.ARM_PIT, 'side_first' : SceneUtils.KnownLines.BACK_LINE, 'side_second' : SceneUtils.KnownLines.ARM_LINE, 'ranges' : [{'range' : [80, 90], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
-				{ 'name': SceneUtils.KnownAngles.BACK_ANGLE, 'side_first' : SceneUtils.KnownLines.BACK_LINE, 'side_second' : SceneUtils.KnownLines.HORIZONTAL_REF_LINE, 'ranges' : [{'range' : [40, 45], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+			{ 'name': SceneUtils.KnownAngles.ARM_FOREARM, 'side_first' : SceneUtils.KnownLines.ARM_LINE, 'side_second' : SceneUtils.KnownLines.FOREARM_LINE, 'ranges' : [{'range' : [150, 170], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+			{ 'name': SceneUtils.KnownAngles.HIP_KNEE_ANGLE, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.SHIN_LINE, 'ranges' : [{'range' : [140, 145], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+			{ 'name': SceneUtils.KnownAngles.KNEE_EXTENSION, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.BACK_LINE, 'ranges' : [{'range' : [35, 40], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+			{ 'name': SceneUtils.KnownAngles.HIP_OPEN, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.BACK_LINE, 'onAngleChanged' : onAngleChanged},
+			{ 'name': SceneUtils.KnownAngles.ARM_PIT, 'side_first' : SceneUtils.KnownLines.BACK_LINE, 'side_second' : SceneUtils.KnownLines.ARM_LINE, 'ranges' : [{'range' : [80, 90], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+			{ 'name': SceneUtils.KnownAngles.BACK_ANGLE, 'side_first' : SceneUtils.KnownLines.BACK_LINE, 'side_second' : SceneUtils.KnownLines.HORIZONTAL_REF_LINE, 'ranges' : [{'range' : [40, 45], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
 			];
 
 			texts['stepOneCanvas'] = [
-				{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Length reference', 'x' : 42, 'y' : 40},
-				{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Horizontal reference', 'x' : 42, 'y' : 120},				
+			{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Length reference', 'x' : 42, 'y' : 40},
+			{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Horizontal reference', 'x' : 42, 'y' : 120},				
 			]
 /*
 			points['stepTwoCanvas'] = [
@@ -347,7 +455,7 @@
 				{ 'name' : SceneUtils.KnownLines.VERTICAL_REF_LINE, 'points' : [SceneUtils.KnownPoints.VERT_REF_START, SceneUtils.KnownPoints.VERT_REF_END]},
 				{ 'name' : SceneUtils.KnownLines.CUSTOM_LINE, 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START, SceneUtils.KnownPoints.CUST_TOOL_END]},
 			];
-*/
+			*/
 
 			var scene = new Scene(canvasId, $('.stepCanvasArea').width(), $('.stepCanvasArea').height());
 			scene.load(points[canvasId], lines[canvasId], angles[canvasId], texts[canvasId]);
@@ -359,94 +467,49 @@
 			return scene;
 		}
 
-		self.sceneTop = setupCanvas('stepOneCanvas');		
+		self.sceneTop = self.setupCanvas('stepOneCanvas');		
 		//var sceneBottom = setupCanvas('stepTwoCanvas');
 
-		[self.sceneTop].forEach(function (scene) {
+		[self.sceneTop].forEach(function (scene) {			
 			// Thigh line
-			scene.onLineLengthChanged(function (f, t) {			
-				updateLineSizes();
+			scene.onLineLengthChanged(function (f, t) {	
+				self.updateLineSizes();
 			}, SceneUtils.KnownLines.THIGH_LINE);
 
 			// Shin line
 			scene.onLineLengthChanged(function (f, t) {			
-				updateLineSizes();
+				self.updateLineSizes();
 			}, SceneUtils.KnownLines.SHIN_LINE);
 
 			// Hip to wrist
 			scene.onLineLengthChanged(function (f, t) {
-				updateLineSizes();
+				self.updateLineSizes();
 			}, SceneUtils.KnownLines.HIP_TO_WRIST);
 			
 			// Ref length line
 			scene.onLineLengthChanged(function (from, to) {
-				refDistanceInPixels = from.getDistance(to);
-				updateLineSizes();		
+				self.refDistanceInPixels = from.getDistance(to);
+				self.updateLineSizes();		
 			}, SceneUtils.KnownLines.DISTANCE_REF_LINE);
 
 			// Custom tool
 			scene.onLineLengthChanged(function (f, t) {
-				updateLineSizes();
+				self.updateLineSizes();
 				updateCustomAngle();
 			}, SceneUtils.KnownLines.CUSTOM_LINE);
 
 			// Back line
 			scene.onLineLengthChanged(function (f, t) {
-				updateBackAngle();
+				self.updateBackAngle();
 			}, SceneUtils.KnownLines.BACK_LINE);	
 
 			scene.onLineLengthChanged(function (f, t) {
-				updateBackAngle();
+				self.updateBackAngle();
 			}, SceneUtils.KnownLines.HORIZONTAL_REF_LINE);	
 		});	
 
-		function updateBackAngle() {
-			var hLine = self.sceneTop.getLine(SceneUtils.KnownLines.HORIZONTAL_REF_LINE);
-			var bLine = self.sceneTop.getLine(SceneUtils.KnownLines.BACK_LINE);
-
-			if (hLine == undefined || bLine == undefined)
-				return;
-
-			var angle = GeometryUtils.AngleBetweenLines(hLine, bLine);
-			$('#backAngle').text(angle.toFixed(1) + '°');
-		}
-
-		// Custom tool angle
-		function updateCustomAngle() {
-			var hLine = self.sceneTop.getLine(SceneUtils.KnownLines.HORIZONTAL_REF_LINE);
-			var bLine = self.sceneTop.getLine(SceneUtils.KnownLines.CUSTOM_LINE);
-
-			if (hLine == undefined || bLine == undefined)
-				return;
-
-			var angle = GeometryUtils.AngleBetweenLines(hLine, bLine);
-			$('#customAngle').text(Math.abs(180-angle).toFixed(1) + '°' + ' / ' +angle.toFixed(1) + '°');
-		}
-
-		function updateLineSizes() {
-			function centiMeterstoMeters(val) {
-				return (val * 10).toFixed(1) + ' mm';
-			}
-
-			refDistanceCMPerPixel = refDistanceCM / refDistanceInPixels;
-			var thighLine = self.sceneTop.getLine(SceneUtils.KnownLines.THIGH_LINE);
-			$('#thighLength').text(centiMeterstoMeters(thighLine != undefined ? (thighLine.length() * refDistanceCMPerPixel) : 0));
-
-			var shinLine = self.sceneTop.getLine(SceneUtils.KnownLines.SHIN_LINE);
-			$('#shinLength').text(centiMeterstoMeters(shinLine != undefined ? (shinLine.length() * refDistanceCMPerPixel) : 0));
-
-			var hipToWrist = self.sceneTop.getLine(SceneUtils.KnownLines.HIP_TO_WRIST);
-			$('#hipToWristH').text(centiMeterstoMeters(hipToWrist != undefined ? (hipToWrist.horizontalDistance() * refDistanceCMPerPixel) : 0));
-			$('#hipToWristV').text(centiMeterstoMeters(hipToWrist != undefined ? (hipToWrist.verticalDistance() * refDistanceCMPerPixel) : 0));
-
-			var customLine = self.sceneTop.getLine(SceneUtils.KnownLines.CUSTOM_LINE);
-			$('#endToEndH').text(centiMeterstoMeters(customLine != undefined ? (customLine.horizontalDistance() * refDistanceCMPerPixel) : 0));
-			$('#endToEndV').text(centiMeterstoMeters(customLine != undefined ? (customLine.verticalDistance() * refDistanceCMPerPixel) : 0));
-			$('#customLength').text(centiMeterstoMeters(customLine != undefined ? (customLine.length() * refDistanceCMPerPixel) : 0));
-		}	
-
-		$($('.stepCanvasArea')[1]).hide();	
-	});
+$($('.stepCanvasArea')[1]).hide();	
+});
 
 </script>
 

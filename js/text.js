@@ -27,6 +27,10 @@ var Text = function (point) {
 		}
 	}
 
+	this.remove = function () {
+		_text.remove();
+	}
+
 	this.registerOnTextSelect = function (func, ctx) {
 		self._onTextSelect.push({'f' : func, 'ctx' : ctx});
 	}

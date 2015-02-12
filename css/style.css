@@ -8,7 +8,8 @@ html, body{
 	font-family: 'Roboto', 'Lato', sans-serif;	
 	background: #FFf;
 	font-weight:400;
-	
+	font-size: 17px;
+
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -25,6 +26,11 @@ body a{
 @font-face {
     font-family: Roboto;
     src: url(../fonts/Roboto-Light.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: RobotoBold;
+    src: url(../fonts/Roboto-Bold.ttf) format('truetype');
 }
 
 .btn-file {
@@ -82,6 +88,16 @@ body a{
 	pointer-events: all;
 }
 
+.custom-tool-bg {
+	background: rgb(244, 244, 244);
+}
+
+.close {
+	font-size: 15px;
+	opacity: 1;
+	padding: 5px;
+}
+
 #stepOneDropdownIco {
 	margin-left: 4px;
 }
@@ -108,7 +124,15 @@ body a{
 
 .angleText {
 	font-weight: 600;
+	font-family: RobotoBold;
+	margin-left: 5px;
 }
+
+.angleName {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
 
 #pipe ul li span {
 	color: #FFF;

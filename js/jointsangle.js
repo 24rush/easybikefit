@@ -32,6 +32,11 @@ var JointsAngle = function (line1, line2, name) {
 		return this;
 	}
 
+	this.remove = function () {		
+		path.remove();
+		angleText.remove();
+	}
+
 	function findCommonPoint() {
 		var m1 = [pointL11, pointL12];
 		var m2 = [pointL21, pointL22];

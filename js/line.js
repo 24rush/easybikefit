@@ -1,10 +1,11 @@
 
-var JointLine = function (point1, point2, visible) {	
+var JointLine = function (point1, point2, visible, name) {	
 	var self = this;
 
-	this.visible = (typeof visible === "undefined") ? true : visible;
+	self.visible = (typeof visible === "undefined") ? true : visible;
+	self.name = (typeof name === "undefined") ? undefined : name;
 	
-	this._onLineChangedCbk = [];
+	self._onLineChangedCbk = [];
 
 	self._from = point1.point();	
 	self._to = point2.point();
@@ -25,13 +26,17 @@ var JointLine = function (point1, point2, visible) {
 		_path.add(self._to);	
 		
 		for (var cbk in self._onLineChangedCbk) {			
-			self._onLineChangedCbk[cbk](self._from, self._to);
+			self._onLineChangedCbk[cbk](self._from, self._to, self.name);
 		}
 	}
 
 	this.onLineChanged = function (cbk) {
 		self._onLineChangedCbk.push(cbk);
-		cbk(self._from, self._to);
+		cbk(self._from, self._to, self.name);
+	}
+
+	this.remove = function () {
+		_path.remove();
 	}
 
 	this.length = function () {		

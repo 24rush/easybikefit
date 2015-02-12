@@ -38,6 +38,11 @@ var JointPoint = function(point) {
 		_text.position = _circle.position.add(0, 1);
 	}
 
+	this.remove = function () {
+		_circle.remove();
+		_text.remove();
+	}
+
 	this.label = function (value) {
 		_text.content = value;
 		centerLabel();
