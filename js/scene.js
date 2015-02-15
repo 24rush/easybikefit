@@ -150,6 +150,12 @@ var Scene =  function (paperScope, width, height) {
 		}
 	}
 
+	this.updateRanges = function(ranges) {
+		for (var idx in ranges) {
+			self.sceneAngles[ranges[idx]['name']].setRanges(ranges[idx]['ranges']);
+		}
+	}
+
 	this.drawLines = function () {
 		this.view._project.activate();
 

@@ -11,12 +11,24 @@
 	<link href="css/style.css" rel='stylesheet' type='text/css' />	
 </head>
 <body>			
-	<div class="container-fluid">		
+	<div class="container-fluid" style="margin-top: 30px;">		
 		<div class="row">
-			<div class="col-md-2">
+			<div class="col-md-2">				
 				<div class="panel panel-default">
-					<div class="panel-heading">Angles</div>
+					<div class="panel-heading">
+						Angles
+					</div>
 					<div class="panel-body">
+						<div class="dropdown btn-group-sm" style="margin-bottom: 5px;">
+							<span>Bike type</span>
+							<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+								Road
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-right" id="bikeTypesList" role="menu" aria-labelledby="dropdownMenu1">							
+							</ul>
+						</div>
+
 						<span class="angleName">Knee Angle Flexion</span><span class="angleText" id="hipKneeAngle"></span>
 						<br>
 						<span class="angleName">Elbow Angle </span><span class="angleText" id="armForeArm"></span>
@@ -32,9 +44,8 @@
 						<div class="alert alert-note alert-small" role="alert" style="margin-top: 5px;">
 							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 							<span class="sr-only">Note:</span>
-							Adjust I and J points to represent a horizontal reference line for correct back angle
-						</div>						
-						<span>Back Angle </span><span class="angleText" id="backAngle"></span>
+							Adjust the horizontal reference for correct back angle
+						</div>												
 					</div>
 				</div>
 
@@ -44,9 +55,9 @@
 						<div id="alertLength" class="alert alert-note alert-small" role="alert">
 							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 							<span class="sr-only">Note:</span>
-							Enter distance reference to get stats
+							Use the length reference to point to something in your picture whose dimensions you know
 						</div>
-						<span class="angleName">Length reference distance </span><input type="text" class="form-control" id="inputLength" style="width: 50px;display: inline;" placeholder="cm">	
+						<span class="angleName">Length of reference </span><input type="text" class="form-control" id="inputLength" style="width: 50px;display: inline;" placeholder="cm">	
 						<br>
 						<span class="angleName">Thigh Length </span><span class="angleText" id="thighLength"></span>
 						<br>
@@ -60,7 +71,7 @@
 
 				<div class="panel panel-default panel-custom-tool">
 					<div class="panel-heading clearfix">
-						<span>Custom tools</span>
+						<span>Custom measurements</span>
 						<span class="glyphicon glyphicon-plus pull-right" aria-hidden="true" id="btnAddCustomTool"></span>
 					</div>
 					<div class="panel-body custom-tool-template" style="display: none;">
@@ -77,20 +88,26 @@
 			</div>
 
 			<div class="col-md-8">
-				<div class="stepWorkArea">
-					<div class="stepHeader alert alert-header unselectable" role="alert">
-						<span id="stepOneDropdownIco" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>				
-						<b>Step 1 </b>| Side picture with leg straight (cranks at 6 and 12 o'clock)
-						<span class="btn btn-default btn-file" style="margin-left: 10px;">
-							Upload a picture of you<input type="file" id="fileOne" class="clickable">
-						</span>
-					</div>		
+				<div class="stepWorkArea alert alert-header" role="alert">											
+					
+					<span class="btn btn-default btn-file" style="margin: 0 16px 4px 0;">
+						Upload a picture or video of you<input type="file" id="fileOne" accept="video/*" class="clickable">
+					</span>
+					<div class="inline" style="display:none;" id="videoControls">
+						<span id="rwd" class="video-control unselectable glyphicon glyphicon-backward"></span>
+						<span id="play" class="video-control unselectable glyphicon glyphicon-pause"></span>
+						<span id="fwd" class="video-control unselectable glyphicon glyphicon-forward"></span>
+						<span>Advance/rewind by: </span>
+						<input type="text" class="form-control" id="advanceValue" style="width: 70px;display: inline;" value="0.25">	
+					</div>
+
 					<div class="stepCanvasArea" style="width: 100%; height: 100%; pointer-events: none;background-color: #E5FFF7; background-repeat: no-repeat; background-position: center;background-image: url(http://www.triradar.com/files/2014/01/DIY-Bike-Fit.jpg); background-size: contain;">
-						<canvas id="stepOneCanvas" style="pointer-events: all; width: 100%; height: 100%;"></canvas>
+						<video id="riderVideo" class="video-js vjs-default-skin" style="width: 100%; display: none;" autoplay loop></video>
+						<canvas id="stepOneCanvas" style="pointer-events: all; top: 30px; width: 100%; position: absolute;"></canvas>						
 					</div>		
 				</div>
 
-				<div class="stepWorkArea" style="margin-top: 5px;">
+				<!--div class="stepWorkArea" style="margin-top: 5px;">
 					<div class="stepHeader alert alert-header unselectable" role="alert">
 						<span id="stepOneDropdownIco" class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>				
 						<b>Step 2 </b>| Side picture with knee bent (cranks at 3 and 9 o'clock)
@@ -101,7 +118,7 @@
 					<div class="stepCanvasArea" style="width:100%; height: 100%; pointer-events: none;background-color: #E5FFF7; background-repeat: no-repeat; background-position: center;background-image: url(http://www.londoncyclist.co.uk/wp-content/uploads/2013/03/bike-fitting-side-view-of-cyclist.jpg); background-size: contain;">
 						<canvas id="stepTwoCanvas" style="pointer-events: all; width: 100%; height: 100%;"></canvas>
 					</div>		
-				</div>
+				</div-->
 			</div>
 		</div>
 	</div>
@@ -118,7 +135,8 @@
 	<script src="js/jointsangle.js" type="text/javascript"></script>	
 	<script src="js/dependentpoint.js" type="text/javascript"></script>
 	<script src="js/scene.js" type="text/javascript"></script>
-	<script src="js/vectorutils.js" type="text/javascript"></script>
+	<script src="js/vectorutils.js" type="text/javascript"></script>	
+	<script src="js/videoplayer.js" type="text/javascript"></script>	
 
 	<script type="text/javascript">
 	$(document).on('change', '.btn-file :file', function(evt) {	
@@ -136,35 +154,111 @@
 		var lastCustomToolNo = 0;
 
 		self.customToolsList = [];
+		self.ranges = {};
+
+		self.points = {};
+		self.lines = {};
+		self.angles = {};
+		self.texts = {};	
 
 		var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		var lastLabel = 0;			
 
-		var windowHeight = 0.8 * $(window).height();
-		$('.stepCanvasArea').height(windowHeight);	
+		var windowHeight = 0.9 * $(window).height();
+		$('.stepCanvasArea').height(windowHeight);		
 
-		var inputLength = $('#inputLength');
+		self.video = new VideoPlayer('riderVideo');
+		self.videoAdvanceValue = 0.25;
+		self.video.height(windowHeight);
+
+		self.videoControls = $('#videoControls');
+
+		self.video.onStatusChanged(function (status) {
+			console.log('status' + status);
+			var playBtn = $('#play');
+			playBtn.removeClass('glyphicon-play');
+			playBtn.removeClass('glyphicon-pause');
+
+			playBtn.addClass(status['playbackStatus'] == true ? 'glyphicon-play' : 'glyphicon-pause');
+		});
+		
+		self.videoControls.find('#play').click(function (evt) {
+			self.video.togglePlayPause();
+		});
+
+		self.videoControls.find('#rwd').click(function (evt) {						
+			self.video.pause();
+			self.video.rewind(-self.videoAdvanceValue);
+		});
+
+		self.videoControls.find('#fwd').click(function (evt) {
+			self.video.pause();			
+			self.video.advance(self.videoAdvanceValue);
+		});
+
+		var advanceValue = $('#advanceValue');
+		advanceValue.bind("propertychange change click keyup input paste", function(e) { 
+			var parsedValue = parseFloat(advanceValue.val());			
+
+			if (parsedValue != NaN) {
+				self.videoAdvanceValue = parsedValue !== NaN ? parsedValue : self.videoAdvanceValue;				
+			}	
+		});
+
+		self.videoControls.hide();
+
+		var inputLength = $('#inputLength');		
+
 		self.refDistanceCM = 0;
 		self.refDistanceInPixels = 0;
 		self.refDistanceCMPerPixel  = 0;
 
-		$('.btn-file :file').on('fileselect', function(event, numFiles, targetId) {
-			var file = new FileReader();			
-			file.readAsDataURL(event.target.files[0]);
+		$('.btn-file :file').on('fileselect', function(event, numFiles, targetId) {			
+			var file = event.target.files[0];
+			var type = file.type;
 
-			file.onload = function(evt) {	
-				var destination = $(targetId == 'fileOne' ? $('.stepCanvasArea')[0] : $('.stepCanvasArea')[1]);
-				destination.css('background-image', 'url("' + evt.target.result + '")');
-				loadToolbox();
-			}		
+			var imageMimes = ['image/png', 'image/gif', 'image/bmp', 'image/jpg', 'image/jpeg'];
+			
+			if (imageMimes.indexOf(type) != -1) {
+				var file = new FileReader();			
+				file.readAsDataURL(event.target.files[0]);
+
+				file.onload = function(evt) {
+					self.video.show(false);
+					self.videoControls.hide();
+
+					var destination = $(targetId == 'fileOne' ? $('.stepCanvasArea')[0] : $('.stepCanvasArea')[1]);
+					destination.css('background-image', 'url("' + evt.target.result + '")');				
+				}		
+
+				return;
+			}			
+			
+			if (!window.URL && !window.webkitURL) {
+				alert('Your browser is not ' + '<a href="http://caniuse.com/bloburls">supported</a>!', true);
+				return;
+			}           
+
+			var isOk = self.video.canPlay(type);
+			var message = 'Can play type "' + type + '": ' + isOk;			
+			
+			if (!isOk) { return; }					
+
+			$('.stepCanvasArea').css('background-image', 'none');
+
+			var fileURL = URL.createObjectURL(file);				
+
+			self.video.show(true);	
+			self.videoControls.show();		
+			self.video.setSource(fileURL);			
 		});
 
-		$('.stepHeader').click(function(event) {			
-			if (event.target.localName == 'input')
-				return;
+$('.stepHeader').click(function(event) {			
+	if (event.target.localName == 'input')
+		return;
 
-			$.each($('.stepHeader'), function (index, step) {
-				var menuIco = $(step).find('#stepOneDropdownIco');			
+	$.each($('.stepHeader'), function (index, step) {
+		var menuIco = $(step).find('#stepOneDropdownIco');			
 				//Close
 				if (menuIco.hasClass('glyphicon-chevron-down') == true) {
 					menuIco.removeClass('glyphicon-chevron-down');
@@ -183,70 +277,68 @@
 					});					
 				}
 			});
-		});
+});
 
-		$('#btnAddCustomTool').click(function () {
-			var getNextLabel = self.getNextLabel;
-			var onAngleChanged = self.onAngleChanged;
-			var onLineLengthChanged = self.onCustomToolLineChanged;
+$('#btnAddCustomTool').click(function () {
+	var getNextLabel = self.getNextLabel;
+	var onAngleChanged = self.onAngleChanged;
+	var onLineLengthChanged = self.onCustomToolLineChanged;
 
-			var startLabel = getNextLabel();
-			var middleLabel = getNextLabel();
-			var endLabel = getNextLabel();
+	var startLabel = getNextLabel();
+	var middleLabel = getNextLabel();
+	var endLabel = getNextLabel();
 
-			points = [		
-			{'x': 49,  'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START + lastCustomToolNo, 'label' : startLabel},
-			{'x': 140, 'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo, 'label' : middleLabel},
-			{'x': 230, 'y' : lastCustomToolY + 20,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END + lastCustomToolNo, 'label' : endLabel},
-			];
+	points = [		
+	{'x': 49,  'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START + lastCustomToolNo, 'label' : startLabel},
+	{'x': 140, 'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo, 'label' : middleLabel},
+	{'x': 230, 'y' : lastCustomToolY + 20,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END + lastCustomToolNo, 'label' : endLabel},
+	];
 
-			var customToolBase = SceneUtils.KnownLines.CUSTOM_TOOL + '_' + lastCustomToolNo + '_';
+	var customToolBase = SceneUtils.KnownLines.CUSTOM_TOOL + '_' + lastCustomToolNo + '_';
 
-			lines = [
-			{ 'name' : customToolBase + '0', 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START + lastCustomToolNo, SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo], 'onLineLengthChanged' : onLineLengthChanged},
-			{ 'name' : customToolBase + '1', 'points' : [SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo, SceneUtils.KnownPoints.CUST_TOOL_END + lastCustomToolNo], 'onLineLengthChanged' : onLineLengthChanged},
-			];
+	lines = [
+	{ 'name' : customToolBase + '0', 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START + lastCustomToolNo, SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo], 'onLineLengthChanged' : onLineLengthChanged},
+	{ 'name' : customToolBase + '1', 'points' : [SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo, SceneUtils.KnownPoints.CUST_TOOL_END + lastCustomToolNo], 'onLineLengthChanged' : onLineLengthChanged},
+	];
 
-			angles = [
-			{ 'name': SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo, 'side_first' : customToolBase + '0', 'side_second' : customToolBase + '1', 'ranges' : [{'range' : [0, 180], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
-			];
+	angles = [
+	{ 'name': SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo, 'side_first' : customToolBase + '0', 'side_second' : customToolBase + '1', 'ranges' : [{'range' : [0, 180], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+	];
 
-			self.sceneTop.load(points, lines, angles, []);		
+	self.sceneTop.load(points, lines, angles, []);		
 
-			var template = $('.custom-tool-template').clone();
-			template.find('#customLength0').attr('id', customToolBase + '0').prev().text(startLabel + '-' + middleLabel +' Length');
-			template.find('#customLength1').attr('id', customToolBase + '1').prev().text(middleLabel + '-' + endLabel +' Length');
-			template.find('#customAngle').attr('id', SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo);
+	var template = $('.custom-tool-template').clone();
+	template.find('#customLength0').attr('id', customToolBase + '0').prev().text(startLabel + '-' + middleLabel +' Length');
+	template.find('#customLength1').attr('id', customToolBase + '1').prev().text(middleLabel + '-' + endLabel +' Length');
+	template.find('#customAngle').attr('id', SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo);
 
-			template.find('.remove-custom-tool').attr('ctx', customToolBase).removeClass('remove-custom-tool').addClass('remove-custom-tool' + lastCustomToolNo);
+	template.find('.remove-custom-tool').attr('ctx', customToolBase).removeClass('remove-custom-tool').addClass('remove-custom-tool' + lastCustomToolNo);
 
-			template.removeClass('custom-tool-template');
-			template.addClass('custom-tool-' + lastCustomToolNo);
+	template.removeClass('custom-tool-template');
+	template.addClass('custom-tool-' + lastCustomToolNo);
 
-			template.show();
-			self.customToolsList.push(customToolBase);
+	template.show();
+	self.customToolsList.push(customToolBase);
 
-			$('.panel-custom-tool').append(template[0].outerHTML);
-			$('.remove-custom-tool' + lastCustomToolNo).click(function() {
-				var ctx = $(this).attr('ctx');
-				self.customToolsList.splice(self.customToolsList.indexOf(ctx), 1);
+	$('.panel-custom-tool').append(template[0].outerHTML);
+	$('.remove-custom-tool' + lastCustomToolNo).click(function() {
+		var ctx = $(this).attr('ctx');
+		self.customToolsList.splice(self.customToolsList.indexOf(ctx), 1);
 
-				var toolNo = self.getToolIdFromName(ctx);
+		var toolNo = self.getToolIdFromName(ctx);
 
-				var pointIdsToRemove = [SceneUtils.KnownPoints.CUST_TOOL_START + toolNo, SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + toolNo, SceneUtils.KnownPoints.CUST_TOOL_END + toolNo];
-				var lineIdsToRemove = [ctx + '0', ctx + '1'];
-				var angleIdsToRemove = [SceneUtils.KnownAngles.CUSTOM_ANGLE + toolNo];
+		var pointIdsToRemove = [SceneUtils.KnownPoints.CUST_TOOL_START + toolNo, SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + toolNo, SceneUtils.KnownPoints.CUST_TOOL_END + toolNo];
+		var lineIdsToRemove = [ctx + '0', ctx + '1'];
+		var angleIdsToRemove = [SceneUtils.KnownAngles.CUSTOM_ANGLE + toolNo];
 
-				self.sceneTop.unload(pointIdsToRemove, lineIdsToRemove, angleIdsToRemove);
+		self.sceneTop.unload(pointIdsToRemove, lineIdsToRemove, angleIdsToRemove);
 
-				$(this).parent().parent().detach();
-			});
+		$(this).parent().parent().detach();
+	});
 
-			lastCustomToolY += 40;
-			lastCustomToolNo += 1;
-
-
-		});	
+	lastCustomToolY += 40;
+	lastCustomToolNo += 1;
+});		  
 
 inputLength.data('oldVal', inputLength.val());
 inputLength.bind("propertychange change click keyup input paste", function(e) {
@@ -266,17 +358,132 @@ inputLength.bind("propertychange change click keyup input paste", function(e) {
 	}
 });
 
-inputLength.keydown(function(event) {                
-	if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 
-		|| event.keyCode == 27 || event.keyCode == 13 
-		|| (event.keyCode == 65 && event.ctrlKey === true) 
-		|| (event.keyCode >= 35 && event.keyCode <= 39))
-		return;		
+[inputLength, advanceValue].forEach(function (ctrl) {
+	ctrl.keydown(function(event) {
+		var allowedKeyCodes = [8, 9, 13, 27, 37, 39, 46];
+		if (allowedKeyCodes.indexOf(event.keyCode) != -1 
+			|| (event.keyCode == 190 && $(this).val().indexOf('.') == -1)
+			|| (event.keyCode == 65 && event.ctrlKey === true) 
+			|| (event.keyCode >= 35 && event.keyCode <= 39)) 
+			return;			
 
-	if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
-		event.preventDefault(); 
-	}   
+		if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
+			event.preventDefault(); 
+		}   
+	});
 });
+
+self.ranges['road'] = [
+{'name' : SceneUtils.KnownAngles.ARM_FOREARM, 'ranges': [{'range' : [150, 170], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.HIP_KNEE_ANGLE, 'ranges' : [{'range' : [140, 145], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.KNEE_EXTENSION, 'ranges' : [{'range' : [35, 40], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.ARM_PIT, 'ranges' : [{'range' : [80, 90], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.BACK_ANGLE, 'ranges' : [{'range' : [40, 45], 'color' : 'green'}]},
+];
+
+self.ranges['mtb'] = [
+{'name' : SceneUtils.KnownAngles.ARM_FOREARM, 'ranges': [{'range' : [150, 170], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.HIP_KNEE_ANGLE, 'ranges' : [{'range' : [140, 145], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.KNEE_EXTENSION, 'ranges' : [{'range' : [35, 40], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.ARM_PIT, 'ranges' : [{'range' : [75, 80], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.BACK_ANGLE, 'ranges' : [{'range' : [45, 50], 'color' : 'green'}]},
+];
+
+self.ranges['tt'] = [
+{'name' : SceneUtils.KnownAngles.ARM_FOREARM, 'ranges': [{'range' : [90, 100], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.HIP_KNEE_ANGLE, 'ranges' : [{'range' : [138, 143], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.KNEE_EXTENSION, 'ranges' : [{'range' : [37, 42], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.ARM_PIT, 'ranges' : [{'range' : [75, 80], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.BACK_ANGLE, 'ranges' : [{'range' : [20, 22], 'color' : 'green'}]},
+];
+
+self.ranges['tri'] = [
+{'name' : SceneUtils.KnownAngles.ARM_FOREARM, 'ranges': [{'range' : [90, 100], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.HIP_KNEE_ANGLE, 'ranges' : [{'range' : [138, 143], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.KNEE_EXTENSION, 'ranges' : [{'range' : [37, 42], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.ARM_PIT, 'ranges' : [{'range' : [70, 75], 'color' : 'green'}]},
+{'name' : SceneUtils.KnownAngles.BACK_ANGLE, 'ranges' : [{'range' : [22, 25], 'color' : 'green'}]},
+];
+
+self.buildAngleRanges = function () {
+	function rangeLabel (name) {
+		switch (name)
+		{
+			case SceneUtils.KnownAngles.ARM_FOREARM:
+			return 'Elbow Angle';
+			case SceneUtils.KnownAngles.HIP_KNEE_ANGLE:
+			return 'Knee Angle Flexion';
+			case SceneUtils.KnownAngles.KNEE_EXTENSION:
+			return 'Knee Angle Extension';
+			case SceneUtils.KnownAngles.ARM_PIT:
+			return 'Shoulder Angle to Elbow';
+			case SceneUtils.KnownAngles.BACK_ANGLE:
+			return 'Back Angle';
+		}
+	}
+
+	var bikeTypesList = $('#bikeTypesList');
+	var bikeTypes = ['road', 'mtb', 'tri', 'tt'];
+	var bikeTypeLables = ['Road', 'MTB', 'Triathlon', 'Time trial'];
+
+	for (var i = 0; i < bikeTypes.length; i++) {
+		var a = $('<a/>', {
+			role : 'menuitem',
+			value : bikeTypes[i],
+			tabindex : '-1',
+			href : '#',
+			class : 'strong',
+			text : bikeTypeLables[i]
+		});
+
+		var li = $('<li/>', {
+			role : 'presentation'
+		});
+
+		li.append(a);
+		bikeTypesList.append(li);
+
+		for (var j = 0; j < self.ranges[bikeTypes[i]].length; j++) {
+			var currRange = self.ranges[bikeTypes[i]][j]['ranges'][0]['range'];
+			var label = rangeLabel(self.ranges[bikeTypes[i]][j]['name']);
+
+			var li = $('<li/>', {
+				role : 'presentation',
+				class : 'dropdown-header unselectable',
+				text : label + ': '
+			});
+
+			var span = $('<span/>', {
+				class : 'strong',
+				text : currRange[0] + ' ' + currRange[1]
+			});
+
+			li.append(span);
+			bikeTypesList.append(li);
+		}
+	}
+
+	$(".dropdown-menu li a").click(function(){
+		console.log($(this).parents(".dropdown").find('.btn'));
+		$(this).parents(".dropdown").find('.btn').html($(this).text()+" <span class=\"caret\"></span>");
+		$(this).parents(".dropdown").find('.btn').val($(this).text());
+
+		var bikeType = $(this).attr('value');	
+		self.sceneTop.updateRanges(self.ranges[bikeType]);
+	});
+
+}();
+
+self.getRange = function(type, angle) {
+	var selectedRange = self.ranges[type];
+	for (idx in selectedRange) {
+		if (selectedRange[idx]['name'] == angle) {
+			return selectedRange[idx]['ranges'];
+		}
+	}
+
+	return [];
+}
 
 self.onAngleChanged = function(angle, target) {
 			//console.log(angle + ' ' + target);
@@ -316,7 +523,7 @@ self.onAngleChanged = function(angle, target) {
 				return;
 
 			var angle = GeometryUtils.AngleBetweenLines(hLine, bLine);
-			$('#backAngle').text(angle.toFixed(1) + '°');
+			$('#backAngle').text((180 - angle).toFixed(1) + '°');
 		}
 
 		// Custom tool angle
@@ -370,18 +577,18 @@ self.onAngleChanged = function(angle, target) {
 			return label;
 		}
 
-		self.setupCanvas = function(canvasId) {
-			paper.setup(canvasId);
+		self.reloadScene = function () {
+			var canvasId = "stepOneCanvas";
+			self.sceneTop.load(self.points[canvasId], self.lines[canvasId], self.angles[canvasId], self.texts[canvasId]);
+		}
 
-			var points = {};
-			var lines = {};
-			var angles = {};
-			var texts = {};
+		self.setupCanvas = function(canvasId) {
+			paper.setup(canvasId);		
 
 			var getNextLabel = self.getNextLabel;
-			var onAngleChanged = self.onAngleChanged;
+			var onAngleChanged = self.onAngleChanged;					
 
-			points['stepOneCanvas'] = [
+			self.points['stepOneCanvas'] = [
 			{'x': 647, 'y' : 140, 'scale' : true, 'name' : SceneUtils.KnownPoints.SHOULDER, 'label' : getNextLabel()},
 			{'x': 703, 'y' : 246, 'scale' : true, 'name' : SceneUtils.KnownPoints.ELBOW, 'label' : getNextLabel()},
 			{'x': 794, 'y' : 291, 'scale' : true, 'name' : SceneUtils.KnownPoints.WRIST, 'label' : getNextLabel()},
@@ -389,14 +596,14 @@ self.onAngleChanged = function(angle, target) {
 			{'x': 615, 'y' : 370, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE, 'label' : getNextLabel()},
 			{'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : getNextLabel()},		
 
-			{'x': 49,  'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : getNextLabel()},
-			{'x': 179, 'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : getNextLabel()},
+			{'x': 49,  'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : getNextLabel()},
+			{'x': 179, 'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : getNextLabel()},
 
-			{'x': 49, 'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_START, 'label' : getNextLabel()},
-			{'x': 179, 'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_END, 'label' : getNextLabel()}
+			{'x': 49, 'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_START, 'label' : getNextLabel()},
+			{'x': 179, 'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_END, 'label' : getNextLabel()}
 			];
 
-			lines['stepOneCanvas'] = [
+			self.lines['stepOneCanvas'] = [
 			{ 'name' : SceneUtils.KnownLines.ARM_LINE, 'points' : [SceneUtils.KnownPoints.SHOULDER, SceneUtils.KnownPoints.ELBOW]},
 			{ 'name' : SceneUtils.KnownLines.FOREARM_LINE, 'points' : [SceneUtils.KnownPoints.ELBOW, SceneUtils.KnownPoints.WRIST]},
 			{ 'name' : SceneUtils.KnownLines.THIGH_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.KNEE]},
@@ -409,56 +616,22 @@ self.onAngleChanged = function(angle, target) {
 			{ 'name' : SceneUtils.KnownLines.HORIZONTAL_REF_LINE, 'points' : [SceneUtils.KnownPoints.HORIZ_REF_START, SceneUtils.KnownPoints.HORIZ_REF_END]},
 			];
 
-			angles['stepOneCanvas'] = [
-			{ 'name': SceneUtils.KnownAngles.ARM_FOREARM, 'side_first' : SceneUtils.KnownLines.ARM_LINE, 'side_second' : SceneUtils.KnownLines.FOREARM_LINE, 'ranges' : [{'range' : [150, 170], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
-			{ 'name': SceneUtils.KnownAngles.HIP_KNEE_ANGLE, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.SHIN_LINE, 'ranges' : [{'range' : [140, 145], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
-			{ 'name': SceneUtils.KnownAngles.KNEE_EXTENSION, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.BACK_LINE, 'ranges' : [{'range' : [35, 40], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+			self.angles['stepOneCanvas'] = [
+			{ 'name': SceneUtils.KnownAngles.ARM_FOREARM, 'side_first' : SceneUtils.KnownLines.ARM_LINE, 'side_second' : SceneUtils.KnownLines.FOREARM_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.ARM_FOREARM), 'onAngleChanged' : onAngleChanged},
+			{ 'name': SceneUtils.KnownAngles.HIP_KNEE_ANGLE, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.SHIN_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.HIP_KNEE_ANGLE), 'onAngleChanged' : onAngleChanged},
+			{ 'name': SceneUtils.KnownAngles.KNEE_EXTENSION, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.BACK_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.KNEE_EXTENSION), 'onAngleChanged' : onAngleChanged},
 			{ 'name': SceneUtils.KnownAngles.HIP_OPEN, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.BACK_LINE, 'onAngleChanged' : onAngleChanged},
-			{ 'name': SceneUtils.KnownAngles.ARM_PIT, 'side_first' : SceneUtils.KnownLines.BACK_LINE, 'side_second' : SceneUtils.KnownLines.ARM_LINE, 'ranges' : [{'range' : [80, 90], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
-			{ 'name': SceneUtils.KnownAngles.BACK_ANGLE, 'side_first' : SceneUtils.KnownLines.BACK_LINE, 'side_second' : SceneUtils.KnownLines.HORIZONTAL_REF_LINE, 'ranges' : [{'range' : [40, 45], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+			{ 'name': SceneUtils.KnownAngles.ARM_PIT, 'side_first' : SceneUtils.KnownLines.BACK_LINE, 'side_second' : SceneUtils.KnownLines.ARM_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.ARM_PIT), 'onAngleChanged' : onAngleChanged},
+			{ 'name': SceneUtils.KnownAngles.BACK_ANGLE, 'side_first' : SceneUtils.KnownLines.BACK_LINE, 'side_second' : SceneUtils.KnownLines.HORIZONTAL_REF_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.BACK_ANGLE), 'onAngleChanged' : onAngleChanged},
 			];
 
-			texts['stepOneCanvas'] = [
+			self.texts['stepOneCanvas'] = [
 			{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Length reference', 'x' : 42, 'y' : 40},
 			{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Horizontal reference', 'x' : 42, 'y' : 120},				
 			]
-/*
-			points['stepTwoCanvas'] = [
-				{'x': 647, 'y' : 140, 'scale' : true, 'name' : SceneUtils.KnownPoints.SHOULDER, 'label' : getNextLabel()},
-				{'x': 703, 'y' : 246, 'scale' : true, 'name' : SceneUtils.KnownPoints.ELBOW, 'label' : getNextLabel()},
-				{'x': 794, 'y' : 291, 'scale' : true, 'name' : SceneUtils.KnownPoints.WRIST, 'label' : getNextLabel()},
-				{'x': 476, 'y' : 261, 'scale' : true, 'name' : SceneUtils.KnownPoints.HIP, 'label' : getNextLabel()},
-				{'x': 615, 'y' : 370, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE, 'label' : getNextLabel()},
-				{'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : getNextLabel()},
-				{'x': 655, 'y' : 330, 'scale' : true, 'name' : SceneUtils.KnownPoints.TIBIA, 'label' : getNextLabel()},
-				{'x': 662, 'y' : 651, 'scale' : true, 'name' : SceneUtils.KnownPoints.SPINDLE, 'label' : getNextLabel()},
-				{'x': 49,  'y' : 60,  'scale' : true, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START, 'label' : getNextLabel()},
-				{'x': 179, 'y' : 60,  'scale' : true, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END, 'label' : getNextLabel()},
-
-				{'x': 49,  'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : getNextLabel()},
-				{'x': 179, 'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : getNextLabel()},
-
-				{'x': 112, 'y' : 207, 'scale' : false, 'name' : SceneUtils.KnownPoints.VERT_REF_START, 'label' : getNextLabel()},
-				{'x': 112, 'y' : 309, 'scale' : false, 'name' : SceneUtils.KnownPoints.VERT_REF_END, 'label' : getNextLabel()}
-			];
-
-			lines['stepTwoCanvas'] = [
-				{ 'name' : SceneUtils.KnownLines.ARM_LINE, 'points' : [SceneUtils.KnownPoints.SHOULDER, SceneUtils.KnownPoints.ELBOW]},
-				{ 'name' : SceneUtils.KnownLines.FOREARM_LINE, 'points' : [SceneUtils.KnownPoints.ELBOW, SceneUtils.KnownPoints.WRIST]},
-				{ 'name' : SceneUtils.KnownLines.THIGH_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.KNEE]},
-				{ 'name' : SceneUtils.KnownLines.SHIN_LINE, 'points' : [SceneUtils.KnownPoints.KNEE, SceneUtils.KnownPoints.ANKLE]},
-				{ 'name' : SceneUtils.KnownLines.BACK_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.SHOULDER]},
-
-				{ 'name' : SceneUtils.KnownLines.HIP_TO_WRIST, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.WRIST], 'visible' : false},
-
-				{ 'name' : SceneUtils.KnownLines.DISTANCE_REF_LINE, 'points' : [SceneUtils.KnownPoints.LEN_REF_START, SceneUtils.KnownPoints.LEN_REF_END]},
-				{ 'name' : SceneUtils.KnownLines.VERTICAL_REF_LINE, 'points' : [SceneUtils.KnownPoints.VERT_REF_START, SceneUtils.KnownPoints.VERT_REF_END]},
-				{ 'name' : SceneUtils.KnownLines.CUSTOM_LINE, 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START, SceneUtils.KnownPoints.CUST_TOOL_END]},
-			];
-			*/
 
 			var scene = new Scene(canvasId, $('.stepCanvasArea').width(), $('.stepCanvasArea').height());
-			scene.load(points[canvasId], lines[canvasId], angles[canvasId], texts[canvasId]);
+			scene.load(self.points[canvasId], self.lines[canvasId], self.angles[canvasId], self.texts[canvasId]);
 
 			view.onFrame = function (event) {
 				scene.animateJoints(event);
@@ -467,8 +640,7 @@ self.onAngleChanged = function(angle, target) {
 			return scene;
 		}
 
-		self.sceneTop = self.setupCanvas('stepOneCanvas');		
-		//var sceneBottom = setupCanvas('stepTwoCanvas');
+		self.sceneTop = self.setupCanvas('stepOneCanvas');				
 
 		[self.sceneTop].forEach(function (scene) {			
 			// Thigh line

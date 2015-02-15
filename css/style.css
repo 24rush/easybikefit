@@ -33,6 +33,10 @@ body a{
     src: url(../fonts/Roboto-Bold.ttf) format('truetype');
 }
 
+.inline {
+	display: inline;
+}
+
 .btn-file {
 	position: relative;
 	overflow: hidden;
@@ -133,6 +137,17 @@ body a{
 	margin-bottom: 5px;
 }
 
+.video-control {
+	padding-right: 15px;
+}
+
+.strong {
+	font-family: RobotoBold;
+}
+
+.dropdown-header {
+	font-size: 13px;
+}
 
 #pipe ul li span {
 	color: #FFF;
