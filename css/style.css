@@ -24,13 +24,65 @@ body a{
 }
 
 @font-face {
-    font-family: Roboto;
-    src: url(../fonts/Roboto-Light.ttf) format('truetype');
+	font-family: Roboto;
+	src: url(../fonts/Roboto-Light.ttf) format('truetype');
 }
 
 @font-face {
-    font-family: RobotoBold;
-    src: url(../fonts/Roboto-Bold.ttf) format('truetype');
+	font-family: RobotoBold;
+	src: url(../fonts/Roboto-Bold.ttf) format('truetype');
+}
+
+.tooltip-inner {
+    max-width: 350px;
+    width: 250px;
+}
+
+.tooltip.top .tooltip-inner {
+	background-color: white;
+}
+.tooltip.top .tooltip-arrow {
+	border-top-color: white;
+}
+
+.tooltip.in {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+
+.tooltipContainer {
+	background-color: white;
+	color: black;
+	opacity: 1;
+
+	border: 1px solid rgba(0,0,0,.15);
+	border-radius: 4px;
+	-webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+	box-shadow: 0 6px 12px rgba(0,0,0,.175);
+
+	padding: 5px;
+	width: 100%;
+
+	font-size: 14px;
+}
+
+.infoBox {
+	background-image: url("http://www.veryicon.com/icon/png/System/Dustbunnies%20Full/info.png");
+	background-repeat: no-repeat;
+}
+
+.numberCircle {
+	margin: 3px;
+	display: inline-block;
+	border-radius: 50%;
+    behavior: url(PIE.htc); 
+
+	width: 18px;
+    height: 18px;
+    background: #12335E;
+    border: 1px solid #0E812E;
+    color: white;
+    font-size: 14px;
 }
 
 .inline {
@@ -107,13 +159,13 @@ body a{
 }
 
 .unselectable {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: default;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: default;
 }
 
 #stepTwoCanvas:active,
@@ -123,9 +175,10 @@ body a{
 
 
 .glyphicon:hover, .glyphicon:focus {
-  	opacity: 0.5;
-  }
+	opacity: 0.5;
+}
 
+.angleTextTooltip,
 .angleText {
 	font-weight: 600;
 	font-family: RobotoBold;
@@ -183,33 +236,33 @@ body a{
 
 /* Base styles (regardless of theme) */
 .bs-callout {
-  margin: 20px 0;
-  padding: 15px 30px 15px 15px;
-  border-left: 5px solid #eee;
+	margin: 20px 0;
+	padding: 15px 30px 15px 15px;
+	border-left: 5px solid #eee;
 }
 .bs-callout h4 {
-  margin-top: 0;
+	margin-top: 0;
 }
 .bs-callout p:last-child {
-  margin-bottom: 0;
+	margin-bottom: 0;
 }
 .bs-callout code,
 .bs-callout .highlight {
-  background-color: #fff;
+	background-color: #fff;
 }
- 
+
 /* Themes for different contexts */
 .bs-callout-danger {
-  background-color: #fcf2f2;
-  border-color: #dFb5b4;
+	background-color: #fcf2f2;
+	border-color: #dFb5b4;
 }
 .bs-callout-warning {
-  background-color: #fefbed;
-  border-color: #f1e7bc;
+	background-color: #fefbed;
+	border-color: #f1e7bc;
 }
 .bs-callout-info {
-  background-color: #f0f7fd;
-  border-color: #d0e3f0;
+	background-color: #f0f7fd;
+	border-color: #d0e3f0;
 }
 
 ul.big-btns{
