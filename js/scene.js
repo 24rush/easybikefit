@@ -11,6 +11,8 @@ var SceneUtils = {
 		SHIN_LINE : 'shinLine',
 		BACK_LINE : 'backLine',
 		HIP_TO_WRIST : 'hipToWrist',
+		HIP_TO_WRIST_H : 'hipToWristH',
+		HIP_TO_WRIST_V : 'hipToWristV',
 	},
 
 	KnownPoints : {
@@ -59,7 +61,7 @@ var Scene =  function (paperScope, width, height) {
 
 	this.paddingRight = 14;
 	this.textHeight = 6;
-	this.rowPadding = 25;
+	this.rowPadding = 20;
 
 	this.scenePoints = [];
 	this.sceneLines = [];

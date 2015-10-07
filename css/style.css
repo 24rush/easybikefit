@@ -4,18 +4,18 @@ Author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 --*/
-html, body{
-	font-family: 'Roboto', 'Lato', sans-serif;	
+html, body {
+	font-family: Arial, sans-serif;
 	background: #FFf;
 	font-weight:400;
-	font-size: 17px;
+	font-size: 15px;
 
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
 }
-body a{
+body a {
 	transition:0.5s all;
 	-webkit-transition:0.5s all;
 	-moz-transition:0.5s all;
@@ -74,15 +74,16 @@ body a{
 .numberCircle {
 	margin: 3px;
 	display: inline-block;
-	border-radius: 50%;
-    behavior: url(PIE.htc); 
+	border-radius: 50%;    
 
-	width: 18px;
-    height: 18px;
+	width: 19px;
+    height: 19px;
     background: #12335E;
     border: 1px solid #0E812E;
     color: white;
     font-size: 14px;
+    text-align: center;
+    line-height: 19px;
 }
 
 .inline {
@@ -122,7 +123,7 @@ body a{
 }
 
 .alert-note {
-	color: #50557B;
+	color: #286AB1;
 	background-color: #E4E4E4;
 	border-color: #DADADA;
 }
@@ -134,6 +135,11 @@ body a{
 
 .panel {
 	border-radius: 0px;
+	margin-bottom: 15px;
+}
+
+.panel-body {
+	padding: 5px 15px 5px 15px;
 }
 
 .text {
@@ -178,6 +184,11 @@ body a{
 	opacity: 0.5;
 }
 
+.lines
+.angles {
+	margin-bottom: 5px;
+}
+
 .angleTextTooltip,
 .angleText {
 	font-weight: 600;
@@ -188,6 +199,12 @@ body a{
 .angleName {
 	margin-top: 5px;
 	margin-bottom: 5px;
+	margin-left: 5px;
+}
+
+.angleSubSection {
+	margin-left: 8px;
+	font-size: 13px;
 }
 
 .video-control {
@@ -200,6 +217,10 @@ body a{
 
 .dropdown-header {
 	font-size: 13px;
+}
+
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
+	background-color: rgba(41, 109, 181, 0.83);
 }
 
 #pipe ul li span {

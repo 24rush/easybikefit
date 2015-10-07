@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Easy road bike fitting</title>
+	<title>Easy bike fit - Fit better</title>
 	
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">		
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">	
@@ -32,42 +32,45 @@
 							</ul>
 						</div>
 
-						<span class="angleName">Knee Angle Flexion</span><span class="angleTextTooltip" id="hipKneeAngle"></span>
-						<br>
-						<span class="angleName">Elbow Angle </span><span class="angleTextTooltip" id="armForeArm"></span>
-						<br>
-						<span class="angleName">Knee Angle Extension </span><span class="angleTextTooltip" id="kneeExtension"></span>
-						<br>
-						<span class="angleName">Hip Angle Open </span><span class="angleText" id="hipOpen"></span>
-						<br>
-						<span class="angleName">Shoulder Angle to Elbow </span><span class="angleTextTooltip" id="armPit"></span>
-						<br>						
+						<!--
+							<angle name> <points>
+							  Current angle: <angleValue>
+							  Recommended range: <r1> - <r2>
+						-->
+						<div af="hipKneeAngle" class="angles"></div>
+						<div af="armForeArm" class="angles"></div>				
+						<div af="kneeExtension" class="angles"></div>			
+						<div af="hipOpen" class="angles"></div>						
+						<div af="armPit" class="angles"></div>									
+
+						<div af="backAngle" class="angles"></div>	
 						<div class="alert alert-note alert-small" role="alert" style="margin-top: 5px;">
 							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 							<span class="sr-only">Note:</span>
 							Adjust the horizontal reference for correct back angle
-						</div>						
-						<span class="angleName">Back Angle </span><span class="angleTextTooltip" id="backAngle"></span>						
+						</div>															
 					</div>
 				</div>
 
 				<div class="panel panel-default">
 					<div class="panel-heading">Lengths</div>
-					<div class="panel-body">	
+					<div class="panel-body">
+					<!--
+						<line name> <points>
+						   Current length: <lineLength>
+					-->
 						<div id="alertLength" class="alert alert-note alert-small" role="alert">
 							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 							<span class="sr-only">Note:</span>
-							Use the length reference to point to something in your picture whose dimensions you know
+							Use the length reference to measure something in your picture whose dimensions you know.
 						</div>
-						<span class="angleName">Length of reference </span><input type="text" class="form-control" id="inputLength" style="width: 50px;display: inline;" placeholder="cm">	
+						<span class="lines">Length of reference </span>
+						<input type="text" class="form-control" id="inputLength" style="width: 50px;display: inline;" placeholder="cm"><span> cm</span>
 						<br>
-						<span class="angleName">Thigh Length </span><span class="angleText" id="thighLength"></span>
-						<br>
-						<span class="angleName">Shin Length </span><span class="angleText" id="shinLength"></span>
-						<br>
-						<span class="angleName">Hip to wrist (horiz) </span><span class="angleText" id="hipToWristH"></span>
-						<br>
-						<span class="angleName">Hip to wrist (vertical) </span><span class="angleText" id="hipToWristV"></span>
+						<div class="lines" lf="thighLine"></div>						
+						<div class="lines" lf="shinLine"></div>						
+						<div class="lines" lf="hipToWristH"></div>						
+						<div class="lines" lf="hipToWristV"></div>
 					</div>
 				</div>
 
@@ -79,9 +82,11 @@
 					<div class="panel-body custom-tool-template" style="display: none;">
 						<div class="custom-tool-bg">
 							<span class="close remove-custom-tool glyphicon glyphicon-remove"></span>								
-							<span class="angleName">Length</span><span class="angleText" id="customLength0"></span>
+							<span class="numberCircle"></span><span class="numberCircle"></span><span class="angleName">Length: </span>
+							<span class="angleText" id="customLength0"></span>
 							<br>
-							<span class="angleName">Length</span><span class="angleText" id="customLength1"></span>
+							<span class="numberCircle"></span><span class="numberCircle"></span><span class="angleName">Length: </span>
+							<span class="angleText" id="customLength1"></span>
 							<br>
 							<span class="angleName">Angle between </span><span class="angleText" id="customAngle"></span>					
 						</div>
@@ -92,7 +97,7 @@
 			<div class="col-md-8">
 				<div class="stepWorkArea alert alert-header" role="alert">											
 					
-					<span class="btn btn-default btn-file" style="margin: 0 16px 4px 0;">
+					<span class="btn btn-default btn-file" style="margin: 0 16px 6px 0; background-color: #286AB1; color: white; border-radius: 3px;">
 						Upload a picture or video of you<input type="file" id="fileOne" accept="video/*" class="clickable">
 					</span>
 					<div class="inline" style="display:none;" id="videoControls">
@@ -103,7 +108,7 @@
 						<input type="text" class="form-control" id="advanceValue" style="width: 70px;display: inline;" value="0.25">	
 					</div>
 
-					<div class="stepCanvasArea" style="width: 100%; height: 100%; pointer-events: none;background-color: #E5FFF7; background-repeat: no-repeat; background-position: center;background-image: url(http://www.triradar.com/files/2014/01/DIY-Bike-Fit.jpg); background-size: contain;">
+					<div class="stepCanvasArea" style="width: 100%; height: 100%; pointer-events: none; background-repeat: no-repeat; background-position: center;background-image: url(http://www.triradar.com/files/2014/01/DIY-Bike-Fit.jpg); background-size: contain;">
 						<video id="riderVideo" class="video-js vjs-default-skin" style="width: 100%; display: none;" autoplay loop></video>
 						<canvas id="stepOneCanvas" style="pointer-events: all; top: 25px; width: 100%; height: 100%; position: absolute;"></canvas>						
 					</div>		
@@ -317,10 +322,15 @@ $('#btnAddCustomTool').click(function () {
 	self.sceneTop.load(points, lines, angles, []);		
 
 	var template = $('.custom-tool-template').clone();
-	template.find('#customLength0').attr('id', customToolBase + '0').prev().text(startLabel + '-' + middleLabel +' Length');
-	template.find('#customLength1').attr('id', customToolBase + '1').prev().text(middleLabel + '-' + endLabel +' Length');
-	template.find('#customAngle').attr('id', SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo);
+	var firstPoint = template.find('#customLength0').attr('id', customToolBase + '0').prev();
+	firstPoint.prev().prev().text(startLabel);
+	firstPoint.prev().text(middleLabel);
 
+	var secondPoint = template.find('#customLength1').attr('id', customToolBase + '1').prev();
+	secondPoint.prev().prev().text(middleLabel);
+	secondPoint.prev().text(endLabel);
+
+	template.find('#customAngle').attr('id', SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo);
 	template.find('.remove-custom-tool').attr('ctx', customToolBase).removeClass('remove-custom-tool').addClass('remove-custom-tool' + lastCustomToolNo);
 
 	template.removeClass('custom-tool-template');
@@ -415,7 +425,7 @@ self.ranges['tri'] = [
 ];
 
 self.buildAngleRanges = function () {
-	function rangeLabel (name) {
+	function measurementLabel(name) {
 		switch (name)
 		{
 			case SceneUtils.KnownAngles.ARM_FOREARM:
@@ -424,10 +434,24 @@ self.buildAngleRanges = function () {
 			return 'Knee Angle Flexion';
 			case SceneUtils.KnownAngles.KNEE_EXTENSION:
 			return 'Knee Angle Extension';
+			case SceneUtils.KnownAngles.HIP_OPEN:
+			return 'Hip Angle Open';
 			case SceneUtils.KnownAngles.ARM_PIT:
 			return 'Shoulder Angle to Elbow';
 			case SceneUtils.KnownAngles.BACK_ANGLE:
 			return 'Back Angle';
+			case SceneUtils.KnownLines.THIGH_LINE:
+			return 'Thigh Line';
+			case SceneUtils.KnownLines.SHIN_LINE:
+			return 'Shin Line';
+			case SceneUtils.KnownLines.BACK_LINE:
+			return 'Back Line';
+			case SceneUtils.KnownLines.HIP_TO_WRIST_H:
+			return 'Hip to wrist (horiz)';
+			case SceneUtils.KnownLines.HIP_TO_WRIST_V:
+			return 'Hip to wrist (vertical)';
+			default:
+			return "";
 		}
 	}
 
@@ -454,7 +478,7 @@ self.buildAngleRanges = function () {
 
 		for (var j = 0; j < self.ranges[bikeTypes[i]].length; j++) {
 			var currRange = self.ranges[bikeTypes[i]][j]['ranges'][0]['range'];
-			var label = rangeLabel(self.ranges[bikeTypes[i]][j]['name']);
+			var label = measurementLabel(self.ranges[bikeTypes[i]][j]['name']);
 
 			var li = $('<li/>', {
 				role : 'presentation',
@@ -472,35 +496,33 @@ self.buildAngleRanges = function () {
 		}
 	}
 
-	self.createAngleHelp = function () {		
-		$('.angleTextTooltip').each(function (i, elem) {
-			var id = $(elem).attr('id');
-			$("<span ttFor=\"" + id + "\" class=\"glyphicon glyphicon-eye-open\" style=\"padding-left: 2px;\" data-html=\"true\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + id + "\"</span>").insertBefore(elem);
-		});
-
-		$('[data-toggle="tooltip"]').tooltip();
-	}();		
-
-	self.updateAngleHelp = function (range) {
-		function getLabels(angle) {
+	self.getLabels = function(angle) {
 			switch (angle) {
 				case SceneUtils.KnownAngles.ARM_FOREARM:
 				return ['A', 'B', 'C'];
 				case SceneUtils.KnownAngles.HIP_KNEE_ANGLE:
 				return ['D', 'E', 'F'];
 				case SceneUtils.KnownAngles.KNEE_EXTENSION:
-				return 'Knee Angle Extension';
+				return ['x', 'E', 'F'];
 				case SceneUtils.KnownAngles.ARM_PIT:
 				return ['D', 'A', 'B'];
 				case SceneUtils.KnownAngles.BACK_ANGLE:
 				return ['A', 'D', 'A'];
+				case SceneUtils.KnownLines.THIGH_LINE:
+				return ['D', 'E'];
+				case SceneUtils.KnownLines.SHIN_LINE:
+				return ['E', 'F'];
+				case SceneUtils.KnownLines.HIP_TO_WRIST_H:
+				return ['D', 'C'];
+				case SceneUtils.KnownLines.HIP_TO_WRIST_V:
+				return ['D', 'C'];
 				default:
 				return [];
 			}			
-		}
+	}	
 
-		function getLabelsFormatted(angle) {
-			var labels = getLabels(angle);			
+	self.getLabelsFormatted = function(angle) {
+			var labels = self.getLabels(angle);			
 			var labelsFormat = "";
 
 			for (var i = 0; i < labels.length; i++) {
@@ -508,28 +530,56 @@ self.buildAngleRanges = function () {
 			};
 
 			return labelsFormat;
-		}
+	}			
 
-		$('[ttFor]').each(function (i, elem) {
-			var jElem = $(elem);
-			var currAngle = jElem.attr('ttFor');
+	self.updateAngleHelp = function (range) {
+		$('.angles').each(function (i, elem) {
+			var id = $(elem).attr('af');	
+
+			var angleName = measurementLabel(id);
+
+			if (angleName == "") 
+				return;
 
 			for (var i = 0; i < range.length; i++) {
-				if (range[i]['name'] == currAngle) {
+				if (range[i]['name'] == id) {
 					var ranges = range[i].ranges[0];
 
-					var htmlText = String.format("<div class='tooltipContainer'><div><span>Recommended range: {0} - {1}</span><div> " +
-						"<span>Angle between" + getLabelsFormatted(currAngle) + "</span></div>" +
-						"</div>", ranges.range[0], ranges.range[1]);
-
-					console.log(htmlText);
-					jElem.attr('data-original-title', htmlText);
+					if ($(elem).children().length > 0) {
+						$(elem).find('#rr_' + id).text(String.format('{0}°-{1}°', ranges.range[0], ranges.range[1]));
+						continue;
+					}
 					
+					$(elem)
+					.append($('<div>').append($('<span>').text(angleName)).append($('<span>').attr('class', 'angleName').html(self.getLabelsFormatted(id))))
+					.append($('<div class=\"angleSubSection\">').append($('<span>').text('Current angle: ')).append($('<span>').attr('id', id).attr('class', 'angleText')))
+					.append($('<div class=\"angleSubSection\">').append($('<span>').text('Recommended range:')).append($('<span id=\"rr_' + id + '\" class="angleText">').text(String.format('{0}°-{1}°', ranges.range[0], ranges.range[1]))));
+
 					break;
-				}
-			}
+				}			
+			}		
+			
 		});
-	};
+	}
+
+	self.buildLines = function () {
+		$('.lines').each(function (i, elem) {
+			var id = $(elem).attr('lf');
+
+			var lineName = measurementLabel(id);
+
+			if (lineName == "") 
+				return;
+
+			$(elem)
+			.append($('<div>').append($('<span>').text(lineName)).append($('<span>').attr('class', 'angleName').html(self.getLabelsFormatted(id))))
+			.append($('<div class=\"angleSubSection\">').append($('<span>').text('Current length: ')).append($('<span>').attr('id', id).attr('class', 'angleText')))
+			/*
+				<line name> <points>
+				  Current length: <lineLength>
+			*/
+		});
+	}();
 
 	$(".dropdown-menu li a").click(function(){		
 		$(this).parents(".dropdown").find('.btn').html($(this).text()+" <span class=\"caret\"></span>");
@@ -621,10 +671,10 @@ self.onAngleChanged = function(angle, target) {
 
 		self.updateLineSizes = function() {						
 			var thighLine = self.sceneTop.getLine(SceneUtils.KnownLines.THIGH_LINE);
-			$('#thighLength').text(self.pixelsToMM(thighLine != undefined ? thighLine.length() : 0));
+			$('#thighLine').text(self.pixelsToMM(thighLine != undefined ? thighLine.length() : 0));
 
 			var shinLine = self.sceneTop.getLine(SceneUtils.KnownLines.SHIN_LINE);
-			$('#shinLength').text(self.pixelsToMM(shinLine != undefined ? shinLine.length() : 0));
+			$('#shinLine').text(self.pixelsToMM(shinLine != undefined ? shinLine.length() : 0));
 
 			var hipToWrist = self.sceneTop.getLine(SceneUtils.KnownLines.HIP_TO_WRIST);
 			$('#hipToWristH').text(self.pixelsToMM(hipToWrist != undefined ? hipToWrist.horizontalDistance() : 0));
@@ -666,11 +716,11 @@ self.onAngleChanged = function(angle, target) {
 			{'x': 615, 'y' : 370, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE, 'label' : getNextLabel()},
 			{'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : getNextLabel()},		
 
-			{'x': 49,  'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : getNextLabel()},
+			{'x': 32,  'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : getNextLabel()},
 			{'x': 179, 'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : getNextLabel()},
 
-			{'x': 49, 'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_START, 'label' : getNextLabel()},
-			{'x': 179, 'y' : 137, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_END, 'label' : getNextLabel()}
+			{'x': 32, 'y' : 122, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_START, 'label' : getNextLabel()},
+			{'x': 179, 'y' : 122, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_END, 'label' : getNextLabel()}
 			];
 
 			self.lines['stepOneCanvas'] = [
@@ -696,8 +746,8 @@ self.onAngleChanged = function(angle, target) {
 			];
 
 			self.texts['stepOneCanvas'] = [
-			{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Length reference', 'x' : 42, 'y' : 40},
-			{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Horizontal reference', 'x' : 42, 'y' : 120},				
+			{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Length reference', 'x' : 22, 'y' : 40},
+			{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Horizontal reference', 'x' : 22, 'y' : 100},				
 			]
 
 			var scene = new Scene(canvasId, $('.stepCanvasArea').width(), $('.stepCanvasArea').height());

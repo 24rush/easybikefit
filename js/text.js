@@ -6,7 +6,7 @@ var Text = function (point) {
 	_text.style = {
 		font: 'sans-serif',
 		fontWeight: 'normal',
-		fontSize: 16,
+		fontSize: 14,
 	};	
 
 	this._onTextSelect = [];

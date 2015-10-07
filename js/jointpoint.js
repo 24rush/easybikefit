@@ -3,7 +3,7 @@ var JointPoint = function(point) {
 	var self = this;
 
 	var _radius = 9;
-	var strokeWidth = 2;
+	var strokeWidth = 1;
 
 	var _circle = new Path.Circle({
 		center: point,
