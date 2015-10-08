@@ -15,7 +15,7 @@
 		<div class="row">
 			<div class="col-md-2">
 				<div>
-					<img src='logo.png'>
+					<img src='logo.jpg' style="max-width: 100%; max-height: 100%; margin-bottom: 1px;">
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -94,7 +94,7 @@
 				</div>
 			</div>
 
-			<div class="col-md-8">
+			<div class="col-md-10">
 				<div class="stepWorkArea alert alert-header" role="alert">											
 					
 					<span class="btn btn-default btn-file" style="margin: 0 16px 6px 0; background-color: #286AB1; color: white; border-radius: 3px;">
@@ -503,7 +503,7 @@ self.buildAngleRanges = function () {
 				case SceneUtils.KnownAngles.HIP_KNEE_ANGLE:
 				return ['D', 'E', 'F'];
 				case SceneUtils.KnownAngles.KNEE_EXTENSION:
-				return ['x', 'E', 'F'];
+				return ['F', 'E', 'G'];
 				case SceneUtils.KnownAngles.ARM_PIT:
 				return ['D', 'A', 'B'];
 				case SceneUtils.KnownAngles.BACK_ANGLE:
@@ -714,13 +714,14 @@ self.onAngleChanged = function(angle, target) {
 			{'x': 794, 'y' : 291, 'scale' : true, 'name' : SceneUtils.KnownPoints.WRIST, 'label' : getNextLabel()},
 			{'x': 476, 'y' : 261, 'scale' : true, 'name' : SceneUtils.KnownPoints.HIP, 'label' : getNextLabel()},
 			{'x': 615, 'y' : 370, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE, 'label' : getNextLabel()},
-			{'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : getNextLabel()},		
+			{'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : getNextLabel()},
+			{'x': 765, 'y' : 487, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE_HIP_VIRTUAL, 'label' : getNextLabel(), 'unmovable' : true},
 
 			{'x': 32,  'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : getNextLabel()},
 			{'x': 179, 'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : getNextLabel()},
 
 			{'x': 32, 'y' : 122, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_START, 'label' : getNextLabel()},
-			{'x': 179, 'y' : 122, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_END, 'label' : getNextLabel()}
+			{'x': 179, 'y' : 122, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_END, 'label' : getNextLabel()}			
 			];
 
 			self.lines['stepOneCanvas'] = [

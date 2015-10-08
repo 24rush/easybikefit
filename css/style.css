@@ -126,6 +126,7 @@ body a {
 	color: #286AB1;
 	background-color: #E4E4E4;
 	border-color: #DADADA;
+	font-size: 14px;
 }
 
 .alert-small {
@@ -135,7 +136,7 @@ body a {
 
 .panel {
 	border-radius: 0px;
-	margin-bottom: 15px;
+	margin-bottom: -1px;
 }
 
 .panel-body {
@@ -184,7 +185,7 @@ body a {
 	opacity: 0.5;
 }
 
-.lines
+.lines,
 .angles {
 	margin-bottom: 5px;
 }

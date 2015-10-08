@@ -18,6 +18,7 @@ var JointPoint = function(point) {
 
 	var _isDragging = false;
 	var _currentScale = -1;
+	var _isMovable = true;
 
 	var _center = point;
 	var _onMoveCbk = [];
@@ -67,6 +68,11 @@ var JointPoint = function(point) {
 		return _circle.position;
 	}
 
+	this.setMovable = function (movable) {		
+		_isMovable = movable;
+		return this;
+	}
+
 	this.radius = function () {		
 		return _radius;
 	}
@@ -91,10 +97,18 @@ var JointPoint = function(point) {
 	}
 
 	this.setMoved = function (event) {
+		oldMovable = _isMovable;
+
+		_isMovable = true;
 		_circle.onMouseDrag(event);
+		_isMovable = oldMovable;
 	}
 
-	_circle.onMouseDrag = function (event) {			
+	_circle.onMouseDrag = function (event) {
+		if (_isMovable == false) {
+			return;
+		}			
+
 		_circle.position = event.point;
 		centerLabel();
 
@@ -104,20 +118,24 @@ var JointPoint = function(point) {
 	}
 
 	_circle.onMouseEnter = function (event) {	
-		if (_isDragging == true)
+		if (_isDragging == true || _isMovable == false)
 			return;					
 
 		self.setScale(_upScaling);				
 	}
 
 	_circle.onMouseLeave = function (event) {
-		if (_isDragging == true)
+		if (_isDragging == true || _isMovable == false)
 			return;
 
 		self.setScale(_downScaling);				
 	}
 
-	_circle.onMouseDown = function (event) {						
+	_circle.onMouseDown = function (event) {
+		if (_isMovable == false) {
+			return;
+		}			
+			
 		self.setScale(_downScaling);
 		_isDragging = true;				
 	}

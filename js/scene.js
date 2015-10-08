@@ -26,6 +26,7 @@ var SceneUtils = {
 
 		TIBIA : 'tibia',
 		SPINDLE : 'spindle',
+		KNEE_HIP_VIRTUAL : 'virtual',
 
 		LEN_REF_START : 'lenRefStart',
 		LEN_REF_END : 'lenRefEnd',
@@ -110,6 +111,8 @@ var Scene =  function (paperScope, width, height) {
 
 		if (self.animationStart == undefined) {
 			self.animationStart = event.time * 1000;
+
+			self.scenePoints[SceneUtils.KnownPoints.KNEE_HIP_VIRTUAL].setMovable(true);
 			return;
 		}
 
@@ -139,6 +142,8 @@ var Scene =  function (paperScope, width, height) {
 
 		if (this.animationEnded == true) {
 			this.drawLines();
+
+			self.scenePoints[SceneUtils.KnownPoints.KNEE_HIP_VIRTUAL].setMovable(false);
 		}		
 	};
 
@@ -173,8 +178,13 @@ var Scene =  function (paperScope, width, height) {
 		var hipPoint = self.scenePoints[SceneUtils.KnownPoints.HIP];
 		var kneePoint = self.scenePoints[SceneUtils.KnownPoints.KNEE];
 
-		var lineHip = new JointLine(kneePoint, new DependantPoint([hipPoint, kneePoint], function () {				
-			return kneePoint.point().subtract(hipPoint.point()).add(kneePoint.point());
+		var lineHip = new JointLine(kneePoint, new DependantPoint([hipPoint, kneePoint], function () {
+			var newPos = kneePoint.point().subtract(hipPoint.point()).add(kneePoint.point());
+			
+			// Move virtual point			
+			self.scenePoints[SceneUtils.KnownPoints.KNEE_HIP_VIRTUAL].setMoved({'point': newPos});
+
+			return newPos;
 		}));		
 	}
 
@@ -241,14 +251,14 @@ var Scene =  function (paperScope, width, height) {
 
 			if (point['scale'] == false) {
 				var finalDestinationPoint = new Point(point['x'], point['y']);
-				self.scenePoints[pointName] = new JointPoint(finalDestinationPoint).label(point['label']).setFinalDestinationPoint(finalDestinationPoint);
+				self.scenePoints[pointName] = new JointPoint(finalDestinationPoint).label(point['label']).setFinalDestinationPoint(finalDestinationPoint).setMovable(point['unmovable'] == undefined ? true : false);
 				continue;
 			}
 			
 			var scaledPoint = new Point(point['x'], point['y']);
 			this.applyScaling(scaledPoint)	
 
-			self.scenePoints[pointName] = new JointPoint(scaledPoint).label(point['label']).setFinalDestinationPoint(scaledPoint);	
+			self.scenePoints[pointName] = new JointPoint(scaledPoint).label(point['label']).setFinalDestinationPoint(scaledPoint).setMovable(point['unmovable'] == undefined ? true : false);	
 		}
 
 		for (var i = 0; i < lines.length; i++) {
