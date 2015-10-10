@@ -1,140 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Easy bike fit - Fit better</title>
-	
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8">		
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">	
-	<link href="css/style.css" rel='stylesheet' type='text/css' />	
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Easy bike fit - Fit better</title>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">     
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">    
+    <link href="css/style.css" rel='stylesheet' type='text/css' />  
 </head>
-<body>			
-	<div class="container-fluid" style="margin-top: 15px;">		
-		<div class="row">
-			<div class="col-md-2">
-				<div>
-					<img src='logo.jpg' style="max-width: 100%; max-height: 100%; margin-bottom: 1px;">
-				</div>
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						Angles
-					</div>
-					<div class="panel-body">
-						<div class="dropdown btn-group-sm" style="margin-bottom: 5px;">
-							<span>Bike type</span>
-							<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-								Road
-								<span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu dropdown-menu-right" id="bikeTypesList" role="menu" aria-labelledby="dropdownMenu1">							
-							</ul>
-						</div>
+<body>          
+    <div class="container-fluid" style="margin-top: 15px;">     
+        <div class="row">
+            <div class="col-md-2">
+                <div>
+                    <img src='logo.jpg' style="max-width: 100%; max-height: 100%; margin-bottom: 1px;">
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Angles
+                    </div>
+                    <div class="panel-body">
+                        <div class="dropdown btn-group-sm" style="margin-bottom: 5px;">
+                            <span>Bike type</span>
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                Road
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" id="bikeTypesList" role="menu" aria-labelledby="dropdownMenu1">                           
+                            </ul>
+                        </div>
 
-						<!--
-							<angle name> <points>
-							  Current angle: <angleValue>
-							  Recommended range: <r1> - <r2>
-						-->
-						<div af="hipKneeAngle" class="angles"></div>
-						<div af="armForeArm" class="angles"></div>				
-						<div af="kneeExtension" class="angles"></div>			
-						<div af="hipOpen" class="angles"></div>						
-						<div af="armPit" class="angles"></div>									
+                        <!--
+                            <angle name> <points>
+                              Current angle: <angleValue>
+                              Recommended range: <r1> - <r2>
+                          -->
+                          <div af="hipKneeAngle" class="angles"></div>
+                          <div af="armForeArm" class="angles"></div>              
+                          <div af="kneeExtension" class="angles"></div>           
+                          <div af="hipOpen" class="angles"></div>                     
+                          <div af="armPit" class="angles"></div>                                  
 
-						<div af="backAngle" class="angles"></div>	
-						<div class="alert alert-note alert-small" role="alert" style="margin-top: 5px;">
-							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-							<span class="sr-only">Note:</span>
-							Adjust the horizontal reference for correct back angle
-						</div>															
-					</div>
-				</div>
+                          <div af="backAngle" class="angles"></div>                           
+                      </div>
+                  </div>
 
-				<div class="panel panel-default">
-					<div class="panel-heading">Lengths</div>
-					<div class="panel-body">
-					<!--
-						<line name> <points>
-						   Current length: <lineLength>
-					-->
-						<div id="alertLength" class="alert alert-note alert-small" role="alert">
-							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-							<span class="sr-only">Note:</span>
-							Use the length reference to measure something in your picture whose dimensions you know.
-						</div>
-						<span class="lines">Length of reference </span>
-						<input type="text" class="form-control" id="inputLength" style="width: 50px;display: inline;" placeholder="cm"><span> cm</span>
-						<br>
-						<div class="lines" lf="thighLine"></div>						
-						<div class="lines" lf="shinLine"></div>						
-						<div class="lines" lf="hipToWristH"></div>						
-						<div class="lines" lf="hipToWristV"></div>
-					</div>
-				</div>
+                  <div class="panel panel-default">
+                    <div class="panel-heading">Lengths</div>
+                    <div class="panel-body">
+                    <!--
+                        <line name> <points>
+                           Current length: <lineLength>
+                       -->                     
+                       <span class="lines">Length of reference </span>
+                       <input type="text" class="form-control" id="inputLength" style="width: 50px;display: inline;" placeholder="cm"><span> cm</span>
+                       <br>
+                       <div class="lines" lf="thighLine"></div>                        
+                       <div class="lines" lf="shinLine"></div>                     
+                       <div class="lines" lf="hipToWristH"></div>                      
+                       <div class="lines" lf="hipToWristV"></div>
+                   </div>
+               </div>
 
-				<div class="panel panel-default panel-custom-tool">
-					<div class="panel-heading clearfix">
-						<span>Custom measurements</span>
-						<span class="glyphicon glyphicon-plus pull-right" aria-hidden="true" id="btnAddCustomTool"></span>
-					</div>
-					<div class="panel-body custom-tool-template" style="display: none;">
-						<div class="custom-tool-bg">
-							<span class="close remove-custom-tool glyphicon glyphicon-remove"></span>								
-							<span class="numberCircle"></span><span class="numberCircle"></span><span class="angleName">Length: </span>
-							<span class="angleText" id="customLength0"></span>
-							<br>
-							<span class="numberCircle"></span><span class="numberCircle"></span><span class="angleName">Length: </span>
-							<span class="angleText" id="customLength1"></span>
-							<br>
-							<span class="angleName">Angle between </span><span class="angleText" id="customAngle"></span>					
-						</div>
-					</div>
-				</div>
-			</div>
+               <div class="panel panel-default panel-custom-tool">
+                <div class="panel-heading clearfix">
+                    <span>Custom measurements</span>
+                    <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true" id="btnAddCustomTool"></span>
+                </div>
+                <div class="panel-body custom-tool-template" style="display: none;">
+                    <div class="custom-tool-bg">
+                        <span class="close remove-custom-tool glyphicon glyphicon-remove"></span>                               
+                        <span class="numberCircle"></span><span class="numberCircle"></span><span class="angleName">Length: </span>
+                        <span class="angleText" id="customLength0"></span>
+                        <br>
+                        <span class="numberCircle"></span><span class="numberCircle"></span><span class="angleName">Length: </span>
+                        <span class="angleText" id="customLength1"></span>
+                        <br>
+                        <span class="angleName">Angle between </span><span class="angleText" id="customAngle"></span>                   
+                    </div>
+                </div>
+            </div>
+        </div>
 
-			<div class="col-md-10">
-				<div class="stepWorkArea alert alert-header" role="alert">											
-					
-					<span class="btn btn-default btn-file" style="margin: 0 16px 6px 0; background-color: #286AB1; color: white; border-radius: 3px;">
-						Upload a picture or video of you<input type="file" id="fileOne" accept="video/*" class="clickable">
-					</span>
-					<div class="inline" style="display:none;" id="videoControls">
-						<span id="rwd" class="video-control unselectable glyphicon glyphicon-backward"></span>
-						<span id="play" class="video-control unselectable glyphicon glyphicon-pause"></span>
-						<span id="fwd" class="video-control unselectable glyphicon glyphicon-forward"></span>
-						<span>Advance/rewind by: </span>
-						<input type="text" class="form-control" id="advanceValue" style="width: 70px;display: inline;" value="0.25">	
-					</div>
+        <div class="col-md-10">
+            <div class="stepWorkArea alert alert-header" role="alert">                                          
 
-					<div class="stepCanvasArea" style="width: 100%; height: 100%; pointer-events: none; background-repeat: no-repeat; background-position: center;background-image: url(http://www.triradar.com/files/2014/01/DIY-Bike-Fit.jpg); background-size: contain;">
-						<video id="riderVideo" class="video-js vjs-default-skin" style="width: 100%; display: none;" autoplay loop></video>
-						<canvas id="stepOneCanvas" style="pointer-events: all; top: 25px; width: 100%; height: 100%; position: absolute;"></canvas>						
-					</div>		
-				</div>
-			</div>
+                <span class="btn btn-primary btn-file">
+                    Upload a picture or video of you<input type="file" id="fileOne" accept="video/*" class="clickable">
+                </span>                
+                <button type="button" id="btn_get_started" class="btn btn-primary clickable pull-right">
+                    Getting started <span class="caret"></span></button>                                            
+                    </div>                        
 
-		</div>
-	</div>
-	<!--button type="button" class="btn btn-default" id="btnDump">Dump</button-->
+                    <div class="inline" style="display:none;" id="videoControls">
+                        <span id="rwd" class="video-control unselectable glyphicon glyphicon-backward"></span>
+                        <span id="play" class="video-control unselectable glyphicon glyphicon-pause"></span>
+                        <span id="fwd" class="video-control unselectable glyphicon glyphicon-forward"></span>
+                        <span>Advance/rewind by: </span>
+                        <input type="text" class="form-control" id="advanceValue" style="width: 70px;display: inline;" value="0.25">    
+                    </div>
 
-	<script src="js/lib/jquery.min.js" type="text/javascript"></script>		
-	<script src="js/lib/bootstrap.min.js" type="text/javascript"></script>	
-	<script src="js/paper-full.js" type="text/javascript"></script>
-	<script src="js/paper-core.js" type="text/javascript"></script>
+                    <div class="stepCanvasArea" style="width: 100%; height: 100%; pointer-events: none; background-repeat: no-repeat; background-position: center;background-image: url(http://www.triradar.com/files/2014/01/DIY-Bike-Fit.jpg); background-size: contain;">
+                        <video id="riderVideo" class="video-js vjs-default-skin" style="width: 100%; display: none;" autoplay loop></video>
+                        <canvas id="stepOneCanvas" style="pointer-events: all; top: 45px; width: 100%; height: 100%; position: absolute;"></canvas>                     
+                        
+                        <div class="col-md-3 pull-right" id="panel_get_started" style="display:none; margin-top: 5px;padding-right: 0px;">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">How to use this tool</div>
+                                <div class="panel-body">
+                                    <span>Take a picture of you sitting on the bike in your usual riding position. You can use your trainer or whatever is more convenient for you. If you don't have a trainer, you can also lean against a wall or have someone hold you upright. Once you have the picture, upload it and start moving the dotted letters to match your joints like so:</span>
+                                    <ul style="list-style-type: none; padding-left: 5px;">
+                                        <li><span class="numberCircle">A</span> - shoulder</li>
+                                        <li><span class="numberCircle">B</span> - elbow</li>
+                                        <li><span class="numberCircle">C</span> - wrist</li>
+                                        <li><span class="numberCircle">D</span> - hip</li>
+                                        <li><span class="numberCircle">E</span> - knee</li>
+                                        <li><span class="numberCircle">F</span> - ankle</li>                            
+                                    </ul>
+                                    <span><strong>Tip:</strong> to help you position the points you can stick a small piece of colored electrical take on your joints.</span>
+                                    <br><br>
+                                    <span>Once you have all the points set up, check the table on the left side to see if the angles fall in the recommended ranges.</span>
+                                    <br><br>
+                                    <strong>Length reference: </strong><span>use the <span class="numberCircle">H</span> and <span class="numberCircle">I</span>points to mark something in your picture whose length you know. Once you have a length reference marked, input it's actual length in centimeters in the corresponding box. In this way we will know how to measure the rest of the elements in your picture.</span>
+                                </div>
+                            </div>          
+                        </div>  
 
-	<script src="js/jointpoint.js" type="text/javascript"></script>
-	<script src="js/line.js" type="text/javascript"></script>
-	<script src="js/text.js" type="text/javascript"></script>
-	<script src="js/jointsangle.js" type="text/javascript"></script>	
-	<script src="js/dependentpoint.js" type="text/javascript"></script>
-	<script src="js/scene.js" type="text/javascript"></script>
-	<script src="js/vectorutils.js" type="text/javascript"></script>	
-	<script src="js/videoplayer.js" type="text/javascript"></script>	
+                    </div>      
+                </div>
+            </div>            
+        </div>
+        <!--button type="button" class="btn btn-default" id="btnDump">Dump</button-->
 
-	<script type="text/javascript">
-	String.format = function() {
+        <script src="js/lib/jquery.min.js" type="text/javascript"></script>     
+        <script src="js/lib/bootstrap.min.js" type="text/javascript"></script>  
+        <script src="js/paper-full.js" type="text/javascript"></script>
+        <script src="js/paper-core.js" type="text/javascript"></script>
+
+        <script src="js/jointpoint.js" type="text/javascript"></script>
+        <script src="js/line.js" type="text/javascript"></script>
+        <script src="js/text.js" type="text/javascript"></script>
+        <script src="js/jointsangle.js" type="text/javascript"></script>    
+        <script src="js/dependentpoint.js" type="text/javascript"></script>
+        <script src="js/scene.js" type="text/javascript"></script>
+        <script src="js/vectorutils.js" type="text/javascript"></script>    
+        <script src="js/videoplayer.js" type="text/javascript"></script>    
+
+        <script type="text/javascript">
+        String.format = function() {
     // The string containing the format items (e.g. "{0}")
     // will and always has to be the first argument.
     var theString = arguments[0];
@@ -150,246 +165,250 @@
     return theString;
 }
 
-$(document).on('change', '.btn-file :file', function(evt) {	
-	var input = $(this),
-	numFiles = input.get(0).files ? input.get(0).files[0] : 1;
-	input.trigger('fileselect', [numFiles, evt.target.id]);
+$(document).on('change', '.btn-file :file', function(evt) { 
+    var input = $(this),
+    numFiles = input.get(0).files ? input.get(0).files[0] : 1;
+    input.trigger('fileselect', [numFiles, evt.target.id]);
 });
 
 $(document).ready(function() {
-	var self = this;
+    var self = this;
 
-	paper.install(window);
+    paper.install(window);
 
-	var lastCustomToolY = 200;
-	var lastCustomToolNo = 0;
+    var lastCustomToolY = 200;
+    var lastCustomToolNo = 0;
 
-	self.customToolsList = [];
-	self.ranges = {};
+    self.customToolsList = [];
+    self.ranges = {};
 
-	self.points = {};
-	self.lines = {};
-	self.angles = {};
-	self.texts = {};			
+    self.points = {};
+    self.lines = {};
+    self.angles = {};
+    self.texts = {};            
 
-	var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	var lastLabel = 0;			
+    var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var lastLabel = 0;          
 
-	var windowHeight = 0.9 * $(window).height();
-	var canvasDiv = $('.stepCanvasArea');
-	canvasDiv.height(windowHeight);
+    var windowHeight = 0.9 * $(window).height();
+    var canvasDiv = $('.stepCanvasArea');
+    canvasDiv.height(windowHeight);
 
-	$('#stepOneCanvas').width(canvasDiv.width());
-	$('#stepOneCanvas').height(canvasDiv.height());
+    $('#stepOneCanvas').width(canvasDiv.width());
+    $('#stepOneCanvas').height(canvasDiv.height());
+    
+    $('#btn_get_started').on('click', function (e) {        
+        $('#panel_get_started').toggle('hide');        
+    });
 
-	self.video = new VideoPlayer('riderVideo');
-	self.videoAdvanceValue = 0.25;
-	self.video.height(windowHeight);
+    self.video = new VideoPlayer('riderVideo');
+    self.videoAdvanceValue = 0.25;
+    self.video.height(windowHeight);
 
-	self.videoControls = $('#videoControls');
+    self.videoControls = $('#videoControls');
 
-	self.video.onStatusChanged(function (status) {
-		console.log('status' + status);
-		var playBtn = $('#play');
-		playBtn.removeClass('glyphicon-play');
-		playBtn.removeClass('glyphicon-pause');
+    self.video.onStatusChanged(function (status) {
+        console.log('status' + status);
+        var playBtn = $('#play');
+        playBtn.removeClass('glyphicon-play');
+        playBtn.removeClass('glyphicon-pause');
 
-		playBtn.addClass(status['playbackStatus'] == true ? 'glyphicon-play' : 'glyphicon-pause');
-	});
+        playBtn.addClass(status['playbackStatus'] == true ? 'glyphicon-play' : 'glyphicon-pause');
+    });
 
-	self.videoControls.find('#play').click(function (evt) {
-		self.video.togglePlayPause();
-	});
+    self.videoControls.find('#play').click(function (evt) {
+        self.video.togglePlayPause();
+    });
 
-	self.videoControls.find('#rwd').click(function (evt) {						
-		self.video.pause();
-		self.video.rewind(-self.videoAdvanceValue);
-	});
+    self.videoControls.find('#rwd').click(function (evt) {                      
+        self.video.pause();
+        self.video.rewind(-self.videoAdvanceValue);
+    });
 
-	self.videoControls.find('#fwd').click(function (evt) {
-		self.video.pause();			
-		self.video.advance(self.videoAdvanceValue);
-	});
+    self.videoControls.find('#fwd').click(function (evt) {
+        self.video.pause();         
+        self.video.advance(self.videoAdvanceValue);
+    });
 
-	var advanceValue = $('#advanceValue');
-	advanceValue.bind("propertychange change click keyup input paste", function(e) { 
-		var parsedValue = parseFloat(advanceValue.val());			
+    var advanceValue = $('#advanceValue');
+    advanceValue.bind("propertychange change click keyup input paste", function(e) { 
+        var parsedValue = parseFloat(advanceValue.val());           
 
-		if (parsedValue != NaN) {
-			self.videoAdvanceValue = parsedValue !== NaN ? parsedValue : self.videoAdvanceValue;				
-		}	
-	});
+        if (parsedValue != NaN) {
+            self.videoAdvanceValue = parsedValue !== NaN ? parsedValue : self.videoAdvanceValue;                
+        }   
+    });
 
-	self.videoControls.hide();
+    self.videoControls.hide();
 
-	var inputLength = $('#inputLength');		
+    var inputLength = $('#inputLength');        
 
-	self.refDistanceCM = 0;
-	self.refDistanceInPixels = 0;
-	self.refDistanceCMPerPixel  = 0;
+    self.refDistanceCM = 0;
+    self.refDistanceInPixels = 0;
+    self.refDistanceCMPerPixel  = 0;
 
-	$('.btn-file :file').on('fileselect', function(event, numFiles, targetId) {			
-		var file = event.target.files[0];
-		var type = file.type;
+    $('.btn-file :file').on('fileselect', function(event, numFiles, targetId) {         
+        var file = event.target.files[0];
+        var type = file.type;
 
-		var imageMimes = ['image/png', 'image/gif', 'image/bmp', 'image/jpg', 'image/jpeg'];
+        var imageMimes = ['image/png', 'image/gif', 'image/bmp', 'image/jpg', 'image/jpeg'];
 
-		if (imageMimes.indexOf(type) != -1) {
-			var file = new FileReader();			
-			file.readAsDataURL(event.target.files[0]);
+        if (imageMimes.indexOf(type) != -1) {
+            var file = new FileReader();            
+            file.readAsDataURL(event.target.files[0]);
 
-			file.onload = function(evt) {
-				self.video.show(false);
-				self.videoControls.hide();
+            file.onload = function(evt) {
+                self.video.show(false);
+                self.videoControls.hide();
 
-				$('.stepCanvasArea').css('background-image', 'url("' + evt.target.result + '")');				
-			}		
+                $('.stepCanvasArea').css('background-image', 'url("' + evt.target.result + '")');               
+            }       
 
-			return;
-		}			
+            return;
+        }           
 
-		if (!window.URL && !window.webkitURL) {
-			alert('Your browser is not ' + '<a href="http://caniuse.com/bloburls">supported</a>!', true);
-			return;
-		}           
+        if (!window.URL && !window.webkitURL) {
+            alert('Your browser is not ' + '<a href="http://caniuse.com/bloburls">supported</a>!', true);
+            return;
+        }           
 
-		var isOk = self.video.canPlay(type);
-		var message = 'Can play type "' + type + '": ' + isOk;			
+        var isOk = self.video.canPlay(type);
+        var message = 'Can play type "' + type + '": ' + isOk;          
 
-		if (!isOk) { return; }					
+        if (!isOk) { return; }                  
 
-		$('.stepCanvasArea').css('background-image', 'none');
+        $('.stepCanvasArea').css('background-image', 'none');
 
-		var fileURL = URL.createObjectURL(file);				
+        var fileURL = URL.createObjectURL(file);                
 
-		self.video.show(true);	
-		self.videoControls.show();		
-		self.video.setSource(fileURL);			
-	});
+        self.video.show(true);  
+        self.videoControls.show();      
+        self.video.setSource(fileURL);          
+    });
 
-$('.stepHeader').click(function(event) {			
-	if (event.target.localName == 'input')
-		return;
+$('.stepHeader').click(function(event) {            
+    if (event.target.localName == 'input')
+        return;
 
-	$.each($('.stepHeader'), function (index, step) {
-		var menuIco = $(step).find('#stepOneDropdownIco');			
-				//Close
-				if (menuIco.hasClass('glyphicon-chevron-down') == true) {
-					menuIco.removeClass('glyphicon-chevron-down');
-					menuIco.addClass('glyphicon-chevron-right');
+    $.each($('.stepHeader'), function (index, step) {
+        var menuIco = $(step).find('#stepOneDropdownIco');          
+                //Close
+                if (menuIco.hasClass('glyphicon-chevron-down') == true) {
+                    menuIco.removeClass('glyphicon-chevron-down');
+                    menuIco.addClass('glyphicon-chevron-right');
 
-					$($(this).siblings()[0]).animate({ height: "toggle", opacity: 0 }, 500, function() {
-						$($(step).siblings()[0]).css('opacity', '0');
-					});  
+                    $($(this).siblings()[0]).animate({ height: "toggle", opacity: 0 }, 500, function() {
+                        $($(step).siblings()[0]).css('opacity', '0');
+                    });  
 
-				} else { // Open
-					menuIco.addClass('glyphicon-chevron-down');
-					menuIco.removeClass('glyphicon-chevron-right');
+                } else { // Open
+                    menuIco.addClass('glyphicon-chevron-down');
+                    menuIco.removeClass('glyphicon-chevron-right');
 
-					$($(this).siblings()[0]).animate({ height: "toggle", opacity: 1 }, 500, function() {
-						$($(step).siblings()[0]).css('opacity', '1');
-					});					
-				}
-			});
+                    $($(this).siblings()[0]).animate({ height: "toggle", opacity: 1 }, 500, function() {
+                        $($(step).siblings()[0]).css('opacity', '1');
+                    });                 
+                }
+            });
 });
 
 $('#btnAddCustomTool').click(function () {
-	var getNextLabel = self.getNextLabel;
-	var onAngleChanged = self.onAngleChanged;
-	var onLineLengthChanged = self.onCustomToolLineChanged;
+    var getNextLabel = self.getNextLabel;
+    var onAngleChanged = self.onAngleChanged;
+    var onLineLengthChanged = self.onCustomToolLineChanged;
 
-	var startLabel = getNextLabel();
-	var middleLabel = getNextLabel();
-	var endLabel = getNextLabel();
+    var startLabel = getNextLabel();
+    var middleLabel = getNextLabel();
+    var endLabel = getNextLabel();
 
-	points = [		
-	{'x': 49,  'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START + lastCustomToolNo, 'label' : startLabel},
-	{'x': 140, 'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo, 'label' : middleLabel},
-	{'x': 230, 'y' : lastCustomToolY + 20,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END + lastCustomToolNo, 'label' : endLabel},
-	];
+    points = [      
+    {'x': 49,  'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_START + lastCustomToolNo, 'label' : startLabel},
+    {'x': 140, 'y' : lastCustomToolY,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo, 'label' : middleLabel},
+    {'x': 230, 'y' : lastCustomToolY + 20,  'scale' : false, 'name' : SceneUtils.KnownPoints.CUST_TOOL_END + lastCustomToolNo, 'label' : endLabel},
+    ];
 
-	var customToolBase = SceneUtils.KnownLines.CUSTOM_TOOL + '_' + lastCustomToolNo + '_';
+    var customToolBase = SceneUtils.KnownLines.CUSTOM_TOOL + '_' + lastCustomToolNo + '_';
 
-	lines = [
-	{ 'name' : customToolBase + '0', 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START + lastCustomToolNo, SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo], 'onLineLengthChanged' : onLineLengthChanged},
-	{ 'name' : customToolBase + '1', 'points' : [SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo, SceneUtils.KnownPoints.CUST_TOOL_END + lastCustomToolNo], 'onLineLengthChanged' : onLineLengthChanged},
-	];
+    lines = [
+    { 'name' : customToolBase + '0', 'points' : [SceneUtils.KnownPoints.CUST_TOOL_START + lastCustomToolNo, SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo], 'onLineLengthChanged' : onLineLengthChanged},
+    { 'name' : customToolBase + '1', 'points' : [SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + lastCustomToolNo, SceneUtils.KnownPoints.CUST_TOOL_END + lastCustomToolNo], 'onLineLengthChanged' : onLineLengthChanged},
+    ];
 
-	angles = [
-	{ 'name': SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo, 'side_first' : customToolBase + '0', 'side_second' : customToolBase + '1', 'ranges' : [{'range' : [0, 180], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
-	];
+    angles = [
+    { 'name': SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo, 'side_first' : customToolBase + '0', 'side_second' : customToolBase + '1', 'ranges' : [{'range' : [0, 180], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
+    ];
 
-	self.sceneTop.load(points, lines, angles, []);		
+    self.sceneTop.load(points, lines, angles, []);      
 
-	var template = $('.custom-tool-template').clone();
-	var firstPoint = template.find('#customLength0').attr('id', customToolBase + '0').prev();
-	firstPoint.prev().prev().text(startLabel);
-	firstPoint.prev().text(middleLabel);
+    var template = $('.custom-tool-template').clone();
+    var firstPoint = template.find('#customLength0').attr('id', customToolBase + '0').prev();
+    firstPoint.prev().prev().text(startLabel);
+    firstPoint.prev().text(middleLabel);
 
-	var secondPoint = template.find('#customLength1').attr('id', customToolBase + '1').prev();
-	secondPoint.prev().prev().text(middleLabel);
-	secondPoint.prev().text(endLabel);
+    var secondPoint = template.find('#customLength1').attr('id', customToolBase + '1').prev();
+    secondPoint.prev().prev().text(middleLabel);
+    secondPoint.prev().text(endLabel);
 
-	template.find('#customAngle').attr('id', SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo);
-	template.find('.remove-custom-tool').attr('ctx', customToolBase).removeClass('remove-custom-tool').addClass('remove-custom-tool' + lastCustomToolNo);
+    template.find('#customAngle').attr('id', SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo);
+    template.find('.remove-custom-tool').attr('ctx', customToolBase).removeClass('remove-custom-tool').addClass('remove-custom-tool' + lastCustomToolNo);
 
-	template.removeClass('custom-tool-template');
-	template.addClass('custom-tool-' + lastCustomToolNo);
+    template.removeClass('custom-tool-template');
+    template.addClass('custom-tool-' + lastCustomToolNo);
 
-	template.show();
-	self.customToolsList.push(customToolBase);
+    template.show();
+    self.customToolsList.push(customToolBase);
 
-	$('.panel-custom-tool').append(template[0].outerHTML);
-	$('.remove-custom-tool' + lastCustomToolNo).click(function() {
-		var ctx = $(this).attr('ctx');
-		self.customToolsList.splice(self.customToolsList.indexOf(ctx), 1);
+    $('.panel-custom-tool').append(template[0].outerHTML);
+    $('.remove-custom-tool' + lastCustomToolNo).click(function() {
+        var ctx = $(this).attr('ctx');
+        self.customToolsList.splice(self.customToolsList.indexOf(ctx), 1);
 
-		var toolNo = self.getToolIdFromName(ctx);
+        var toolNo = self.getToolIdFromName(ctx);
 
-		var pointIdsToRemove = [SceneUtils.KnownPoints.CUST_TOOL_START + toolNo, SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + toolNo, SceneUtils.KnownPoints.CUST_TOOL_END + toolNo];
-		var lineIdsToRemove = [ctx + '0', ctx + '1'];
-		var angleIdsToRemove = [SceneUtils.KnownAngles.CUSTOM_ANGLE + toolNo];
+        var pointIdsToRemove = [SceneUtils.KnownPoints.CUST_TOOL_START + toolNo, SceneUtils.KnownPoints.CUST_TOOL_MIDDLE + toolNo, SceneUtils.KnownPoints.CUST_TOOL_END + toolNo];
+        var lineIdsToRemove = [ctx + '0', ctx + '1'];
+        var angleIdsToRemove = [SceneUtils.KnownAngles.CUSTOM_ANGLE + toolNo];
 
-		self.sceneTop.unload(pointIdsToRemove, lineIdsToRemove, angleIdsToRemove);
+        self.sceneTop.unload(pointIdsToRemove, lineIdsToRemove, angleIdsToRemove);
 
-		$(this).parent().parent().detach();
-	});
+        $(this).parent().parent().detach();
+    });
 
-	lastCustomToolY += 40;
-	lastCustomToolNo += 1;
-});		  
+    lastCustomToolY += 40;
+    lastCustomToolNo += 1;
+});       
 
 inputLength.data('oldVal', inputLength.val());
 inputLength.bind("propertychange change click keyup input paste", function(e) {
-	if (inputLength.val() == '') {
-		$('#alertLength').fadeIn();
-		return;
-	}				
+    if (inputLength.val() == '') {
+        $('#alertLength').fadeIn();
+        return;
+    }               
 
-	if (inputLength.data('oldVal') != inputLength.val()) {
-		$('#alertLength').fadeOut();
+    if (inputLength.data('oldVal') != inputLength.val()) {
+        $('#alertLength').fadeOut();
 
-		inputLength.data('oldVal', inputLength.val());
-		self.refDistanceCM = inputLength.val() != '' ? inputLength.val() : 0;
-		self.refDistanceCMPerPixel  = self.refDistanceCM / self.refDistanceInPixels;
+        inputLength.data('oldVal', inputLength.val());
+        self.refDistanceCM = inputLength.val() != '' ? inputLength.val() : 0;
+        self.refDistanceCMPerPixel  = self.refDistanceCM / self.refDistanceInPixels;
 
-		self.updateLineSizes();
-	}
+        self.updateLineSizes();
+    }
 });
 
 [inputLength, advanceValue].forEach(function (ctrl) {
-	ctrl.keydown(function(event) {
-		var allowedKeyCodes = [8, 9, 13, 27, 37, 39, 46];
-		if (allowedKeyCodes.indexOf(event.keyCode) != -1 
-			|| (event.keyCode == 190 && $(this).val().indexOf('.') == -1)
-			|| (event.keyCode == 65 && event.ctrlKey === true) 
-			|| (event.keyCode >= 35 && event.keyCode <= 39)) 
-			return;			
+    ctrl.keydown(function(event) {
+        var allowedKeyCodes = [8, 9, 13, 27, 37, 39, 46];
+        if (allowedKeyCodes.indexOf(event.keyCode) != -1 
+            || (event.keyCode == 190 && $(this).val().indexOf('.') == -1)
+            || (event.keyCode == 65 && event.ctrlKey === true) 
+            || (event.keyCode >= 35 && event.keyCode <= 39)) 
+            return;         
 
-		if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
-			event.preventDefault(); 
-		}   
-	});
+        if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
+            event.preventDefault(); 
+        }   
+    });
 });
 
 self.ranges['road'] = [
@@ -425,383 +444,383 @@ self.ranges['tri'] = [
 ];
 
 self.buildAngleRanges = function () {
-	function measurementLabel(name) {
-		switch (name)
-		{
-			case SceneUtils.KnownAngles.ARM_FOREARM:
-			return 'Elbow Angle';
-			case SceneUtils.KnownAngles.HIP_KNEE_ANGLE:
-			return 'Knee Angle Flexion';
-			case SceneUtils.KnownAngles.KNEE_EXTENSION:
-			return 'Knee Angle Extension';
-			case SceneUtils.KnownAngles.HIP_OPEN:
-			return 'Hip Angle Open';
-			case SceneUtils.KnownAngles.ARM_PIT:
-			return 'Shoulder Angle to Elbow';
-			case SceneUtils.KnownAngles.BACK_ANGLE:
-			return 'Back Angle';
-			case SceneUtils.KnownLines.THIGH_LINE:
-			return 'Thigh Line';
-			case SceneUtils.KnownLines.SHIN_LINE:
-			return 'Shin Line';
-			case SceneUtils.KnownLines.BACK_LINE:
-			return 'Back Line';
-			case SceneUtils.KnownLines.HIP_TO_WRIST_H:
-			return 'Hip to wrist (horiz)';
-			case SceneUtils.KnownLines.HIP_TO_WRIST_V:
-			return 'Hip to wrist (vertical)';
-			default:
-			return "";
-		}
-	}
+    function measurementLabel(name) {
+        switch (name)
+        {
+            case SceneUtils.KnownAngles.ARM_FOREARM:
+            return 'Elbow Angle';
+            case SceneUtils.KnownAngles.HIP_KNEE_ANGLE:
+            return 'Knee Angle Flexion';
+            case SceneUtils.KnownAngles.KNEE_EXTENSION:
+            return 'Knee Angle Extension';
+            case SceneUtils.KnownAngles.HIP_OPEN:
+            return 'Hip Angle Open';
+            case SceneUtils.KnownAngles.ARM_PIT:
+            return 'Shoulder Angle to Elbow';
+            case SceneUtils.KnownAngles.BACK_ANGLE:
+            return 'Back Angle';
+            case SceneUtils.KnownLines.THIGH_LINE:
+            return 'Thigh Line';
+            case SceneUtils.KnownLines.SHIN_LINE:
+            return 'Shin Line';
+            case SceneUtils.KnownLines.BACK_LINE:
+            return 'Back Line';
+            case SceneUtils.KnownLines.HIP_TO_WRIST_H:
+            return 'Hip to wrist (horiz)';
+            case SceneUtils.KnownLines.HIP_TO_WRIST_V:
+            return 'Hip to wrist (vertical)';
+            default:
+            return "";
+        }
+    }
 
-	var bikeTypesList = $('#bikeTypesList');
-	var bikeTypes = ['road', 'mtb', 'tri', 'tt'];
-	var bikeTypeLables = ['Road', 'MTB', 'Triathlon', 'Time trial'];
+    var bikeTypesList = $('#bikeTypesList');
+    var bikeTypes = ['road', 'mtb', 'tri', 'tt'];
+    var bikeTypeLables = ['Road', 'MTB', 'Triathlon', 'Time trial'];
 
-	for (var i = 0; i < bikeTypes.length; i++) {
-		var a = $('<a/>', {
-			role : 'menuitem',
-			value : bikeTypes[i],
-			tabindex : '-1',
-			href : '#',
-			class : 'strong',
-			text : bikeTypeLables[i]
-		});
+    for (var i = 0; i < bikeTypes.length; i++) {
+        var a = $('<a/>', {
+            role : 'menuitem',
+            value : bikeTypes[i],
+            tabindex : '-1',
+            href : '#',
+            class : 'strong',
+            text : bikeTypeLables[i]
+        });
 
-		var li = $('<li/>', {
-			role : 'presentation'
-		});
+        var li = $('<li/>', {
+            role : 'presentation'
+        });
 
-		li.append(a);
-		bikeTypesList.append(li);
+        li.append(a);
+        bikeTypesList.append(li);
 
-		for (var j = 0; j < self.ranges[bikeTypes[i]].length; j++) {
-			var currRange = self.ranges[bikeTypes[i]][j]['ranges'][0]['range'];
-			var label = measurementLabel(self.ranges[bikeTypes[i]][j]['name']);
+        for (var j = 0; j < self.ranges[bikeTypes[i]].length; j++) {
+            var currRange = self.ranges[bikeTypes[i]][j]['ranges'][0]['range'];
+            var label = measurementLabel(self.ranges[bikeTypes[i]][j]['name']);
 
-			var li = $('<li/>', {
-				role : 'presentation',
-				class : 'dropdown-header unselectable',
-				text : label + ': '
-			});
+            var li = $('<li/>', {
+                role : 'presentation',
+                class : 'dropdown-header unselectable',
+                text : label + ': '
+            });
 
-			var span = $('<span/>', {
-				class : 'strong',
-				text : currRange[0] + ' ' + currRange[1]
-			});
+            var span = $('<span/>', {
+                class : 'strong',
+                text : currRange[0] + ' ' + currRange[1]
+            });
 
-			li.append(span);
-			bikeTypesList.append(li);
-		}
-	}
+            li.append(span);
+            bikeTypesList.append(li);
+        }
+    }
 
-	self.getLabels = function(angle) {
-			switch (angle) {
-				case SceneUtils.KnownAngles.ARM_FOREARM:
-				return ['A', 'B', 'C'];
-				case SceneUtils.KnownAngles.HIP_KNEE_ANGLE:
-				return ['D', 'E', 'F'];
-				case SceneUtils.KnownAngles.KNEE_EXTENSION:
-				return ['F', 'E', 'G'];
-				case SceneUtils.KnownAngles.ARM_PIT:
-				return ['D', 'A', 'B'];
-				case SceneUtils.KnownAngles.BACK_ANGLE:
-				return ['A', 'D', 'A'];
-				case SceneUtils.KnownLines.THIGH_LINE:
-				return ['D', 'E'];
-				case SceneUtils.KnownLines.SHIN_LINE:
-				return ['E', 'F'];
-				case SceneUtils.KnownLines.HIP_TO_WRIST_H:
-				return ['D', 'C'];
-				case SceneUtils.KnownLines.HIP_TO_WRIST_V:
-				return ['D', 'C'];
-				default:
-				return [];
-			}			
-	}	
+    self.getLabels = function(angle) {
+        switch (angle) {
+            case SceneUtils.KnownAngles.ARM_FOREARM:
+            return ['A', 'B', 'C'];
+            case SceneUtils.KnownAngles.HIP_KNEE_ANGLE:
+            return ['D', 'E', 'F'];
+            case SceneUtils.KnownAngles.KNEE_EXTENSION:
+            return ['F', 'E', 'G'];
+            case SceneUtils.KnownAngles.ARM_PIT:
+            return ['D', 'A', 'B'];
+            case SceneUtils.KnownAngles.BACK_ANGLE:
+            return ['A', 'D', 'A'];
+            case SceneUtils.KnownLines.THIGH_LINE:
+            return ['D', 'E'];
+            case SceneUtils.KnownLines.SHIN_LINE:
+            return ['E', 'F'];
+            case SceneUtils.KnownLines.HIP_TO_WRIST_H:
+            return ['D', 'C'];
+            case SceneUtils.KnownLines.HIP_TO_WRIST_V:
+            return ['D', 'C'];
+            default:
+            return [];
+        }           
+    }   
 
-	self.getLabelsFormatted = function(angle) {
-			var labels = self.getLabels(angle);			
-			var labelsFormat = "";
+    self.getLabelsFormatted = function(angle) {
+        var labels = self.getLabels(angle);         
+        var labelsFormat = "";
 
-			for (var i = 0; i < labels.length; i++) {
-				labelsFormat += "<span class=\"numberCircle\">" + labels[i] + "</span>";
-			};
+        for (var i = 0; i < labels.length; i++) {
+            labelsFormat += "<span class=\"numberCircle\">" + labels[i] + "</span>";
+        };
 
-			return labelsFormat;
-	}			
+        return labelsFormat;
+    }           
 
-	self.updateAngleHelp = function (range) {
-		$('.angles').each(function (i, elem) {
-			var id = $(elem).attr('af');	
+    self.updateAngleHelp = function (range) {
+        $('.angles').each(function (i, elem) {
+            var id = $(elem).attr('af');    
 
-			var angleName = measurementLabel(id);
+            var angleName = measurementLabel(id);
 
-			if (angleName == "") 
-				return;
+            if (angleName == "") 
+                return;
 
-			for (var i = 0; i < range.length; i++) {
-				if (range[i]['name'] == id) {
-					var ranges = range[i].ranges[0];
+            for (var i = 0; i < range.length; i++) {
+                if (range[i]['name'] == id) {
+                    var ranges = range[i].ranges[0];
 
-					if ($(elem).children().length > 0) {
-						$(elem).find('#rr_' + id).text(String.format('{0}°-{1}°', ranges.range[0], ranges.range[1]));
-						continue;
-					}
-					
-					$(elem)
-					.append($('<div>').append($('<span>').text(angleName)).append($('<span>').attr('class', 'angleName').html(self.getLabelsFormatted(id))))
-					.append($('<div class=\"angleSubSection\">').append($('<span>').text('Current angle: ')).append($('<span>').attr('id', id).attr('class', 'angleText')))
-					.append($('<div class=\"angleSubSection\">').append($('<span>').text('Recommended range:')).append($('<span id=\"rr_' + id + '\" class="angleText">').text(String.format('{0}°-{1}°', ranges.range[0], ranges.range[1]))));
+                    if ($(elem).children().length > 0) {
+                        $(elem).find('#rr_' + id).text(String.format('{0}°-{1}°', ranges.range[0], ranges.range[1]));
+                        continue;
+                    }
+                    
+                    $(elem)
+                    .append($('<div>').append($('<span>').text(angleName)).append($('<span>').attr('class', 'angleName').html(self.getLabelsFormatted(id))))
+                    .append($('<div class=\"angleSubSection\">').append($('<span>').text('Current angle: ')).append($('<span>').attr('id', id).attr('class', 'angleText')))
+                    .append($('<div class=\"angleSubSection\">').append($('<span>').text('Recommended range:')).append($('<span id=\"rr_' + id + '\" class="angleText">').text(String.format('{0}°-{1}°', ranges.range[0], ranges.range[1]))));
 
-					break;
-				}			
-			}		
-			
-		});
-	}
+                    break;
+                }           
+            }       
+            
+        });
+}
 
-	self.buildLines = function () {
-		$('.lines').each(function (i, elem) {
-			var id = $(elem).attr('lf');
+self.buildLines = function () {
+    $('.lines').each(function (i, elem) {
+        var id = $(elem).attr('lf');
 
-			var lineName = measurementLabel(id);
+        var lineName = measurementLabel(id);
 
-			if (lineName == "") 
-				return;
+        if (lineName == "") 
+            return;
 
-			$(elem)
-			.append($('<div>').append($('<span>').text(lineName)).append($('<span>').attr('class', 'angleName').html(self.getLabelsFormatted(id))))
-			.append($('<div class=\"angleSubSection\">').append($('<span>').text('Current length: ')).append($('<span>').attr('id', id).attr('class', 'angleText')))
-			/*
-				<line name> <points>
-				  Current length: <lineLength>
-			*/
-		});
-	}();
+        $(elem)
+        .append($('<div>').append($('<span>').text(lineName)).append($('<span>').attr('class', 'angleName').html(self.getLabelsFormatted(id))))
+        .append($('<div class=\"angleSubSection\">').append($('<span>').text('Current length: ')).append($('<span>').attr('id', id).attr('class', 'angleText')))
+            /*
+                <line name> <points>
+                  Current length: <lineLength>
+                  */
+              });
+}();
 
-	$(".dropdown-menu li a").click(function(){		
-		$(this).parents(".dropdown").find('.btn').html($(this).text()+" <span class=\"caret\"></span>");
-		$(this).parents(".dropdown").find('.btn').val($(this).text());
+$(".dropdown-menu li a").click(function(){      
+    $(this).parents(".dropdown").find('.btn').html($(this).text()+" <span class=\"caret\"></span>");
+    $(this).parents(".dropdown").find('.btn').val($(this).text());
 
-		var bikeType = $(this).attr('value');	
-		self.sceneTop.updateRanges(self.ranges[bikeType]);
-		self.updateAngleHelp(self.ranges[bikeType]);
-	});
+    var bikeType = $(this).attr('value');   
+    self.sceneTop.updateRanges(self.ranges[bikeType]);
+    self.updateAngleHelp(self.ranges[bikeType]);
+});
 
-	self.updateAngleHelp(self.ranges['road']);
+self.updateAngleHelp(self.ranges['road']);
 
 }();
 
 self.getRange = function(type, angle) {
-	var selectedRange = self.ranges[type];
-	for (idx in selectedRange) {
-		if (selectedRange[idx]['name'] == angle) {
-			return selectedRange[idx]['ranges'];
-		}
-	}
+    var selectedRange = self.ranges[type];
+    for (idx in selectedRange) {
+        if (selectedRange[idx]['name'] == angle) {
+            return selectedRange[idx]['ranges'];
+        }
+    }
 
-	return [];
+    return [];
 }
 
 self.onAngleChanged = function(angle, target) {
-			//console.log(angle + ' ' + target);
-			$('#' + target).text(angle + '°');
+            //console.log(angle + ' ' + target);
+            $('#' + target).text(angle + '°');
 
-			if (target == SceneUtils.KnownAngles.HIP_KNEE_ANGLE) {
-				$('#' + SceneUtils.KnownAngles.KNEE_EXTENSION).text((180 - angle).toFixed(1) + '°');
-			}
-		}
+            if (target == SceneUtils.KnownAngles.HIP_KNEE_ANGLE) {
+                $('#' + SceneUtils.KnownAngles.KNEE_EXTENSION).text((180 - angle).toFixed(1) + '°');
+            }
+        }
 
-		self.getToolIdFromName = function (target) {								
-			var indexToolId = target.indexOf('_');
+        self.getToolIdFromName = function (target) {                                
+            var indexToolId = target.indexOf('_');
 
-			if (indexToolId == -1)
-				return '-1';
+            if (indexToolId == -1)
+                return '-1';
 
-			return target.substring(indexToolId + 1, target.indexOf('_', indexToolId + 1));			
-		}
+            return target.substring(indexToolId + 1, target.indexOf('_', indexToolId + 1));         
+        }
 
-		self.onCustomToolLineChanged = function(f, t, target) {
-			for (var i = 0; i < self.customToolsList.length; i++) {
-				target = self.customToolsList[i];
-				var toolId = self.getToolIdFromName(target);
+        self.onCustomToolLineChanged = function(f, t, target) {
+            for (var i = 0; i < self.customToolsList.length; i++) {
+                target = self.customToolsList[i];
+                var toolId = self.getToolIdFromName(target);
 
-				var currLine = target + '0';
-				$('.custom-tool-' + toolId).find('#' + currLine).text(self.pixelsToMM(self.sceneTop.getLine(currLine).length()));
-				currLine = target + '1';
-				$('.custom-tool-' + toolId).find('#' + currLine).text(self.pixelsToMM(self.sceneTop.getLine(currLine).length()));
-			}				
-		}
+                var currLine = target + '0';
+                $('.custom-tool-' + toolId).find('#' + currLine).text(self.pixelsToMM(self.sceneTop.getLine(currLine).length()));
+                currLine = target + '1';
+                $('.custom-tool-' + toolId).find('#' + currLine).text(self.pixelsToMM(self.sceneTop.getLine(currLine).length()));
+            }               
+        }
 
-		self.updateBackAngle = function() {
-			var hLine = self.sceneTop.getLine(SceneUtils.KnownLines.HORIZONTAL_REF_LINE);
-			var bLine = self.sceneTop.getLine(SceneUtils.KnownLines.BACK_LINE);
+        self.updateBackAngle = function() {
+            var hLine = self.sceneTop.getLine(SceneUtils.KnownLines.HORIZONTAL_REF_LINE);
+            var bLine = self.sceneTop.getLine(SceneUtils.KnownLines.BACK_LINE);
 
-			if (hLine == undefined || bLine == undefined)
-				return;
+            if (hLine == undefined || bLine == undefined)
+                return;
 
-			var angle = GeometryUtils.AngleBetweenLines(hLine, bLine);
-			$('#backAngle').text((180 - angle).toFixed(1) + '°');
-		}
+            var angle = GeometryUtils.AngleBetweenLines(hLine, bLine);
+            $('#backAngle').text((180 - angle).toFixed(1) + '°');
+        }
 
-		// Custom tool angle
-		self.updateCustomAngle = function() {
-			var hLine = self.sceneTop.getLine(SceneUtils.KnownLines.HORIZONTAL_REF_LINE);
-			var bLine = self.sceneTop.getLine(SceneUtils.KnownLines.CUSTOM_LINE);
+        // Custom tool angle
+        self.updateCustomAngle = function() {
+            var hLine = self.sceneTop.getLine(SceneUtils.KnownLines.HORIZONTAL_REF_LINE);
+            var bLine = self.sceneTop.getLine(SceneUtils.KnownLines.CUSTOM_LINE);
 
-			if (hLine == undefined || bLine == undefined)
-				return;
+            if (hLine == undefined || bLine == undefined)
+                return;
 
-			var angle = GeometryUtils.AngleBetweenLines(hLine, bLine);
-			$('#customAngle').text(Math.abs(180-angle).toFixed(1) + '°' + ' / ' +angle.toFixed(1) + '°');
-		}
+            var angle = GeometryUtils.AngleBetweenLines(hLine, bLine);
+            $('#customAngle').text(Math.abs(180-angle).toFixed(1) + '°' + ' / ' +angle.toFixed(1) + '°');
+        }
 
-		self.getCMPerPixel = function () {
-			if (self.refDistanceInPixels == 0)
-				return 0;
+        self.getCMPerPixel = function () {
+            if (self.refDistanceInPixels == 0)
+                return 0;
 
-			return self.refDistanceCM / self.refDistanceInPixels;
-		}
+            return self.refDistanceCM / self.refDistanceInPixels;
+        }
 
-		self.pixelsToMM = function(val) {			
-			return (val * 10 * self.getCMPerPixel()).toFixed(1) + ' mm';
-		}
+        self.pixelsToMM = function(val) {           
+            return (val * 10 * self.getCMPerPixel()).toFixed(1) + ' mm';
+        }
 
-		self.updateLineSizes = function() {						
-			var thighLine = self.sceneTop.getLine(SceneUtils.KnownLines.THIGH_LINE);
-			$('#thighLine').text(self.pixelsToMM(thighLine != undefined ? thighLine.length() : 0));
+        self.updateLineSizes = function() {                     
+            var thighLine = self.sceneTop.getLine(SceneUtils.KnownLines.THIGH_LINE);
+            $('#thighLine').text(self.pixelsToMM(thighLine != undefined ? thighLine.length() : 0));
 
-			var shinLine = self.sceneTop.getLine(SceneUtils.KnownLines.SHIN_LINE);
-			$('#shinLine').text(self.pixelsToMM(shinLine != undefined ? shinLine.length() : 0));
+            var shinLine = self.sceneTop.getLine(SceneUtils.KnownLines.SHIN_LINE);
+            $('#shinLine').text(self.pixelsToMM(shinLine != undefined ? shinLine.length() : 0));
 
-			var hipToWrist = self.sceneTop.getLine(SceneUtils.KnownLines.HIP_TO_WRIST);
-			$('#hipToWristH').text(self.pixelsToMM(hipToWrist != undefined ? hipToWrist.horizontalDistance() : 0));
-			$('#hipToWristV').text(self.pixelsToMM(hipToWrist != undefined ? hipToWrist.verticalDistance() : 0));
+            var hipToWrist = self.sceneTop.getLine(SceneUtils.KnownLines.HIP_TO_WRIST);
+            $('#hipToWristH').text(self.pixelsToMM(hipToWrist != undefined ? hipToWrist.horizontalDistance() : 0));
+            $('#hipToWristV').text(self.pixelsToMM(hipToWrist != undefined ? hipToWrist.verticalDistance() : 0));
 
-			var customLine = self.sceneTop.getLine(SceneUtils.KnownLines.CUSTOM_LINE);
-			$('#endToEndH').text(self.pixelsToMM(customLine != undefined ? customLine.horizontalDistance() : 0));
-			$('#endToEndV').text(self.pixelsToMM(customLine != undefined ? customLine.verticalDistance() : 0));
-			$('#customLength').text(self.pixelsToMM(customLine != undefined ? customLine.length() : 0));
-		}	
+            var customLine = self.sceneTop.getLine(SceneUtils.KnownLines.CUSTOM_LINE);
+            $('#endToEndH').text(self.pixelsToMM(customLine != undefined ? customLine.horizontalDistance() : 0));
+            $('#endToEndV').text(self.pixelsToMM(customLine != undefined ? customLine.verticalDistance() : 0));
+            $('#customLength').text(self.pixelsToMM(customLine != undefined ? customLine.length() : 0));
+        }   
 
-		self.getNextLabel = function() {
-			if (lastLabel >= letters.length) {
-				alert('no more letters');
-			}
+        self.getNextLabel = function() {
+            if (lastLabel >= letters.length) {
+                alert('no more letters');
+            }
 
-			var label = letters[lastLabel];
-			lastLabel += 1;
+            var label = letters[lastLabel];
+            lastLabel += 1;
 
-			return label;
-		}
+            return label;
+        }
 
-		self.reloadScene = function () {
-			var canvasId = "stepOneCanvas";
-			self.sceneTop.load(self.points[canvasId], self.lines[canvasId], self.angles[canvasId], self.texts[canvasId]);
-		}
+        self.reloadScene = function () {
+            var canvasId = "stepOneCanvas";
+            self.sceneTop.load(self.points[canvasId], self.lines[canvasId], self.angles[canvasId], self.texts[canvasId]);
+        }
 
-		self.setupCanvas = function(canvasId) {
-			paper.setup(canvasId);		
+        self.setupCanvas = function(canvasId) {
+            paper.setup(canvasId);      
 
-			var getNextLabel = self.getNextLabel;
-			var onAngleChanged = self.onAngleChanged;					
+            var getNextLabel = self.getNextLabel;
+            var onAngleChanged = self.onAngleChanged;                   
 
-			self.points['stepOneCanvas'] = [
-			{'x': 647, 'y' : 140, 'scale' : true, 'name' : SceneUtils.KnownPoints.SHOULDER, 'label' : getNextLabel()},
-			{'x': 703, 'y' : 246, 'scale' : true, 'name' : SceneUtils.KnownPoints.ELBOW, 'label' : getNextLabel()},
-			{'x': 794, 'y' : 291, 'scale' : true, 'name' : SceneUtils.KnownPoints.WRIST, 'label' : getNextLabel()},
-			{'x': 476, 'y' : 261, 'scale' : true, 'name' : SceneUtils.KnownPoints.HIP, 'label' : getNextLabel()},
-			{'x': 615, 'y' : 370, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE, 'label' : getNextLabel()},
-			{'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : getNextLabel()},
-			{'x': 765, 'y' : 487, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE_HIP_VIRTUAL, 'label' : getNextLabel(), 'unmovable' : true},
+            self.points['stepOneCanvas'] = [
+            {'x': 647, 'y' : 140, 'scale' : true, 'name' : SceneUtils.KnownPoints.SHOULDER, 'label' : getNextLabel()},
+            {'x': 703, 'y' : 246, 'scale' : true, 'name' : SceneUtils.KnownPoints.ELBOW, 'label' : getNextLabel()},
+            {'x': 794, 'y' : 291, 'scale' : true, 'name' : SceneUtils.KnownPoints.WRIST, 'label' : getNextLabel()},
+            {'x': 476, 'y' : 261, 'scale' : true, 'name' : SceneUtils.KnownPoints.HIP, 'label' : getNextLabel()},
+            {'x': 615, 'y' : 370, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE, 'label' : getNextLabel()},
+            {'x': 597, 'y' : 541, 'scale' : true, 'name' : SceneUtils.KnownPoints.ANKLE, 'label' : getNextLabel()},
+            {'x': 765, 'y' : 487, 'scale' : true, 'name' : SceneUtils.KnownPoints.KNEE_HIP_VIRTUAL, 'label' : getNextLabel(), 'unmovable' : true},
 
-			{'x': 32,  'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : getNextLabel()},
-			{'x': 179, 'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : getNextLabel()},
+            {'x': 32,  'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_START, 'label' : getNextLabel()},
+            {'x': 179, 'y' : 60, 'scale' : false, 'name' : SceneUtils.KnownPoints.LEN_REF_END, 'label' : getNextLabel()},
 
-			{'x': 32, 'y' : 122, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_START, 'label' : getNextLabel()},
-			{'x': 179, 'y' : 122, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_END, 'label' : getNextLabel()}			
-			];
+            {'x': 32, 'y' : 122, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_START, 'label' : getNextLabel()},
+            {'x': 179, 'y' : 122, 'scale' : false, 'name' : SceneUtils.KnownPoints.HORIZ_REF_END, 'label' : getNextLabel()}         
+            ];
 
-			self.lines['stepOneCanvas'] = [
-			{ 'name' : SceneUtils.KnownLines.ARM_LINE, 'points' : [SceneUtils.KnownPoints.SHOULDER, SceneUtils.KnownPoints.ELBOW]},
-			{ 'name' : SceneUtils.KnownLines.FOREARM_LINE, 'points' : [SceneUtils.KnownPoints.ELBOW, SceneUtils.KnownPoints.WRIST]},
-			{ 'name' : SceneUtils.KnownLines.THIGH_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.KNEE]},
-			{ 'name' : SceneUtils.KnownLines.SHIN_LINE, 'points' : [SceneUtils.KnownPoints.KNEE, SceneUtils.KnownPoints.ANKLE]},
-			{ 'name' : SceneUtils.KnownLines.BACK_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.SHOULDER]},
+            self.lines['stepOneCanvas'] = [
+            { 'name' : SceneUtils.KnownLines.ARM_LINE, 'points' : [SceneUtils.KnownPoints.SHOULDER, SceneUtils.KnownPoints.ELBOW]},
+            { 'name' : SceneUtils.KnownLines.FOREARM_LINE, 'points' : [SceneUtils.KnownPoints.ELBOW, SceneUtils.KnownPoints.WRIST]},
+            { 'name' : SceneUtils.KnownLines.THIGH_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.KNEE]},
+            { 'name' : SceneUtils.KnownLines.SHIN_LINE, 'points' : [SceneUtils.KnownPoints.KNEE, SceneUtils.KnownPoints.ANKLE]},
+            { 'name' : SceneUtils.KnownLines.BACK_LINE, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.SHOULDER]},
 
-			{ 'name' : SceneUtils.KnownLines.HIP_TO_WRIST, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.WRIST], 'visible' : false},
+            { 'name' : SceneUtils.KnownLines.HIP_TO_WRIST, 'points' : [SceneUtils.KnownPoints.HIP, SceneUtils.KnownPoints.WRIST], 'visible' : false},
 
-			{ 'name' : SceneUtils.KnownLines.DISTANCE_REF_LINE, 'points' : [SceneUtils.KnownPoints.LEN_REF_START, SceneUtils.KnownPoints.LEN_REF_END]},
-			{ 'name' : SceneUtils.KnownLines.HORIZONTAL_REF_LINE, 'points' : [SceneUtils.KnownPoints.HORIZ_REF_START, SceneUtils.KnownPoints.HORIZ_REF_END]},
-			];
+            { 'name' : SceneUtils.KnownLines.DISTANCE_REF_LINE, 'points' : [SceneUtils.KnownPoints.LEN_REF_START, SceneUtils.KnownPoints.LEN_REF_END]},
+            { 'name' : SceneUtils.KnownLines.HORIZONTAL_REF_LINE, 'points' : [SceneUtils.KnownPoints.HORIZ_REF_START, SceneUtils.KnownPoints.HORIZ_REF_END]},
+            ];
 
-			self.angles['stepOneCanvas'] = [
-			{ 'name': SceneUtils.KnownAngles.ARM_FOREARM, 'side_first' : SceneUtils.KnownLines.ARM_LINE, 'side_second' : SceneUtils.KnownLines.FOREARM_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.ARM_FOREARM), 'onAngleChanged' : onAngleChanged},
-			{ 'name': SceneUtils.KnownAngles.HIP_KNEE_ANGLE, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.SHIN_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.HIP_KNEE_ANGLE), 'onAngleChanged' : onAngleChanged},
-			{ 'name': SceneUtils.KnownAngles.KNEE_EXTENSION, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.BACK_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.KNEE_EXTENSION), 'onAngleChanged' : onAngleChanged},
-			{ 'name': SceneUtils.KnownAngles.HIP_OPEN, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.BACK_LINE, 'onAngleChanged' : onAngleChanged},
-			{ 'name': SceneUtils.KnownAngles.ARM_PIT, 'side_first' : SceneUtils.KnownLines.BACK_LINE, 'side_second' : SceneUtils.KnownLines.ARM_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.ARM_PIT), 'onAngleChanged' : onAngleChanged},
-			{ 'name': SceneUtils.KnownAngles.BACK_ANGLE, 'side_first' : SceneUtils.KnownLines.BACK_LINE, 'side_second' : SceneUtils.KnownLines.HORIZONTAL_REF_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.BACK_ANGLE), 'onAngleChanged' : onAngleChanged},
-			];
+            self.angles['stepOneCanvas'] = [
+            { 'name': SceneUtils.KnownAngles.ARM_FOREARM, 'side_first' : SceneUtils.KnownLines.ARM_LINE, 'side_second' : SceneUtils.KnownLines.FOREARM_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.ARM_FOREARM), 'onAngleChanged' : onAngleChanged},
+            { 'name': SceneUtils.KnownAngles.HIP_KNEE_ANGLE, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.SHIN_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.HIP_KNEE_ANGLE), 'onAngleChanged' : onAngleChanged},
+            { 'name': SceneUtils.KnownAngles.KNEE_EXTENSION, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.BACK_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.KNEE_EXTENSION), 'onAngleChanged' : onAngleChanged},
+            { 'name': SceneUtils.KnownAngles.HIP_OPEN, 'side_first' : SceneUtils.KnownLines.THIGH_LINE, 'side_second' : SceneUtils.KnownLines.BACK_LINE, 'onAngleChanged' : onAngleChanged},
+            { 'name': SceneUtils.KnownAngles.ARM_PIT, 'side_first' : SceneUtils.KnownLines.BACK_LINE, 'side_second' : SceneUtils.KnownLines.ARM_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.ARM_PIT), 'onAngleChanged' : onAngleChanged},
+            { 'name': SceneUtils.KnownAngles.BACK_ANGLE, 'side_first' : SceneUtils.KnownLines.BACK_LINE, 'side_second' : SceneUtils.KnownLines.HORIZONTAL_REF_LINE, 'ranges' : self.getRange('road', SceneUtils.KnownAngles.BACK_ANGLE), 'onAngleChanged' : onAngleChanged},
+            ];
 
-			self.texts['stepOneCanvas'] = [
-			{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Length reference', 'x' : 22, 'y' : 40},
-			{ 'name' : 'HORIZONTAL_REF_LINE', text : 'Horizontal reference', 'x' : 22, 'y' : 100},				
-			]
+            self.texts['stepOneCanvas'] = [
+            { 'name' : 'HORIZONTAL_REF_LINE', text : 'Length reference', 'x' : 22, 'y' : 40},
+            { 'name' : 'HORIZONTAL_REF_LINE', text : 'Horizontal reference', 'x' : 22, 'y' : 100},              
+            ]
 
-			var scene = new Scene(canvasId, $('.stepCanvasArea').width(), $('.stepCanvasArea').height());
-			scene.load(self.points[canvasId], self.lines[canvasId], self.angles[canvasId], self.texts[canvasId]);
+            var scene = new Scene(canvasId, $('.stepCanvasArea').width(), $('.stepCanvasArea').height());
+            scene.load(self.points[canvasId], self.lines[canvasId], self.angles[canvasId], self.texts[canvasId]);
 
-			view.onFrame = function (event) {
-				scene.animateJoints(event);
-			}
+            view.onFrame = function (event) {
+                scene.animateJoints(event);
+            }
 
-			return scene;
-		}
+            return scene;
+        }
 
-		self.sceneTop = self.setupCanvas('stepOneCanvas');				
+        self.sceneTop = self.setupCanvas('stepOneCanvas');              
 
-		[self.sceneTop].forEach(function (scene) {			
-			// Thigh line
-			scene.onLineLengthChanged(function (f, t) {	
-				self.updateLineSizes();
-			}, SceneUtils.KnownLines.THIGH_LINE);
+        [self.sceneTop].forEach(function (scene) {          
+            // Thigh line
+            scene.onLineLengthChanged(function (f, t) { 
+                self.updateLineSizes();
+            }, SceneUtils.KnownLines.THIGH_LINE);
 
-			// Shin line
-			scene.onLineLengthChanged(function (f, t) {			
-				self.updateLineSizes();
-			}, SceneUtils.KnownLines.SHIN_LINE);
+            // Shin line
+            scene.onLineLengthChanged(function (f, t) {         
+                self.updateLineSizes();
+            }, SceneUtils.KnownLines.SHIN_LINE);
 
-			// Hip to wrist
-			scene.onLineLengthChanged(function (f, t) {
-				self.updateLineSizes();
-			}, SceneUtils.KnownLines.HIP_TO_WRIST);
-			
-			// Ref length line
-			scene.onLineLengthChanged(function (from, to) {
-				self.refDistanceInPixels = from.getDistance(to);
-				self.updateLineSizes();		
-			}, SceneUtils.KnownLines.DISTANCE_REF_LINE);
+            // Hip to wrist
+            scene.onLineLengthChanged(function (f, t) {
+                self.updateLineSizes();
+            }, SceneUtils.KnownLines.HIP_TO_WRIST);
+            
+            // Ref length line
+            scene.onLineLengthChanged(function (from, to) {
+                self.refDistanceInPixels = from.getDistance(to);
+                self.updateLineSizes();     
+            }, SceneUtils.KnownLines.DISTANCE_REF_LINE);
 
-			// Custom tool
-			scene.onLineLengthChanged(function (f, t) {
-				self.updateLineSizes();
-				updateCustomAngle();
-			}, SceneUtils.KnownLines.CUSTOM_LINE);
+            // Custom tool
+            scene.onLineLengthChanged(function (f, t) {
+                self.updateLineSizes();
+                updateCustomAngle();
+            }, SceneUtils.KnownLines.CUSTOM_LINE);
 
-			// Back line
-			scene.onLineLengthChanged(function (f, t) {
-				self.updateBackAngle();
-			}, SceneUtils.KnownLines.BACK_LINE);	
+            // Back line
+            scene.onLineLengthChanged(function (f, t) {
+                self.updateBackAngle();
+            }, SceneUtils.KnownLines.BACK_LINE);    
 
-			scene.onLineLengthChanged(function (f, t) {
-				self.updateBackAngle();
-			}, SceneUtils.KnownLines.HORIZONTAL_REF_LINE);	
-		});	
+            scene.onLineLengthChanged(function (f, t) {
+                self.updateBackAngle();
+            }, SceneUtils.KnownLines.HORIZONTAL_REF_LINE);  
+        }); 
 
-$($('.stepCanvasArea')[1]).hide();	
+$($('.stepCanvasArea')[1]).hide();  
 });
 
 </script>
