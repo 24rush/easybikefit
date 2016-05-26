@@ -6,9 +6,14 @@ var Text = function (point) {
 	_text.style = {
 		font: 'sans-serif',
 		fontWeight: 'normal',
-		fontSize: 14,
+		fontFamily: 'Arial',
+		fontSize: 13,		
+		justification: 'left'
 	};	
 
+	if ('justification' in _text.style) {
+		_text.justification = _text.style['justification'];
+	}
 	this._onTextSelect = [];
 
 	_text.sendToBack();
@@ -31,12 +36,20 @@ var Text = function (point) {
 		_text.remove();
 	}
 
+	this.bounds = function () {
+		return _text.bounds;
+	}
+
 	this.registerOnTextSelect = function (func, ctx) {
 		self._onTextSelect.push({'f' : func, 'ctx' : ctx});
 	}
 
-	this.setPosition = function(point) {
-		_text.position = point;
+	this.setPosition = function(x, y) {
+		_text.point = [x, y];
+	}
+
+	this.setPoint = function(point) {
+		_text.point = point;
 	}
 
 	this.setText = function(value) {
@@ -44,8 +57,8 @@ var Text = function (point) {
 		return self;
 	}
 
-	this.setStyle = function (style) {	
-		for (sKey in Object.keys(style)) {
+	this.setStyle = function (style) {		
+		for (sKey in style) {			
 			_text.style[sKey] = style[sKey];
 		}
 	}

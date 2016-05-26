@@ -8,8 +8,8 @@ var JointPoint = function(point) {
 	var _circle = new Path.Circle({
 		center: point,
 		radius: _radius,
-		fillColor: '#12335E',
-		strokeColor: '#0E812E',
+		fillColor: '#3868B9',
+		strokeColor: '#1DB6FF',
 		strokeWidth: strokeWidth
 	});
 
@@ -135,7 +135,7 @@ var JointPoint = function(point) {
 		if (_isMovable == false) {
 			return;
 		}			
-			
+
 		self.setScale(_downScaling);
 		_isDragging = true;				
 	}

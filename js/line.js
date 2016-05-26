@@ -11,8 +11,8 @@ var JointLine = function (point1, point2, visible, name) {
 	self._to = point2.point();
 
 	var _path = new Path.Line(self._from, self._to);
-	_path.strokeColor = 'black';
-	_path.strokeWidth = 0.7;
+	_path.strokeColor = '#1DB6FF';
+	_path.strokeWidth = 1.7;
 	_path.sendToBack();
 
 	_path.opacity = this.visible == true ? 1 : 0;

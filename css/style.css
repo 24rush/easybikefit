@@ -78,7 +78,7 @@ body a {
 
 	width: 19px;
     height: 19px;
-    background: #12335E;
+    background: #3868B9;
     border: 1px solid #0E812E;
     color: white;
     font-size: 14px;
@@ -93,6 +93,7 @@ body a {
 .btn-file {
 	position: relative;
 	overflow: hidden;
+	border-radius: 0px;
 }
 .btn-file input[type=file] {
 	position: absolute;
@@ -644,6 +645,24 @@ ul.usefull-for li a.u-windows span:hover{
 .social-icons ul li a.pin span:hover{
 	background-position: -314px -42px;
 }
+
+.fb-icon {
+	background-image: url('../img/fb-icon.png');
+    height: 40px;
+    width: 40px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    background-repeat: no-repeat;
+    background-size: 100% auto;"
+}
+
+.fb-icon:hover {
+	background-image: url('../img/fb-icon-hover.png')
+}
+
+
 /*---- footer-links ----*/
 .footer-links{
 	margin-top:1em;

@@ -44,7 +44,7 @@ var SceneUtils = {
 
 	KnownAngles : {
 		ARM_FOREARM : 'armForeArm',
-		HIP_KNEE_ANGLE : 'hipKneeAngle',
+		KNEE_FLEXION : 'kneeFlexion',
 		KNEE_EXTENSION : 'kneeExtension',
 		HIP_OPEN : 'hipOpen',
 		ARM_PIT : 'armPit',
@@ -159,7 +159,10 @@ var Scene =  function (paperScope, width, height) {
 
 	this.updateRanges = function(ranges) {
 		for (var idx in ranges) {
-			self.sceneAngles[ranges[idx]['name']].setRanges(ranges[idx]['ranges']);
+			var angle = self.sceneAngles[ranges[idx]['name']];
+			
+			if (angle != undefined)
+				angle.setRanges(ranges[idx]['ranges']);
 		}
 	}
 

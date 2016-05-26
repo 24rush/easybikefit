@@ -15,10 +15,27 @@ var JointsAngle = function (line1, line2, name) {
 	//path.fillColor = defaultRangeFillColor;
 	path.opacity = 0.6;
 	path.strokeColor = 'black';	
+	
+	var angleCurrentValue = new Text(center);
+	angleCurrentValue.curvature = 0.7;
 
-	var angleText = new Text(center);	
-	angleText.curvature = 0.7;	
+	var angleRangeLabel = new Text(center);	
+	var angleRangeLabelCurrent = new Text(center);
 
+	var textColor = 'white';
+
+	angleRangeLabel.setStyle({'fontFamily' : 'RobotoBold', 'fillColor' : textColor});
+	angleRangeLabelCurrent.setStyle({'fontFamily' : 'RobotoBold', 'fillColor' : textColor});
+
+	angleRangeLabelCurrent.setText("Current angle: ");
+
+	var angleRangesValue = new Text(center);
+	angleRangesValue.setStyle({'fontFamily' : 'RobotoBold', 'fillColor' : textColor});
+	angleCurrentValue.setStyle({'fontFamily' : 'RobotoBold', 'fillColor' : textColor});
+
+	this.followLine = new Path();
+	this.followLine.strokeColor = 'black';
+	this.followLine.sendToBack();
 	this.ranges = undefined;
 
 	this._onAngleChangedCbk = [];
@@ -34,7 +51,11 @@ var JointsAngle = function (line1, line2, name) {
 
 	this.remove = function () {		
 		path.remove();
-		angleText.remove();
+		angleCurrentValue.remove();
+	}
+
+	this.hasRanges = function () {
+		return this.ranges != undefined;
 	}
 
 	function findCommonPoint() {
@@ -71,8 +92,12 @@ var JointsAngle = function (line1, line2, name) {
 
 	this.setRanges = function (ranges) {
 		this.ranges = ranges;
-		this.drawAngle();
-		
+
+		if (this.ranges != undefined) {
+			angleRangeLabel.setText("Range: ");						
+			this.drawAngle();		
+		}			
+
 		return this;
 	}
 
@@ -97,8 +122,7 @@ var JointsAngle = function (line1, line2, name) {
 		var diff2 = destination2.subtract(common);
 		var v2 = diff2.divide(2);//.add(common);
 
-		var cos = (v1.x * v2.x + v1.y * v2.y) / (Math.sqrt(v1.x * v1.x + v1.y * v1.y) * Math.sqrt(v2.x * v2.x + v2.y * v2.y));
-		//console.log(Math.acos(cos) * 180 / Math.PI);
+		var cos = (v1.x * v2.x + v1.y * v2.y) / (Math.sqrt(v1.x * v1.x + v1.y * v1.y) * Math.sqrt(v2.x * v2.x + v2.y * v2.y));		
 		
 		path.removeSegments();		
 
@@ -109,14 +133,43 @@ var JointsAngle = function (line1, line2, name) {
 		path.add(common);
 		path.add(y2);			
 		
-		var mid = new Point((y1.x + y2.x) / 2 + 10, (y1.y + y2.y) / 2 + 10);									
+		var mid = new Point((y1.x + y2.x) / 2 + 100, (y1.y + y2.y) / 2 + 10);											
+		var angle = Math.acos(cos) * 180 / Math.PI;						
 		
-		var angle = Math.acos(cos) * 180 / Math.PI;
-		angleText.setPosition(mid);
+		var textStart = common.clone();
+		textStart.x += 60; textStart.y -= 50;
+		textStart.y += angleCurrentValue.bounds().height;
 
+		var horizItems = this.hasRanges() ? 2 : 1;
+		var maxLabelWidth = Math.max(angleRangeLabel.bounds().width + angleRangesValue.bounds().width, angleRangeLabelCurrent.bounds().width + angleCurrentValue.bounds().width);		
+		
+		if (this.background != undefined) 
+			this.background.remove();
+
+		this.background = new Path.Rectangle([textStart.x -5, textStart.y -angleCurrentValue.bounds().height], [maxLabelWidth +10, angleCurrentValue.bounds().height * horizItems +5]);
+		this.background.fillColor = '#3868B9';
+		this.background.strokeColor = 'black';
+		this.background.strokeWidth = 0.8;
+		this.background.opacity = 0.7;
+		this.background.sendToBack();
+
+		this.followLine.removeSegments();
+		this.followLine.add(common);
+		this.followLine.add([textStart.x -25, textStart.y +2]);
+		this.followLine.add([textStart.x -5, textStart.y +2]);
+
+		// Range:
+		angleRangeLabel.setPoint(textStart);
+		// 90-180		
+		angleRangesValue.setPosition(textStart.x + angleRangeLabel.bounds().width, textStart.y);
+
+		// Current:				
+		angleRangeLabelCurrent.setPosition(textStart.x, textStart.y + angleRangeLabel.bounds().height);		
+		// XX
 		this._currentAngle = angle.toFixed(1);
-		angleText.setText(this._currentAngle);
-
+		angleCurrentValue.setText(this._currentAngle + "°");
+		angleCurrentValue.setPosition(textStart.x + angleRangeLabelCurrent.bounds().width, textStart.y + angleRangeLabel.bounds().height);		
+ 		
  		// Notify angle changed
 		for (var cbk in self._onAngleChangedCbk) {							
 			self._onAngleChangedCbk[cbk](this._currentAngle, this._name);
@@ -124,10 +177,12 @@ var JointsAngle = function (line1, line2, name) {
 
 		if (this.ranges != undefined) {
 			path.fillColor = defaultRangeFillColor;
+			path.sendToBack();
 			for (var i in this.ranges) {
-				var range = this.ranges[i];
-				if (angle >= range['range'][0] && angle <= range['range'][1]) {					
-					path.fillColor = range['color'];
+				var range = this.ranges[i];				
+				angleRangesValue.setText(range['range'][0] + "°" + '-' + range['range'][1] + "°");
+				if (angle >= range['range'][0] && angle <= range['range'][1]) {
+					path.fillColor = range['color'];																		
 					break;
 				}
 			}
