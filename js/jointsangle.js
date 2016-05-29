@@ -51,7 +51,13 @@ var JointsAngle = function (line1, line2, name) {
 
 	this.remove = function () {		
 		path.remove();
-		angleCurrentValue.remove();
+		angleCurrentValue.remove();			
+		angleRangeLabel.remove();
+		angleRangesValue.remove();
+		angleRangeLabelCurrent.remove();
+
+		this.followLine.remove();
+		this.background.remove();
 	}
 
 	this.hasRanges = function () {
