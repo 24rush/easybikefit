@@ -94,6 +94,7 @@ body a {
 	position: relative;
 	overflow: hidden;
 	border-radius: 0px;
+	margin-right: 2px;
 }
 .btn-file input[type=file] {
 	position: absolute;
