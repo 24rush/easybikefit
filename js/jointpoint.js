@@ -87,6 +87,7 @@ var JointPoint = function(point) {
 
 	this.opacity = function (value) {
 		_circle.opacity = value;
+		_text.opacity = value;
 	}
 
 	this.setScale = function(scale) {
@@ -107,7 +108,7 @@ var JointPoint = function(point) {
 	_circle.onMouseDrag = function (event) {
 		if (_isMovable == false) {
 			return;
-		}			
+		}					
 
 		_circle.position = event.point;
 		centerLabel();
@@ -121,14 +122,16 @@ var JointPoint = function(point) {
 		if (_isDragging == true || _isMovable == false)
 			return;					
 
-		self.setScale(_upScaling);				
+		self.setScale(_upScaling);	
+		self.opacity(1);			
 	}
 
 	_circle.onMouseLeave = function (event) {
 		if (_isDragging == true || _isMovable == false)
 			return;
 
-		self.setScale(_downScaling);				
+		self.setScale(_downScaling);	
+		self.opacity(1);			
 	}
 
 	_circle.onMouseDown = function (event) {
@@ -136,12 +139,21 @@ var JointPoint = function(point) {
 			return;
 		}			
 
+		_currentDraggingPoint = this;
 		self.setScale(_downScaling);
+		self.opacity(0);
 		_isDragging = true;				
 	}
 
 	_circle.onMouseUp = function (event) {								
-		_isDragging = false;				
+		console.log('aaa');
+		_isDragging = false;
+		self.opacity(1);
+		_currentDraggingPoint = undefined;				
+	}
+
+	this.onMouseUp = function (event) {
+		_circle.onMouseUp(event);
 	}
 
 	_text.onMouseEnter = _circle.onMouseEnter;
@@ -149,4 +161,12 @@ var JointPoint = function(point) {
 	_text.onMouseUp = _circle.onMouseUp;
 	_text.onMouseDown = _circle.onMouseDown;
 	_text.onMouseDrag = _circle.onMouseDrag;
+}
+
+var _currentDraggingPoint = undefined;
+
+var _tool = new paper.Tool();
+_tool.onMouseUp = function (event) {
+	if (_currentDraggingPoint !== undefined)
+		_currentDraggingPoint.onMouseUp(event);
 }
