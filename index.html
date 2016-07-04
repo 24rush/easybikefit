@@ -52,12 +52,13 @@
                     <div class="panel-heading">Lengths</div>
                     <div class="panel-body">
                     <!--
-                        <line name> <points>
-                           Current length: <lineLength>
+                        <line name> <points> <lineLength>                           
                        -->                     
-                       <span class="lines">Length of reference </span>
+                       <span class="">Length of reference </span>
                        <input type="text" class="form-control" id="inputLength" style="width: 50px;display: inline;" placeholder="cm"><span> cm</span>
                        <br>
+                       <div class="lines" lf="armLine"></div>                        
+                       <div class="lines" lf="foreArmLine"></div>                        
                        <div class="lines" lf="thighLine"></div>                        
                        <div class="lines" lf="shinLine"></div>                     
                        <div class="lines" lf="hipToWristH"></div>                      
@@ -71,7 +72,7 @@
                     <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true" id="btnAddCustomTool"></span>
                 </div>
                 <div class="panel-body custom-tool-template" style="display: none;">
-                    <div class="custom-tool-bg">
+                    <div class="custom_lines">
                         <span class="close remove-custom-tool glyphicon glyphicon-remove"></span>                               
                         <span class="numberCircle"></span><span class="numberCircle"></span><span class="angleName">Length: </span>
                         <span class="angleText" id="customLength0"></span>
@@ -85,10 +86,10 @@
             </div>
         </div>
 
-        <div class="col-md-10">
+        <div class="col-md-10">            
             <div class="stepWorkArea alert alert-header" role="alert">                                          
-                <span class="btn btn-primary btn-file">Upload a picture or video of you
-                    <input type="file" id="fileOne" accept="video/*" class="clickable">
+                <span class="btn btn-primary btn-file">Upload a photo or video of you
+                    <input type="file" id="fileOne" accept="video/*,image/*" class="clickable">
                 </span>                
 
                 <div class="inline" style="display:none;margin-left: 15px;" id="videoControls">
@@ -99,7 +100,7 @@
                     <input type="text" class="form-control" id="advanceValue" style="width: 70px;display: inline;" value="0.25">    
                 </div>
                 
-                <button class="btn btn-file btn-primary clickable pull-right" data-toggle="modal" data-target="#feedback">Feedback form</button>
+                <button class="btn btn-file btn-primary clickable pull-right" data-toggle="modal" data-target="#feedback">Send feedback</button>
 
                 <div class="modal fade" id="feedback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" >
                   <div class="modal-dialog">
@@ -121,13 +122,8 @@
                 </div>
 
                 <button type="button" id="btn_get_started" class="btn btn-file btn-primary clickable pull-right" data-toggle="buttons">
-                    Getting started <span class="caret"></span></button>                                            
-                </div>                                        
-
                 <div class="stepCanvasArea" style="width: 100%; height: 100%; pointer-events: none; background-repeat: no-repeat; background-position: center;background-size: contain; background-image: url('http://cdn.mos.bikeradar.imdserve.com/images/news/2014/01/29/1391015425255-1xzonat68dlrm-960-540.jpg')">
                     <video id="riderVideo" class="video-js vjs-default-skin" style="width: 100%; display: none;" autoplay loop></video>
-                    <canvas id="stepOneCanvas" style="pointer-events: all; top: 45px; width: 100%; height: 100%; position: absolute;"></canvas>                     
-
                     <div class="col-md-3 pull-right" id="panel_get_started" style="display:none; margin-top: 5px;padding-right: 0px;">
                         <div class="panel panel-default">
                             <div class="panel-heading">How to use this tool</div>
@@ -158,10 +154,8 @@
                                     </div>
                                 </div>          
                             </div>  
-
                         </div>      
                     </div>
-                </div>            
             </div>
         </div>
     </div>
@@ -218,7 +212,6 @@
         self.points = {};
         self.lines = {};
         self.angles = {};
-        self.texts = {};            
 
         var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         var lastLabel = 0;          
@@ -228,10 +221,8 @@
         canvasDiv.height(windowHeight);
 
         $('#stepOneCanvas').width(canvasDiv.width());
-        $('#stepOneCanvas').height(canvasDiv.height());
 
         $('#btn_get_started').on('click', function (e) {        
-            $('#panel_get_started').toggle('hide');        
         });
 
         self.video = new VideoPlayer('riderVideo');
@@ -367,7 +358,6 @@
             ];
 
             angles = [
-            { 'name': SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo, 'side_first' : customToolBase + '0', 'side_second' : customToolBase + '1', 'ranges' : [{'range' : [0, 180], 'color' : 'green'}], 'onAngleChanged' : onAngleChanged},
             ];
 
             self.sceneTop.load(points, lines, angles, []);      
@@ -577,9 +567,7 @@
             return labelsFormat;
         }           
 
-        self.updateAngleHelp = function (range) {
             $('.angles').each(function (i, elem) {
-                var id = $(elem).attr('af');    
 
                 var angleName = measurementLabel(id);
 
@@ -611,14 +599,11 @@
             $('.lines').each(function (i, elem) {
                 var id = $(elem).attr('lf');
 
-                var lineName = measurementLabel(id);
 
                 if (lineName == "") 
                     return;
 
                 $(elem)
-                .append($('<div>').append($('<span>').text(lineName)).append($('<span>').attr('class', 'angleName').html(self.getLabelsFormatted(id))))
-                .append($('<div class=\"angleSubSection\">').append($('<span>').text('Current length: ')).append($('<span>').attr('id', id).attr('class', 'angleText')))
                     /*
                         <line name> <points>
                           Current length: <lineLength>
@@ -630,19 +615,13 @@
             $(this).parents(".dropdown").find('.btn').html($(this).text()+" <span class=\"caret\"></span>");
             $(this).parents(".dropdown").find('.btn').val($(this).text());
 
-            var bikeType = $(this).attr('value');   
-            self.sceneTop.updateRanges(self.ranges[bikeType]);
-            self.updateAngleHelp(self.ranges[bikeType]);
         });
 
         self.updateAngleHelp(self.ranges['road']);
 
         }();
 
-        self.getRange = function(type, angle) {
-            var selectedRange = self.ranges[type];
             for (idx in selectedRange) {
-                if (selectedRange[idx]['name'] == angle) {
                     return selectedRange[idx]['ranges'];
                 }
             }
@@ -650,11 +629,8 @@
             return [];
         }
 
-        self.onAngleChanged = function(angle, target) {        
-            $('#' + target).text(angle + '°');
 
             if (target == SceneUtils.KnownAngles.KNEE_EXTENSION) {
-                $('#' + SceneUtils.KnownAngles.KNEE_FLEXION).text((180 - angle).toFixed(1) + '°');
             }
         }
 
@@ -713,7 +689,6 @@
             return (val * 10 * self.getCMPerPixel()).toFixed(1) + ' mm';
         }
 
-        self.updateLineSizes = function() {                     
             var thighLine = self.sceneTop.getLine(SceneUtils.KnownLines.THIGH_LINE);
             $('#thighLine').text(self.pixelsToMM(thighLine != undefined ? thighLine.length() : 0));
 
@@ -742,8 +717,6 @@
         }
 
         self.reloadScene = function () {
-            var canvasId = "stepOneCanvas";
-            self.sceneTop.load(self.points[canvasId], self.lines[canvasId], self.angles[canvasId], self.texts[canvasId]);
         }
 
         self.setupCanvas = function(canvasId) {
@@ -852,7 +825,6 @@ $($('.stepCanvasArea')[1]).hide();
 inputLength.val(50);
 inputLength.trigger('change');
 });
-
 </script>
 
 </body>

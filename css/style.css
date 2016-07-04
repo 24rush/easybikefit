@@ -4,6 +4,32 @@ Author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 --*/
+
+.magnify {
+    position: relative;
+    width: 900px;
+    height: 675px;
+}
+.magnify_glass {
+    z-index: 99999;
+    position: absolute;
+    overflow: hidden;
+}
+.element_to_magnify {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+#elementBeingMagnified {
+
+}
+.magnified_element {
+
+}
+
+
 html, body {
 	font-family: Arial, sans-serif;
 	background: #FFf;
@@ -153,10 +179,6 @@ body a {
 	pointer-events: all;
 }
 
-.custom-tool-bg {
-	background: rgb(244, 244, 244);
-}
-
 .close {
 	font-size: 15px;
 	opacity: 1;
@@ -187,16 +209,32 @@ body a {
 	opacity: 0.5;
 }
 
+.custom_lines,
 .lines,
 .angles {
 	margin-bottom: 5px;
+}
+
+.custom_lines:hover,
+.lines:hover,
+.angles:hover {
+	background: rgba(0,0,0,0.1);
+	cursor: default;
 }
 
 .angleTextTooltip,
 .angleText {
 	font-weight: 600;
 	font-family: RobotoBold;
-	margin-left: 5px;
+	margin-left: 5px;	
+}
+
+.angleOk {
+	color: #00C100
+}
+
+.angleNotOk {
+	color : #D60000
 }
 
 .angleName {

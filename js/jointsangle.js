@@ -11,8 +11,8 @@ var JointsAngle = function (line1, line2, name) {
 	var path = new Path([center, center, center]);
 	path.sendToBack();
 
-	var defaultRangeFillColor = 'red';
-	//path.fillColor = defaultRangeFillColor;
+	var defaultRangeFillColor = 'green';
+	
 	path.opacity = 0.6;
 	path.strokeColor = 'black';	
 	
@@ -99,7 +99,7 @@ var JointsAngle = function (line1, line2, name) {
 	this.setRanges = function (ranges) {
 		this.ranges = ranges;
 
-		if (this.ranges != undefined) {
+		if (this.ranges !== undefined) {
 			angleRangeLabel.setText("Range: ");						
 			this.drawAngle();		
 		}			
@@ -180,19 +180,19 @@ var JointsAngle = function (line1, line2, name) {
 		for (var cbk in self._onAngleChangedCbk) {							
 			self._onAngleChangedCbk[cbk](this._currentAngle, this._name);
 		}
-
-		if (this.ranges != undefined) {
-			path.fillColor = defaultRangeFillColor;
-			path.sendToBack();
-			for (var i in this.ranges) {
-				var range = this.ranges[i];				
-				angleRangesValue.setText(range['range'][0] + "°" + '-' + range['range'][1] + "°");
-				if (angle >= range['range'][0] && angle <= range['range'][1]) {
-					path.fillColor = range['color'];																		
-					break;
-				}
+	
+		path.fillColor = defaultRangeFillColor;
+		path.sendToBack();
+		for (var i in this.ranges) {
+			var range = this.ranges[i];				
+			angleRangesValue.setText(range['range'][0] + "°" + '-' + range['range'][1] + "°");
+			if (angle >= range['range'][0] && angle <= range['range'][1]) {
+				path.fillColor = range['color'];																		
+				break;
+			} else {
+				path.fillColor = 'red';
 			}
-		}
+		}		
 	}
 
 	line1.onLineChanged(function(from, to) {

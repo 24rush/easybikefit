@@ -55,7 +55,7 @@ var SceneUtils = {
 }
 
 var Scene =  function (paperScope, width, height) {
-	var self = this;
+	var self = this;	  
 
 	this.tbStartLeft = 35;
 	this.tbStartTop = 35;
@@ -68,6 +68,10 @@ var Scene =  function (paperScope, width, height) {
 	this.sceneLines = [];
 	this.sceneAngles = [];
 	this.sceneTexts = [];
+
+	this.highlightPath = new Path();
+	this.highlightPath.strokeColor = '#C7FF2E';
+	this.highlightPath.strokeWidth = 5;
 
 	this.lineChangedCbks = [];
 
@@ -89,14 +93,34 @@ var Scene =  function (paperScope, width, height) {
 	this.scalingY = this.height / 775;
 
 	$('.toolbox').css('left', 25);
-	$('.toolbox').css('top', this.tbStartTop);
+	$('.toolbox').css('top', this.tbStartTop);	
 
 	this.getLine = function(name) {
 		return self.sceneLines[name];
 	}
 
-	this.getJointPoint = function (pointName) {		
+	this.getJointPoint = function (pointName) {	
 		return self.scenePoints[pointName];
+	}
+
+	this.getJointPointByLabel = function (label) {		
+		for (var angleName in self.scenePoints) {
+			if (self.scenePoints[angleName].getLabel() === label) {
+				return self.scenePoints[angleName];
+			}
+		}
+	}
+
+	this.highlightPoints = function (labels) {
+        self.unhighlightAll();
+
+        for (var i = 0; i < labels.length; i++) {                             
+            self.highlightPath.addSegment(self.getJointPointByLabel(labels[i]).point());                      
+        };
+	}
+
+	this.unhighlightAll = function () {
+		self.highlightPath.removeSegments();
 	}
 
 	this.restartAnimation = function () {
@@ -130,7 +154,7 @@ var Scene =  function (paperScope, width, height) {
 				progress = 1;
 
 				point.requiresAnimation = false;
-				this.animationEnded = true
+				this.animationEnded = true;
 			}
 
 			oldPos.x *= progress;
@@ -219,6 +243,7 @@ var Scene =  function (paperScope, width, height) {
 	}
 
 	this.unload = function (pointIds, lineIds, angleIds, textIds) {
+		this.unhighlightAll();
 		this.view._project.activate();
 
 		for (var i = 0; i < pointIds.length; i++) {
@@ -240,13 +265,17 @@ var Scene =  function (paperScope, width, height) {
 			angle.remove();
 			
 			delete angle;
-		}
+		}		
 	}
 
 	this.load = function (points, lines, angles, texts) {
 		var self = this;
 
 		this.view._project.activate();
+
+		var resetHighlight = function() {
+			self.unhighlightAll();
+		}
 
 		for (var i = 0; i < points.length; i++) {
 			var point = points[i];
@@ -255,6 +284,7 @@ var Scene =  function (paperScope, width, height) {
 			if (point['scale'] == false) {
 				var finalDestinationPoint = new Point(point['x'], point['y']);
 				self.scenePoints[pointName] = new JointPoint(finalDestinationPoint).label(point['label']).setFinalDestinationPoint(finalDestinationPoint).setMovable(point['unmovable'] == undefined ? true : false);
+				self.scenePoints[pointName].onMove(resetHighlight);
 				continue;
 			}
 			
@@ -262,6 +292,7 @@ var Scene =  function (paperScope, width, height) {
 			this.applyScaling(scaledPoint)	
 
 			self.scenePoints[pointName] = new JointPoint(scaledPoint).label(point['label']).setFinalDestinationPoint(scaledPoint).setMovable(point['unmovable'] == undefined ? true : false);	
+			self.scenePoints[pointName].onMove(resetHighlight);
 		}
 
 		for (var i = 0; i < lines.length; i++) {

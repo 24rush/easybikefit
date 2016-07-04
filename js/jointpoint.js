@@ -51,6 +51,10 @@ var JointPoint = function(point) {
 		return this;
 	}
 
+	this.getLabel = function (){
+		return _text.content;
+	}
+
 	this.setFinalDestinationPoint = function (point) {
 		self.finalDestinationPoint = point;
 		return this;
@@ -130,7 +134,10 @@ var JointPoint = function(point) {
 		if (_isDragging == true || _isMovable == false)
 			return;
 
-		self.setScale(_downScaling);	
+		if (_currentScale == _upScaling) {
+			self.setScale(_downScaling);	
+		}
+		
 		self.opacity(1);			
 	}
 
@@ -139,14 +146,21 @@ var JointPoint = function(point) {
 			return;
 		}			
 
+		$('body').bind('touchmove', function(e){e.preventDefault()});
+
 		_currentDraggingPoint = this;
-		self.setScale(_downScaling);
+
+		if (_currentScale == _upScaling) {
+			self.setScale(_downScaling);
+		}
+
 		self.opacity(0);
 		_isDragging = true;				
 	}
 
-	_circle.onMouseUp = function (event) {								
-		console.log('aaa');
+	_circle.onMouseUp = function (event) {	
+		$('body').unbind('touchmove');
+
 		_isDragging = false;
 		self.opacity(1);
 		_currentDraggingPoint = undefined;				
