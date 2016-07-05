@@ -16,7 +16,7 @@ var Text = function (point) {
 	}
 	this._onTextSelect = [];
 
-	_text.sendToBack();
+	project.activeLayer.insertChild(1, _text);
 
 	_text.onMouseEnter = function (evt) {		
 		for (var i in self._onTextSelect) {

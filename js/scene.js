@@ -94,6 +94,23 @@ var Scene =  function (paperScope, width, height) {
 
 	$('.toolbox').css('left', 25);
 	$('.toolbox').css('top', this.tbStartTop);	
+		
+	this.loadImage = function (url) {
+		if (this.raster)
+			this.raster.remove();
+
+		this.raster = new Raster(url);
+
+		this.raster.onLoad = function() {    			
+	    	self.raster.scale(Math.min(self.height / self.raster.height, self.width / self.raster.width));
+			self.raster.position = view.center;	
+		};	
+
+		this.raster.position = view.center;		
+		this.raster.sendToBack();
+	}
+
+	this.loadImage('img/1391015425255-1xzonat68dlrm-960-540.jpg');
 
 	this.getLine = function(name) {
 		return self.sceneLines[name];
@@ -154,7 +171,8 @@ var Scene =  function (paperScope, width, height) {
 				progress = 1;
 
 				point.requiresAnimation = false;
-				this.animationEnded = true;
+				this.animationEnded = true;	
+				this.raster.sendToBack();			
 			}
 
 			oldPos.x *= progress;

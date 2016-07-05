@@ -115,15 +115,21 @@
                       <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>                        
                       </div>
-                    </div>
-                    <!-- /.modal-content -->
-                  </div>
-                  <!-- /.modal-dialog -->
+                    </div>                    
+                  </div>                  
                 </div>
 
                 <button type="button" id="btn_get_started" class="btn btn-file btn-primary clickable pull-right" data-toggle="buttons">
-                <div class="stepCanvasArea" style="width: 100%; height: 100%; pointer-events: none; background-repeat: no-repeat; background-position: center;background-size: contain; background-image: url('http://cdn.mos.bikeradar.imdserve.com/images/news/2014/01/29/1391015425255-1xzonat68dlrm-960-540.jpg')">
+                    Help <span class="caret"></span></button>                                            
+                </div>                   
+                
+                <div class="stepCanvasArea" style="width: 100%; height: 100%; pointer-events: none;">
                     <video id="riderVideo" class="video-js vjs-default-skin" style="width: 100%; display: none;" autoplay loop></video>
+
+                    
+                    <canvas id="stepOneCanvas" style="pointer-events: all; top: 45px; width: 100%; height: 100%; position: absolute;"></canvas> 
+                    <canvas id="zoom" class="lens" width="200" height="200" style="display: none;"></canvas>
+
                     <div class="col-md-3 pull-right" id="panel_get_started" style="display:none; margin-top: 5px;padding-right: 0px;">
                         <div class="panel panel-default">
                             <div class="panel-heading">How to use this tool</div>
@@ -156,6 +162,7 @@
                             </div>  
                         </div>      
                     </div>
+                </div>                
             </div>
         </div>
     </div>
@@ -201,6 +208,43 @@
     $(document).ready(function() {
         var self = this;
 
+        // Lens     
+        var main = document.getElementById("stepOneCanvas");
+        var zoom = document.getElementById("zoom");
+        zoom.style.display = "none";
+
+        var ctx = main.getContext("2d")
+        var zoomCtx = zoom.getContext("2d");
+
+        var onMoveHandler = function(e){  
+            var clientX = !e.clientX ? e.touches[0].clientX : e.clientX;
+            var clientY = !e.clientY ? e.touches[0].clientY : e.clientY;            
+
+            var layerX = clientX -  $('#stepOneCanvas').offset().left;
+            var layerY = clientY - $('#stepOneCanvas').offset().top;
+            
+            zoomCtx.fillStyle = "white";
+            zoomCtx.fillRect(0,0, zoom.width, zoom.height);
+            zoomCtx.drawImage(main,  layerX -100, layerY-100, 200, 200, -50,-50, 300, 300);
+
+//alert(layerX + ' ' + layerY + ' ' + zoom.width);
+
+            zoom.style.top = clientY - 220 + "px"
+            zoom.style.left = (layerX - 220) + "px"            
+        };
+
+        $('#stepOneCanvas')[0].addEventListener("mousemove", onMoveHandler);
+        $('#stepOneCanvas')[0].addEventListener("touchmove", onMoveHandler);
+
+        $('#stepOneCanvas').on("mousedown touchstart", function(e){
+            zoom.style.display = "block";
+            onMoveHandler(e);
+        });
+
+        $('#stepOneCanvas').on("mouseup touchend", function(){            
+            zoom.style.display = "none";
+        });
+
         paper.install(window);
 
         var lastCustomToolY = 200;
@@ -212,6 +256,7 @@
         self.points = {};
         self.lines = {};
         self.angles = {};
+        self.texts = {};                    
 
         var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         var lastLabel = 0;          
@@ -221,8 +266,10 @@
         canvasDiv.height(windowHeight);
 
         $('#stepOneCanvas').width(canvasDiv.width());
+        $('#stepOneCanvas').height(canvasDiv.height());        
 
         $('#btn_get_started').on('click', function (e) {        
+            $('#panel_get_started').toggle(0,'show');        
         });
 
         self.video = new VideoPlayer('riderVideo');
@@ -283,8 +330,8 @@
                 file.onload = function(evt) {
                     self.video.show(false);
                     self.videoControls.hide();
-
-                    $('.stepCanvasArea').css('background-image', 'url("' + evt.target.result + '")');               
+                    
+                    self.sceneTop.loadImage(evt.target.result);             
                 }       
 
                 return;
@@ -358,6 +405,7 @@
             ];
 
             angles = [
+            { 'name': SceneUtils.KnownAngles.CUSTOM_ANGLE + lastCustomToolNo, 'side_first' : customToolBase + '0', 'side_second' : customToolBase + '1', 'onAngleChanged' : onAngleChanged},
             ];
 
             self.sceneTop.load(points, lines, angles, []);      
@@ -394,6 +442,12 @@
                 self.sceneTop.unload(pointIdsToRemove, lineIdsToRemove, angleIdsToRemove);
 
                 $(this).parent().parent().detach();
+            });
+
+            $('.custom-tool-' + lastCustomToolNo).hover(function () {
+                self.sceneTop.highlightPoints([startLabel, middleLabel, endLabel]);
+            }, function () {
+                self.sceneTop.unhighlightAll();
             });
 
             lastCustomToolY += 40;
@@ -502,6 +556,10 @@
                 return ['D', 'A', 'B'];
                 case SceneUtils.KnownAngles.BACK_ANGLE:
                 return ['A', 'D'];
+                case SceneUtils.KnownLines.ARM_LINE:
+                return ['A', 'B'];
+                case SceneUtils.KnownLines.FOREARM_LINE:
+                return ['B', 'C'];
                 case SceneUtils.KnownLines.THIGH_LINE:
                 return ['D', 'E'];
                 case SceneUtils.KnownLines.SHIN_LINE:
@@ -517,6 +575,7 @@
 
         var bikeTypesList = $('#bikeTypesList');
         var bikeTypes = ['road', 'mtb', 'tri', 'tt'];
+        self.bikeType = 'road';
         var bikeTypeLables = ['Road', 'MTB', 'Triathlon', 'Time trial'];
 
         for (var i = 0; i < bikeTypes.length; i++) {
@@ -567,7 +626,15 @@
             return labelsFormat;
         }           
 
+        self.updateAngleHelp = function (range) {            
             $('.angles').each(function (i, elem) {
+                var id = $(elem).attr('af'); 
+                        
+                $(elem).hover(function() {
+                    self.sceneTop.highlightPoints(self.getLabels(id));                    
+                }, function() {
+                    self.sceneTop.unhighlightAll();
+                });
 
                 var angleName = measurementLabel(id);
 
@@ -599,11 +666,20 @@
             $('.lines').each(function (i, elem) {
                 var id = $(elem).attr('lf');
 
+                $(elem).hover(function() {
+                    self.sceneTop.highlightPoints(self.getLabels(id));                    
+                }, function() {
+                    self.sceneTop.unhighlightAll();
+                });
 
-                if (lineName == "") 
-                    return;
+                //var lineName = measurementLabel(id);
+
+                //if (lineName == "") 
+                //   return;
 
                 $(elem)
+                .append($('<div>').append($('<span>').attr('class', 'angleName').html(self.getLabelsFormatted(id)))
+                .append($('<span>').attr('id', id).attr('class', 'angleText')))                
                     /*
                         <line name> <points>
                           Current length: <lineLength>
@@ -615,13 +691,19 @@
             $(this).parents(".dropdown").find('.btn').html($(this).text()+" <span class=\"caret\"></span>");
             $(this).parents(".dropdown").find('.btn').val($(this).text());
 
+            self.bikeType = $(this).attr('value');   
+            self.sceneTop.updateRanges(self.ranges[self.bikeType]);
+            self.updateAngleHelp(self.ranges[self.bikeType]);
         });
 
         self.updateAngleHelp(self.ranges['road']);
 
         }();
 
+        self.getRange = function(type, angle) {            
+            var selectedRange = self.ranges[type];            
             for (idx in selectedRange) {
+                if (selectedRange[idx]['name'] == angle) {                    
                     return selectedRange[idx]['ranges'];
                 }
             }
@@ -629,8 +711,43 @@
             return [];
         }
 
+        self.isAngleInRange = function (angle, target) {
+            var range = self.getRange(self.bikeType, target);
+            
+            if (range === undefined || range.length == 0) 
+                return true;
+            
+            if (angle >= range[0]['range'][0] && angle <= range[0]['range'][1]) {
+                return true;
+            }
+
+            return false;
+        }
+
+        self.onAngleChanged = function(angle, target) {
+            var isInRange = self.isAngleInRange(angle, target);
+            var elem = undefined;            
+
+            elem = $('#' + target);    
+            elem.text(angle + '°');        
+
+            elem.removeClass('angleOk').removeClass('angleNotOk');
+            
+            if (isInRange == true) 
+                elem.addClass('angleOk');
+            else
+                elem.addClass('angleNotOk');            
 
             if (target == SceneUtils.KnownAngles.KNEE_EXTENSION) {
+                var elem = $('#' + SceneUtils.KnownAngles.KNEE_FLEXION);
+                elem.text((180 - angle).toFixed(1) + '°');
+
+                elem.removeClass('angleOk').removeClass('angleNotOk');
+            
+                if (isInRange == true) 
+                    elem.addClass('angleOk');
+                else
+                    elem.addClass('angleNotOk');            
             }
         }
 
@@ -689,6 +806,13 @@
             return (val * 10 * self.getCMPerPixel()).toFixed(1) + ' mm';
         }
 
+        self.updateLineSizes = function() {              
+            var armLine = self.sceneTop.getLine(SceneUtils.KnownLines.ARM_LINE);
+            $('#armLine').text(self.pixelsToMM(armLine != undefined ? armLine.length() : 0));
+
+            var foreArmLine = self.sceneTop.getLine(SceneUtils.KnownLines.FOREARM_LINE);
+            $('#foreArmLine').text(self.pixelsToMM(foreArmLine != undefined ? foreArmLine.length() : 0));
+            
             var thighLine = self.sceneTop.getLine(SceneUtils.KnownLines.THIGH_LINE);
             $('#thighLine').text(self.pixelsToMM(thighLine != undefined ? thighLine.length() : 0));
 
@@ -717,9 +841,12 @@
         }
 
         self.reloadScene = function () {
+            self.canvasId = "stepOneCanvas";
+            self.sceneTop.load(self.points[self.canvasId], self.lines[self.canvasId], self.angles[self.canvasId], self.texts[self.canvasId]);
         }
 
         self.setupCanvas = function(canvasId) {
+            self.canvasId = canvasId;
             paper.setup(canvasId);      
 
             var getNextLabel = self.getNextLabel;
@@ -784,6 +911,16 @@
         self.sceneTop = self.setupCanvas('stepOneCanvas');              
 
         [self.sceneTop].forEach(function (scene) {          
+            // Arm line
+            scene.onLineLengthChanged(function (f, t) { 
+                self.updateLineSizes();
+            }, SceneUtils.KnownLines.ARM_LINE);
+
+            // Forearm line
+            scene.onLineLengthChanged(function (f, t) { 
+                self.updateLineSizes();
+            }, SceneUtils.KnownLines.FOREARM_LINE);
+
             // Thigh line
             scene.onLineLengthChanged(function (f, t) { 
                 self.updateLineSizes();

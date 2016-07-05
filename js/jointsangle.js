@@ -9,7 +9,7 @@ var JointsAngle = function (line1, line2, name) {
 
 	var center = new Point(0, 0);
 	var path = new Path([center, center, center]);
-	path.sendToBack();
+	project.activeLayer.insertChild(1, path);
 
 	var defaultRangeFillColor = 'green';
 	
@@ -35,7 +35,7 @@ var JointsAngle = function (line1, line2, name) {
 
 	this.followLine = new Path();
 	this.followLine.strokeColor = 'black';
-	this.followLine.sendToBack();
+	project.activeLayer.insertChild(1, this.followLine);
 	this.ranges = undefined;
 
 	this._onAngleChangedCbk = [];
@@ -157,7 +157,7 @@ var JointsAngle = function (line1, line2, name) {
 		this.background.strokeColor = 'black';
 		this.background.strokeWidth = 0.8;
 		this.background.opacity = 0.7;
-		this.background.sendToBack();
+		project.activeLayer.insertChild(1, this.background);
 
 		this.followLine.removeSegments();
 		this.followLine.add(common);
@@ -182,7 +182,7 @@ var JointsAngle = function (line1, line2, name) {
 		}
 	
 		path.fillColor = defaultRangeFillColor;
-		path.sendToBack();
+		project.activeLayer.insertChild(1, path);
 		for (var i in this.ranges) {
 			var range = this.ranges[i];				
 			angleRangesValue.setText(range['range'][0] + "°" + '-' + range['range'][1] + "°");
